@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
-
 enum class GAME_EVENTS : int {
 	QUIT
 };

@@ -7,7 +7,7 @@
 
 GAME_EVENTS glfw_event::get_events() {
 	glfwPollEvents();
-	if (glfwWindowShouldClose(m_window->get_adaptee())) {
+	if (glfwWindowShouldClose(m_window->get_adaptee_r())) {
 		//glfwSetWindowShouldClose(w->get_adaptee(), GL_TRUE);
 		return GAME_EVENTS::QUIT;
 	}

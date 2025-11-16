@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
-
 /* tsg includes */
 #include <tsg/math.h>
 #include <tsg/logger.h>
@@ -104,7 +102,7 @@ namespace geometry {
 	/*
 	* Quaternion class for orientation rappresentation
 	*/
-	class TSG2_API quaternion {
+	class quaternion {
 	public:
 		quaternion(const scalar w = scalar(1), const scalar i = scalar(0), const scalar j = scalar(0), const scalar k = scalar(0));
 		quaternion(const tsg::vector<scalar, 3>& vec);
@@ -275,7 +273,7 @@ namespace geometry {
 		vector2D m_half_sizes{};
 	};
 
-	class TSG2_API bounding_volume {
+	class bounding_volume {
 	public:
 		enum class type {
 			aabb,	// axes aligned bounding box

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <tsg2.h>
 #include <string>
 
-class TSG2_API asset {
+class asset {
 public:
 	asset(const std::string& file_path = "") : m_file_path(file_path) {};
 	~asset() = default;

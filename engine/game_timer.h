@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
-
 template<typename GameTimerImpl>
 class game_timer {
 public:

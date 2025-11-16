@@ -1,8 +1,6 @@
 #pragma once
 
-#include <tsg2.h>
-
-class TSG2_API color {
+class color {
 public:
 	enum RGBA : unsigned {
 		RED		= 0,

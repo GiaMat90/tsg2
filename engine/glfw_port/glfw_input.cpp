@@ -57,7 +57,7 @@ glfw_input::~glfw_input(){}
 
 // overloaded methods
 bool glfw_input::is_key_pressed(const INPUT_KEY key) {
-	const bool res{ glfwGetKey(m_window->get_adaptee(),g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS };
+	const bool res{ glfwGetKey(m_window->get_adaptee_r(),g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS };
 	gl_check_error();
 	return res;
 };

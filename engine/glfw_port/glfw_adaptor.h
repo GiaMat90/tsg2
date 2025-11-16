@@ -1,9 +1,7 @@
 #pragma once
 
-#include "tsg2.h"
-
 template <typename T>
-class TSG2_API glfw_adaptor {
+class glfw_adaptor {
 public:
 	glfw_adaptor() = default;
 	glfw_adaptor(const T* c) : m_glfw_component(c) {};

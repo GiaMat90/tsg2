@@ -8,7 +8,7 @@
 
 using geometry::scalar;
 
-class TSG2_API texture {
+class texture {
 public:
 	using position = tsg::vector<scalar, 3>;
 	using angle = scalar;

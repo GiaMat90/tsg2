@@ -1,7 +1,6 @@
 #pragma once
 
 /* tsg2 includes */
-#include "tsg2.h"
 #include "input.h"
 #include "input_object.h"
 #include "game_timer.h"
@@ -59,10 +58,10 @@ protected: // virtual methods
 protected:
 	void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 public:
-	inline void add_drawable(drawable* obj) { m_renderer.add_drawable(obj); };
-	inline void add_bounding_volume(geometry::bounding_volume* bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
-	inline void add_playable(playable_object* o) { m_input.add_playable(o); };
-	inline void add_physical_object(physics::physical_object* o) { m_physics.add_physical_object(o); }
+	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
+	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
+	inline void add_playable(playable_object* const o) { m_input.add_playable(o); };
+	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); }
 protected: // attributes
 	GAME_STATE m_state{ GAME_STATE::NONE };
 	window_impl m_window;

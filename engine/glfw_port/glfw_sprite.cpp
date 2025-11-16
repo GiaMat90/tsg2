@@ -16,9 +16,6 @@ sprite* sprite::create_sprite() {
 
 void glfw_sprite::load(const std::string& asset) {
     if (!asset.empty()) {
-        /*if (m_adaptee) {
-            unload();
-        }*/
         set_active();
         int nrChannels;
         unsigned char* data = stbi_load(asset.c_str(), &m_width, &m_height, &nrChannels, 0);

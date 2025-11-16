@@ -38,7 +38,7 @@ glfw_texture::~glfw_texture() {
 }
 
 void glfw_texture::set_active() {
-    glBindTexture(GL_TEXTURE_2D, *get_adaptee());
+    glBindTexture(GL_TEXTURE_2D, get_adaptee_v());
     gl_check_error(__FILE__, __LINE__);
 }
 

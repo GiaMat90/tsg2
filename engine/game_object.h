@@ -1,6 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
 #include "sprite.h"
 #include "mesh.h"
 #include "geometry.h"
@@ -9,7 +8,7 @@
 * Pure virtual base class for all game objects
 * It shouldnt be inherited directly
 */
-class TSG2_API game_object {
+class game_object {
 public:
 	game_object() = default;
 	virtual ~game_object() = default;
@@ -20,7 +19,7 @@ public:
 * Drawable class base for all drawable game objects
 * It shouldnt be inherited directly
 */
-class TSG2_API drawable : public game_object {
+class drawable : public game_object {
 public:
 	drawable() = default;
 	virtual ~drawable() = default;
@@ -33,7 +32,7 @@ protected:
 /*
 * Texture object class, it is a drawable object with a texture
 */
-class TSG2_API texture_object : public drawable {
+class texture_object : public drawable {
 public:
 	texture_object() = default;
 	virtual ~texture_object() = default;
@@ -48,7 +47,7 @@ protected:
 * Sprite object class, it is a drawable object with a sprite
 * It should be inherited by all sprite based game objects
 */
-class TSG2_API sprite_object : public drawable {
+class sprite_object : public drawable {
 	using position = texture::position;
 	using angle = texture::angle;
 public:
@@ -57,13 +56,13 @@ public:
 public:
 	void update(const position&, const angle);
 public:
-	inline sprite* get_sprite() const { return m_sprite; }
+	inline sprite * const get_sprite() const { return m_sprite; }
 	inline void set_sprite(sprite* s) { m_sprite = s; }
 protected:
 	sprite* m_sprite{ nullptr };
 };
 
-class TSG2_API mesh_object : public drawable {
+class mesh_object : public drawable {
 public:
 	mesh_object() = default;
 	virtual ~mesh_object() = default;

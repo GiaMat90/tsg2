@@ -1,1 +1,2 @@
 add_subdirectory(arrow_and_bubble)
+add_subdirectory(render_test)

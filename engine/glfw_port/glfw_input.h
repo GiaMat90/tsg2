@@ -1,10 +1,9 @@
 #pragma once
 
-#include "tsg2.h"
 #include "input.h"
 #include "glfw_window.h"
 
-class TSG2_API glfw_input : public input<glfw_window, glfw_input>{
+class glfw_input : public input<glfw_window, glfw_input>{
 public:
 	glfw_input(glfw_window * w);
 	~glfw_input();

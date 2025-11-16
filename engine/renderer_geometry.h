@@ -4,7 +4,7 @@
 #include "game_object.h"
 #include "geometry.h"
 
-class TSG2_API drawable_bounding_volume : public texture_object {
+class drawable_bounding_volume : public texture_object {
 public:
 	drawable_bounding_volume(geometry::bounding_volume* bv = nullptr, const scalar scale = scalar(0));
 	~drawable_bounding_volume();

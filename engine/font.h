@@ -1,13 +1,12 @@
 #pragma once
 
-#include "tsg2.h"
 #include "color.h"
 /* tsg includes */
 #include <tsg/math.h>
 /* std includes */
 #include <string>
 
-class TSG2_API font {
+class font {
 protected:
 	using text_position = tsg::vector<std::size_t, 2>;
 public:

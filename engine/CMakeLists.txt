@@ -6,7 +6,7 @@ file(GLOB ENGINE_SOURCES
 
 list(FILTER ENGINE_SOURCES EXCLUDE REGEX ".*sdl_port/.*")
 
-add_library(engine SHARED ${ENGINE_SOURCES})
+add_library(engine STATIC ${ENGINE_SOURCES})
 
 # Set the folder for Visual Studio
 set_target_properties(engine PROPERTIES FOLDER "tsg2")
@@ -18,8 +18,8 @@ include_directories(${CMAKE_SOURCE_DIR}/externals/tsg/include)
 # Linking tsg lib
 target_link_libraries(engine PRIVATE tsg)
 
-# add necessary simbols to export the dll
-add_compile_definitions(TSG2_EXPORT)
+# add preprocessors simbols
+add_compile_definitions(TSG2_STATIC)
 
 if(GLFW_GAME)
 	# Add GLFW port sources to engine library
@@ -36,6 +36,7 @@ if(GLFW_GAME)
 	set_source_files_properties(${SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 	
 	source_group("engine\\glfw_port" FILES ${GLFW_PORT_SOURCES})
+	source_group("engine\\glfw_port\\shaders" FILES ${SHADERS})
 	
 	target_compile_definitions(engine PUBLIC GLFW_GAME)
 

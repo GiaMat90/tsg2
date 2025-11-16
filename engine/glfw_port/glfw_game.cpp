@@ -12,14 +12,7 @@ glfw_game::~glfw_game() {
 }
 
 bool glfw_game::init() {
-	// Initialize GL and GLFW
-	bool res{ true };
-	/* Initialize the library */
-	if (GLFW_FALSE == glfwInit())
-	{
-		res = false;
-	}
-	return res;
+	return GLFW_TRUE == glfwInit();
 }
 
 void glfw_game::quit() {

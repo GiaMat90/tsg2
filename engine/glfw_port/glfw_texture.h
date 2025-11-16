@@ -8,7 +8,7 @@
 /* tsg includes */
 #include <tsg/types.h>
 
-class TSG2_API glfw_texture : public virtual texture, public tsg::adapter_v<GLuint>
+class glfw_texture : public virtual texture, public tsg::adapter_v<GLuint>
 {
 public:
 	glfw_texture(int width = 0, int height = 0);

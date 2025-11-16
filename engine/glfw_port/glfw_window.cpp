@@ -26,6 +26,10 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 
 	if (!m_adaptee)
 	{
+		const char* description;
+		int code = glfwGetError(&description);
+		tsg::print("Error {}:{}", code, description);
+		tsg::logger::get_instance().write("Error {}:{}", code, description);
 		assert(0);
 	}
 	glfwMakeContextCurrent(m_adaptee);
@@ -33,7 +37,7 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 }
 
 glfw_window::~glfw_window() {
-	// in openGL it is handled with context that are free in glfwTerminate
+	// In openGL it is handled with context that are free in glfwTerminate
 	// or maybe I should?
 	glfwDestroyWindow(m_adaptee);
 }

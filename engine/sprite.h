@@ -6,7 +6,7 @@
 /* std includes */
 #include <string>
 
-class TSG2_API sprite : public virtual texture {
+class sprite : public virtual texture {
 public:
 	sprite(const std::string& path = "") {};
 	virtual ~sprite() {};

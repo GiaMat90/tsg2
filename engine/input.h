@@ -1,6 +1,4 @@
 #pragma once
-
-#include "tsg2.h"
 #include "input_object.h"
 
 /* std includes */
