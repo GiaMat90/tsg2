@@ -1,6 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
 #include "texture.h"
 
 /* std includes */

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
 #include "geometry.h"
 
 /* tsg includes */

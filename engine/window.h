@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
-
 /* std includes */
 #include <exception>
 #include <string>
