@@ -15,6 +15,7 @@ public:
 	~shader();
 	void init(const char* vertex_path, const char* fragment_path);
 	void use();
+	void unuse();
 private:
 	enum class SHADER_TYPE : uint32_t {
 		VERTEX	 = 0,

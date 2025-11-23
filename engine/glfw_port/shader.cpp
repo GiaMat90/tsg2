@@ -20,7 +20,7 @@ void shader::init(const char* vertex_path, const char* fragment_path) {
 	// check linking
 	int success;
 	glGetProgramiv(m_adaptee, GL_LINK_STATUS, &success);
-	gl_check_error(__FILE__, __LINE__);
+	check_error(__FILE__, __LINE__);
 	if (!success) {
 		char info_log[512];
 		glGetProgramInfoLog(m_adaptee, 512, NULL, info_log);
@@ -52,13 +52,13 @@ GLuint shader::load(const char * path, const SHADER_TYPE type) {
 		// create and compile shader program
 		GLuint local_shader = glCreateShader(type == SHADER_TYPE::VERTEX ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER);
 		glShaderSource(local_shader, 1, &code, NULL);	
-		gl_check_error(__FILE__, __LINE__);
+		check_error(__FILE__, __LINE__);
 		glCompileShader(local_shader);
-		gl_check_error(__FILE__, __LINE__);
+		check_error(__FILE__, __LINE__);
 		// check compilation
 		int success;
 		glGetShaderiv(local_shader, GL_COMPILE_STATUS, &success);
-		gl_check_error(__FILE__, __LINE__);
+		check_error(__FILE__, __LINE__);
 		if (!success) {
 			char info_log[512];
 			glGetShaderInfoLog(local_shader, 512, NULL, info_log);
@@ -66,7 +66,7 @@ GLuint shader::load(const char * path, const SHADER_TYPE type) {
 		}
 		// attach to main program
 		glAttachShader(m_adaptee, local_shader);
-		gl_check_error(__FILE__, __LINE__);
+		check_error(__FILE__, __LINE__);
 		return local_shader;
 	}
 	catch (std::fstream::failure& e) {
@@ -81,7 +81,12 @@ GLuint shader::load(const char * path, const SHADER_TYPE type) {
 
 void shader::use() {
 	glUseProgram(m_adaptee);
-	gl_check_error(__FILE__, __LINE__);
+	check_error(__FILE__, __LINE__);
+}
+
+void shader::unuse() {
+	glUseProgram(0);
+	check_error(__FILE__, __LINE__);
 }
 
 #endif

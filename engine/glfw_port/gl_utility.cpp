@@ -11,7 +11,15 @@
 #include <cassert>
 
 #ifdef _DEBUG
-void gl_check_error(const std::string& f, int r) {
+void check_error(const std::string& f, int r) {
+	// Check GLFW errors
+	const char* description;
+	int code = glfwGetError(&description);
+	if (code > GLFW_NO_ERROR) {
+		tsg::print("GLFW Error {}:{} throwed in file {} row {}", code, description, f, r);
+		tsg::logger::get_instance().write("GLFW Error {}:{} throwed in file {} row {}", code, description, f, r);
+	}
+	// Check OpenGL errors
 	if (auto err = glGetError()) {
 		tsg::print("OpenGL Error {} throwed in file {} row {}", err, f, r);
 		tsg::logger::get_instance().write("OpenGL Error {} throwed in file {} row {}", err, f, r);

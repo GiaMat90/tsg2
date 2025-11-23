@@ -1,6 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
 #include "game_object.h"
 #include "contact.h"
 #include "geometry.h"
