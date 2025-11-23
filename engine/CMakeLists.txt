@@ -29,7 +29,7 @@ if(GLFW_GAME)
 	)
 	
 	# set to have shaders with other sources
-	file(GLOB SHADERS "${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders/*.shad")
+	file(GLOB SHADERS "${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders/*.glsl")
 	
 	target_sources(engine PRIVATE ${GLFW_PORT_SOURCES} ${SHADERS})
 

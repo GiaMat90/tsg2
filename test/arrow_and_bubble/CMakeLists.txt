@@ -35,8 +35,11 @@ if(GLFW_GAME)
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_CURRENT_SOURCE_DIR}/assets
 		$<TARGET_FILE_DIR:arrow_and_bubbles>/assets
+		${CMAKE_SOURCE_DIR}/engine/glfw_port/shaders
+		$<TARGET_FILE_DIR:arrow_and_bubbles>/shaders
 		COMMENT "Copying shares files to build directory"
 	)
+
 endif()
 
 
