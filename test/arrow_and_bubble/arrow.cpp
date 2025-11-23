@@ -20,7 +20,7 @@ void arrow::init() {
 }
 
 void arrow::update(const scalar delta_time) {
-	physical_object::update(delta_time);
+	physical_object::update(delta_time); // update physics, position and rotation
 	sprite_object::update(m_position, m_rotation);
 }
 

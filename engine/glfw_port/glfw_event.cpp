@@ -11,7 +11,7 @@ GAME_EVENTS glfw_event::get_events() {
 		//glfwSetWindowShouldClose(w->get_adaptee(), GL_TRUE);
 		return GAME_EVENTS::QUIT;
 	}
-	gl_check_error(__FILE__, __LINE__);
+	check_error(__FILE__, __LINE__);
 }
 
 #endif

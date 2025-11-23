@@ -9,7 +9,7 @@
 
 glfw_game_timer::glfw_game_timer(const unsigned fps) : game_timer(fps) {
 	glfwSetTime(0.0f);
-	gl_check_error(__FILE__, __LINE__);
+	check_error(__FILE__, __LINE__);
 }
 
 const float glfw_game_timer::tick() {

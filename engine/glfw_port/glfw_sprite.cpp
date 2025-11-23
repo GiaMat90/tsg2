@@ -39,11 +39,11 @@ void glfw_sprite::load(const std::string& asset) {
            
             // Upload image data to GPU
             glTexImage2D(GL_TEXTURE_2D, 0, rgba_format, m_width, m_height, 0, rgba_format, GL_UNSIGNED_BYTE, data);
-            gl_check_error(__FILE__, __LINE__);
+            check_error(__FILE__, __LINE__);
 
             // Generate mipmaps
             glGenerateMipmap(GL_TEXTURE_2D);
-            gl_check_error(__FILE__, __LINE__);
+            check_error(__FILE__, __LINE__);
         }
         else {
             tsg::logger::get_instance().write("Error loading texture {}, reason {}", asset, stbi_failure_reason());

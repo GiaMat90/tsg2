@@ -1,6 +1,5 @@
 #pragma once
 
-#include "tsg2.h"
 #include "geometry.h"
 #include "sprite.h"
 #include "texture.h"
@@ -19,19 +18,23 @@ class renderer {
 	using sprites = std::vector<sprite_object*>;
 	using textures = std::vector<texture_object*>;
 	using meshes = std::vector<mesh_object*>;
-	using bounding_volumes = std::vector<drawable_bounding_volume*>;
+	//using bounding_volumes = std::vector<drawable_bounding_volume*>;
+	using bounding_volumes = std::vector<geometry::bounding_volume*>;
 public:
 	class creation_exception : public std::exception {
 		const char* what() { return "renderer creation exception"; }
 	};
 	renderer(WindowImpl* w) : m_window(w) {};
 	virtual ~renderer() {
-		if (m_bv_obj.size() > 0) {
-			for (auto& bv : m_bv_obj) {
-				delete bv;
-			}
-			m_bv_obj.clear();
-		}
+		/* no more needed, no more copies */
+		//if (m_bv_obj.size() > 0) {
+		//	for (auto& bv : m_bv_obj) {
+		//		if (bv) {
+		//			delete bv;
+		//		}
+		//	}
+		//	m_bv_obj.clear();
+		//}
 	};
 public: 
 	inline void render() { static_cast<RendererImpl*>(this)->render(); };
@@ -50,7 +53,7 @@ public:
 	}
 public:
 	// TODO: evalueate to made it private and friendable of game
-	inline void add_drawable(drawable* obj) {
+	inline void add_drawable(drawable* const obj) {
 		if (auto s = dynamic_cast<sprite_object*>(obj)) {
 			m_sprites_obj.push_back(s);
 		}
@@ -68,10 +71,11 @@ public:
 			throw std::runtime_error("Unsupported drawable type");
 		}
 	}
-	inline void add_bounding_volume(geometry::bounding_volume* bv, const scalar scale) {
+	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) {
 		assert(bv);
-		drawable_bounding_volume* p_bdv = new drawable_bounding_volume(bv, scale);
-		m_bv_obj.emplace_back(p_bdv);
+		//drawable_bounding_volume* p_bdv = new drawable_bounding_volume(bv, scale);
+		//m_bv_obj.emplace_back(p_bdv);
+		m_bv_obj.emplace_back(bv);
 	}
 protected:
 	WindowImpl* m_window;
