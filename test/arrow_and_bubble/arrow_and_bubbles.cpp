@@ -73,6 +73,7 @@ void arrow_and_bubbles::initialize_objects() {
 	INCLUDE_BOUNDING_VOLUME(m_arrow.print_bounding_volume(true));
 	INCLUDE_ARROW(add_drawable(&m_arrow));
 	INCLUDE_ARROW(m_arrow.init());
+	INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_arrow.get_bounding_volume(), m_arrow.get_sprite()->get_scale()));
 	for (std::size_t i = 0u; i < NUMBER_OF_BUBBLE; ++i) {
 		INCLUDE_BUBBLE(add_physical_object(&m_bubbles[i]));
 		INCLUDE_BOUNDING_VOLUME(m_bubbles[i].print_bounding_volume(true));

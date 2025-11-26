@@ -5,7 +5,7 @@
 #include "bubble.h"
 
 #define NUMBER_OF_BUBBLE 10
-#define FORCE_INCLUDE_ARROW 1
+#define FORCE_INCLUDE_ARROW 0
 
 class arrow_and_bubbles : public game<2, arrow_and_bubbles>
 {
