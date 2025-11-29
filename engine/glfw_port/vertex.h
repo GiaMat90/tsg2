@@ -76,10 +76,9 @@ public:
 	void use() override;
 	void draw() override;
 private:
-	float m_vertexes[10] = {
-		// Vertex Positions
-		-0.5f, 0.0f, 0.0f, // start
-		 0.5f, 0.0f, 0.0f, // end
-		 0.0f, 0.0f, 0.0f, 1.0f  // color
+	float m_vertexes[14] = {
+		// Vertex Positions // Color RGBA
+		-0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,	// start position
+		 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f	// end	position
 	};
 };

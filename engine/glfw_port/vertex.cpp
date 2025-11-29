@@ -117,10 +117,16 @@ void box2D_vertex::draw() {
 
 line_vertex::line_vertex(const float r, const float b, const float g, const float a) : vertex() 
 {
-	m_vertexes[6] = r;
-	m_vertexes[7] = b;
-	m_vertexes[8] = g;
-	m_vertexes[9] = a;
+	// color first vertex
+	m_vertexes[3] = r;
+	m_vertexes[4] = b;
+	m_vertexes[5] = g;
+	m_vertexes[6] = a;
+	// color second vertex
+	m_vertexes[10] = r;
+	m_vertexes[11] = b;
+	m_vertexes[12] = g;
+	m_vertexes[13] = a;
 }
 line_vertex::~line_vertex()
 {
@@ -138,11 +144,11 @@ void line_vertex::init() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertexes), m_vertexes, GL_STATIC_DRAW);
 	check_error(__FILE__, __LINE__);	
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, reinterpret_cast<void*>(0));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, reinterpret_cast<void*>(0));
 	glEnableVertexAttribArray(0);
 	check_error(__FILE__, __LINE__); 
 	// color attribute
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, reinterpret_cast<void*>(sizeof(float) * 3));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, reinterpret_cast<void*>(sizeof(float) * 3));
 	glEnableVertexAttribArray(1);
 	check_error(__FILE__, __LINE__);
 	// unbind all
