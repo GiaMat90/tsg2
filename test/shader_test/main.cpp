@@ -3,6 +3,7 @@
 #include <glfw_port/shader.h>
 #include <glfw_port/vertex.h>
 #include <glfw_port/gl_utility.h>
+#include <geometry.h>
 // tsg
 #include <tsg/logger.h>
 #include <tsg/io.h>	// print
@@ -12,6 +13,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#define DRAW_TEXTURE_VERTEXES 0
+#define DRAW_LINE_VERTEXES    0
+#define DRAW_TRIANGLE_VERTEXES 1
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -55,6 +60,7 @@ void process_input(GLFWwindow* window)
 }
 
 int main() {
+	tsg::logger::get_instance().write();
 	// before using any GLFW functions, the library must be initialized
 	if(GLFW_FALSE == glfwInit()){
 		return -1;
@@ -76,35 +82,49 @@ int main() {
 	);
 
 	/**/
+#if DRAW_TEXTURE_VERTEXES
 	texture_vertex tex_vertex;
 	tex_vertex.init();
+#endif
 	/**/
+#if DRAW_LINE_VERTEXES
 	line_vertex line(0.75f, 0.25f, 0.5f, 1.0f);
 	line.init();
+#endif
 	/**/
+#if DRAW_TRIANGLE_VERTEXES
+	regpoly_vertex<5> triangle(0.5f, 0.75f, 0.25f, 1.0f);
+	triangle.init();
+#endif
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (false == glfwWindowShouldClose(window)) {
 		process_input(window);  
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		// draw our first triangle
-		texture_shader.use();
+		// initialize commons
 		glm::mat4 transform{ glm::mat4(1.0f) }; // make sure to initialize matrix to identity matrix first
-		float scale{ 0.5f };
+		float scale{ 1.0f };
+		GLint transformLoc{ -1 };
+		/* draw our first texture */
+		texture_shader.use();
+#if DRAW_TEXTURE_VERTEXES
+		transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		scale = 0.5f;
 		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
 		transform = glm::translate(transform, glm::vec3(0.5f, 0.5f, 0.0f));
 		transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		auto transformLoc = glGetUniformLocation(texture_shader.get_adaptee_v(), "transform");
+		transformLoc = glGetUniformLocation(texture_shader.get_adaptee_v(), "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);
 		// draw texture vertex
 		tex_vertex.use();
 		tex_vertex.draw();
+#endif
 		texture_shader.unuse();
-		/**/
+		/* draw first line shader */
 		line_shader.use();
+#if DRAW_LINE_VERTEXES
 		transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		scale = 0.5f;
 		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
@@ -117,6 +137,22 @@ int main() {
 		// draw line vertex
 		line.use();
 		line.draw();
+#endif
+		// draw triangle using line shader
+		transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		scale = 1.0f;
+		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+		transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+		transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		transformLoc = glGetUniformLocation(line_shader.get_adaptee_v(), "transform");
+		check_error(__FILE__, __LINE__);
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+		check_error(__FILE__, __LINE__);
+#if DRAW_TRIANGLE_VERTEXES
+		triangle.use();
+		triangle.draw();
+#endif
+		// unsuse line shader
 		line_shader.unuse();
 		/**/
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

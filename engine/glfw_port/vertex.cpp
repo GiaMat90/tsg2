@@ -1,8 +1,6 @@
 #ifdef GLFW_GAME 
 
 #include "vertex.h"
-#include "gl_utility.h"
-
 /* std includes */
 #include <cassert>
 
@@ -166,5 +164,6 @@ void line_vertex::draw() {
 	glBindVertexArray(0);
 	check_error(__FILE__, __LINE__);
 }
+
 
 #endif

@@ -18,6 +18,7 @@ void check_error(const std::string& f, int r) {
 	if (code > GLFW_NO_ERROR) {
 		tsg::print("GLFW Error {}:{} throwed in file {} row {}", code, description, f, r);
 		tsg::logger::get_instance().write("GLFW Error {}:{} throwed in file {} row {}", code, description, f, r);
+		assert(0);
 	}
 	// Check OpenGL errors
 	if (auto err = glGetError()) {
