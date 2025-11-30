@@ -125,6 +125,8 @@ public:
 				}
 			}
 			else if constexpr (Dim == 2) {
+				tsg::logger::get_instance().write(tsg::string("PhysicalWorld::Computing max(world)=({},{})",
+					m_limits.get_max(AXES::X), m_limits.get_max(AXES::Y)));
 				/* Sorting objects x-based */
 				std::sort(m_objects.begin(), m_objects.end(), [](physical_object* a, physical_object* b) 
 					{
@@ -133,6 +135,9 @@ public:
 				);
 				/* First check if there is contact with world walls */
 				for (auto it = m_objects.begin(); it != m_objects.end(); ++it) {
+					tsg::logger::get_instance().write(tsg::string("PhysicalWorld::Computing max(bv)=({},{})",
+						(*it)->get_bounding_volume()->get_max(AXES::X),
+						(*it)->get_bounding_volume()->get_max(AXES::Y)));
 					auto obj = *it;
 					auto wall_contact = [&](const vector& normal) {
 							scalar seperataing_velocity{ vector::dot((obj->m_velocity), normal) };

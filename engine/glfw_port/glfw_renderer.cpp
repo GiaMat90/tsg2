@@ -22,6 +22,7 @@
 
 using geometry::AXES;
 
+
 glfw_renderer::glfw_renderer(glfw_window * w) : renderer<glfw_window, glfw_renderer>(w) {
 	// NOTE: OpenGL error checks have been omitted for brevity
 	if (0 == gladLoadGL(glfwGetProcAddress)) {
@@ -80,6 +81,7 @@ void glfw_renderer::render() {
 		}
 	}
 	/* drawing sprites */
+#if EXCLUDE_SPRITE
 	if (m_sprites_obj.size() > 0) {
 		// use programs previously loaded
 		m_sprite_shader.use();
@@ -89,6 +91,7 @@ void glfw_renderer::render() {
 			this->draw(s->get_sprite());
 		}
 	}
+#endif
 	/* drawing meshes */
 	if (m_meshes_obj.size() > 0) {
 		/* TODO */
@@ -223,10 +226,10 @@ void glfw_renderer::draw(geometry::box3D * const box) {
 }
 
 void glfw_renderer::draw(geometry::box2D * const box) {
-	box_vertex<2> box2d_vertex(box, 0.5f, 0.75f, 0.25f, 1.0f);
+	box_vertex<2> box2d_vertex(box, 0.9f, 0.8f, 0.7f, 1.0f);
 	glm::mat4 transform{ glm::mat4(1.0f) };  // make sure to initialize matrix to identity matrix first
-	//scale = 1.0f;
-	//transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+	float scale{ 0.5f };
+	transform = glm::scale(transform, glm::vec3(scale, scale, scale));
 	//transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
 	//transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	GLint transformLoc = glGetUniformLocation(m_line_shader.get_adaptee_v(), "transform");
