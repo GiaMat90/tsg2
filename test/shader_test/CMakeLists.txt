@@ -32,15 +32,13 @@ if(GLFW_GAME)
 		target_compile_options(shader_test PRIVATE /W4)
 	else()
 		target_compile_options(shader_test PRIVATE -Wall -Wextra)
-	endif()
+	endif()	
 	
-	add_custom_target(copy_shaders ALL)
-
 	add_custom_command(TARGET shader_test POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
-		${CMAKE_CURRENT_SOURCE_DIR}/shaders
-		$<TARGET_FILE_DIR:shader_test>/shaders
-		COMMENT "Copying shares files to build directory"
+        ${CMAKE_SOURCE_DIR}/engine/glfw_port/shaders
+        $<TARGET_FILE_DIR:shader_test>/shaders
+		COMMENT "Copying shaders files to build directory"
 	)
 endif()
 

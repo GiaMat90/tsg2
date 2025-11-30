@@ -166,9 +166,8 @@ int main() {
 		box_vertex<2> box2d_vertex(&box2d, 0.5f, 0.75f, 0.25f, 1.0f);
 		box2d_vertex.init();
 		box2d_vertex.use();
-		box2d_vertex.draw();
-		// change box runtime to see if it change
-		box2d.translate({ 0.0001f, 0.0f });
+		box2d_vertex.draw();		
+		//box2d.translate({ 0.0001f, 0.0f }); // uncomment to see the box move runtime 
 #endif
 		// unsuse line shader
 		line_shader.unuse();

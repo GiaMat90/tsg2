@@ -81,7 +81,6 @@ void glfw_renderer::render() {
 		}
 	}
 	/* drawing sprites */
-#if EXCLUDE_SPRITE
 	if (m_sprites_obj.size() > 0) {
 		// use programs previously loaded
 		m_sprite_shader.use();
@@ -91,7 +90,6 @@ void glfw_renderer::render() {
 			this->draw(s->get_sprite());
 		}
 	}
-#endif
 	/* drawing meshes */
 	if (m_meshes_obj.size() > 0) {
 		/* TODO */

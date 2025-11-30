@@ -1,2 +1,3 @@
 add_subdirectory(arrow_and_bubble)
 add_subdirectory(shader_test)
+add_subdirectory(physics_test)

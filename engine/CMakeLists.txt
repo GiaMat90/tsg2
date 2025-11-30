@@ -29,14 +29,14 @@ if(GLFW_GAME)
 	)
 	
 	# set to have shaders with other sources
-	file(GLOB SHADERS "${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders/*.glsl")
+	file(GLOB SHADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders/*.glsl")
 	
-	target_sources(engine PRIVATE ${GLFW_PORT_SOURCES} ${SHADERS})
+	target_sources(engine PRIVATE ${GLFW_PORT_SOURCES} ${SHADER_FILES})
 
-	set_source_files_properties(${SHADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
+	set_source_files_properties(${SHADER_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 	
 	source_group("engine\\glfw_port" FILES ${GLFW_PORT_SOURCES})
-	source_group("engine\\glfw_port\\shaders" FILES ${SHADERS})
+	source_group("engine\\glfw_port\\shaders" FILES ${SHADER_FILES})
 	
 	target_compile_definitions(engine PUBLIC GLFW_GAME)
 
@@ -51,11 +51,20 @@ if(GLFW_GAME)
 	
 	add_compile_definitions(GLFW_INCLUDE_NONE)
 
+	# add_custom_command(TARGET engine POST_BUILD
+		# COMMAND ${CMAKE_COMMAND} -E copy_directory
+		# ${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders
+		# $<TARGET_FILE_DIR:engine>/shaders
+		# COMMENT "Copying shares files to build directory"
+	# )
+	
+	add_custom_target(copy_shaders ALL)
+
 	add_custom_command(TARGET engine POST_BUILD
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders
 		$<TARGET_FILE_DIR:engine>/shaders
-		COMMENT "Copying shares files to build directory"
+		COMMENT "Copying shaders files to build directory"
 	)
 
 endif()
