@@ -170,7 +170,7 @@ public:
 			m_vertexes[i++] = b;
 			m_vertexes[i++] = a;
 			++j;
-			tsg::logger::get_instance().write(tsg::string("Vertex {}: pos=({}, {}, {})", i / 7 - 1, m_vertexes[i - 7], m_vertexes[i - 6], m_vertexes[i - 5]));
+			tsg::logger::get_instance().write(tsg::string("Box{}DVertex {}: pos=({}, {}, {})", Dim, i / 7 - 1, m_vertexes[i - 7], m_vertexes[i - 6], m_vertexes[i - 5]));
 		}
 	}
 	~box_vertex() {

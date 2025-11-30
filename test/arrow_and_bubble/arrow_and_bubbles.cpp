@@ -4,7 +4,7 @@
 #include <tsg/io.h>
 #include <tsg/os.h>
 
-#define EXCLUDE_BOUNDING_VOLUME 1
+#define EXCLUDE_BOUNDING_VOLUME 0
 
 #define EXCLUDE_BUBBLE 0
 #if !FORCE_INCLUDE_ARROW
@@ -70,16 +70,16 @@ void arrow_and_bubbles::initialize_objects() {
 	// physic engine stuff
 	INCLUDE_ARROW(add_physical_object(&m_arrow));
 	/* initialize objects */
-	INCLUDE_BOUNDING_VOLUME(m_arrow.print_bounding_volume(true));
+	INCLUDE_ARROW(INCLUDE_BOUNDING_VOLUME(m_arrow.print_bounding_volume(true)));
 	INCLUDE_ARROW(add_drawable(&m_arrow));
 	INCLUDE_ARROW(m_arrow.init());
-	INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_arrow.get_bounding_volume(), m_arrow.get_sprite()->get_scale()));
+	INCLUDE_ARROW(INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_arrow.get_bounding_volume(), m_arrow.get_sprite()->get_scale())));
 	for (std::size_t i = 0u; i < NUMBER_OF_BUBBLE; ++i) {
 		INCLUDE_BUBBLE(add_physical_object(&m_bubbles[i]));
-		INCLUDE_BOUNDING_VOLUME(m_bubbles[i].print_bounding_volume(true));
+		INCLUDE_BUBBLE(INCLUDE_BOUNDING_VOLUME(m_bubbles[i].print_bounding_volume(true)));
 		INCLUDE_BUBBLE(add_drawable(&m_bubbles[i]));
 		INCLUDE_BUBBLE(m_bubbles[i].init());
-		INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_bubbles[i].get_bounding_volume(), m_bubbles[i].get_sprite()->get_scale()));
+		INCLUDE_BUBBLE(INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_bubbles[i].get_bounding_volume(), m_bubbles[i].get_sprite()->get_scale())));
 	}
 }
 

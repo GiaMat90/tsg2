@@ -200,10 +200,10 @@ void glfw_renderer::draw(geometry::bounding_volume* const bv) {
 	case geometry::bounding_volume::type::aabb:
 	case geometry::bounding_volume::type::obb:
 		if(bv->get_dimension() == 3) {
-			draw(static_cast<geometry::box3D&>(*bv));
+			draw(static_cast<geometry::box3D*>(bv));
 		}
 		else if(bv->get_dimension() == 2) {
-			draw(static_cast<geometry::box2D&>(*bv));
+			draw(static_cast<geometry::box2D*>(bv));
 		}
 		else {
 			assert(0); // unsupported dimension
@@ -218,33 +218,24 @@ void glfw_renderer::draw(geometry::bounding_volume* const bv) {
 }
 
 /* TODO */
-void glfw_renderer::draw(const geometry::box3D& box) {
+void glfw_renderer::draw(geometry::box3D * const box) {
 	assert(0);
 }
 
-void glfw_renderer::draw(const geometry::box2D& box) {
-	// I didn't already loaded shaders
-	//
-	/*
-	glDrawArrays(GL_LINES, 0, 2);
-	gl_check_error(__FILE__, __LINE__);
-	*/
-	glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-	transform = glm::translate(transform, glm::vec3(box.get_center()[AXES::X], box.get_center()[AXES::Y], 0.0f));
-
-
-	unsigned int transformLoc = glGetUniformLocation(m_texture_shader.get_adaptee_v(), "transform");
+void glfw_renderer::draw(geometry::box2D * const box) {
+	box_vertex<2> box2d_vertex(box, 0.5f, 0.75f, 0.25f, 1.0f);
+	glm::mat4 transform{ glm::mat4(1.0f) };  // make sure to initialize matrix to identity matrix first
+	//scale = 1.0f;
+	//transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+	//transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+	//transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	GLint transformLoc = glGetUniformLocation(m_line_shader.get_adaptee_v(), "transform");
+	check_error(__FILE__, __LINE__);
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 	check_error(__FILE__, __LINE__);
-
-#if 0
-	glDrawArrays(GL_LINES, 0, 2);
-	gl_check_error(__FILE__, __LINE__);
-#else
-	glDrawElements(GL_TRIANGLES, 1, GL_UNSIGNED_INT, 0);
-	check_error(__FILE__, __LINE__);
-#endif
-	
+	box2d_vertex.init();
+	box2d_vertex.use();
+	box2d_vertex.draw();	
 };
 
 void glfw_renderer::draw(const drawable_bounding_volume&) {

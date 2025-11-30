@@ -28,8 +28,8 @@ public: // overrided methods
 	void draw(mesh*);
 	void draw(font*);
 	void draw(geometry::bounding_volume* const);
-	void draw(const geometry::box3D&);
-	void draw(const geometry::box2D&); 
+	void draw(geometry::box3D * const);
+	void draw(geometry::box2D * const); 
 	void draw(const drawable_bounding_volume&);
 private:
 	/* to render 2D texture */
