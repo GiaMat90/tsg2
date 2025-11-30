@@ -14,9 +14,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#define DRAW_TEXTURE_VERTEXES 0
-#define DRAW_LINE_VERTEXES    0
-#define DRAW_TRIANGLE_VERTEXES 1
+#define GL_POLY_MODE 0
+/* Choice what do you want draw */
+#define DRAW_TEXTURE_VERTEXES 1
+#define DRAW_LINE_VERTEXES    1
+#define DRAW_REGPOLY_VERTEXES 1
+#define DRAW_BOX2D_VERTEXES   1
+
+#define WINDOW_WIDTH  800
+#define WINDOW_HEIGHT 800
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -92,12 +98,16 @@ int main() {
 	line.init();
 #endif
 	/**/
-#if DRAW_TRIANGLE_VERTEXES
+#if DRAW_REGPOLY_VERTEXES
 	regpoly_vertex<10000> polygon(0.75f, 0.75f, 0.55f, 1.0f);
 	polygon.init();
 #endif
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#if DRAW_BOX2D_VERTEXES
+	geometry::box<2> box2d({ 0.0f, 0.0f }, { 0.5f, 0.5f });
+#endif
+#if GL_POLY_MODE
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+#endif
 	while (false == glfwWindowShouldClose(window)) {
 		process_input(window);  
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -140,17 +150,25 @@ int main() {
 #endif
 		// draw triangle using line shader
 		transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		scale = 1.0f;
-		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
-		transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
-		transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+		//scale = 1.0f;
+		//transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+		//transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+		//transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 		transformLoc = glGetUniformLocation(line_shader.get_adaptee_v(), "transform");
 		check_error(__FILE__, __LINE__);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);
-#if DRAW_TRIANGLE_VERTEXES
+#if DRAW_REGPOLY_VERTEXES
 		polygon.use();
 		polygon.draw();
+#endif
+#if DRAW_BOX2D_VERTEXES
+		box_vertex<2> box2d_vertex(&box2d, 0.5f, 0.75f, 0.25f, 1.0f);
+		box2d_vertex.init();
+		box2d_vertex.use();
+		box2d_vertex.draw();
+		// change box runtime to see if it change
+		box2d.translate({ 0.0001f, 0.0f });
 #endif
 		// unsuse line shader
 		line_shader.unuse();

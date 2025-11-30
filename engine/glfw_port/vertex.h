@@ -2,7 +2,7 @@
 
 #include "gl_includes.h"
 #include "gl_utility.h"
-
+#include <geometry.h>
 /* tsg includes */
 #include <tsg/types.h>
 #include <tsg/logger.h>
@@ -107,7 +107,7 @@ public:
 			m_vertexes[i++] = b;
 			m_vertexes[i++] = a;
 			alpha += delta_alpha;
-			tsg::logger::get_instance().write(tsg::string("Vertex {}: pos=({}, {}, {})", i / 7 - 1, m_vertexes[i - 7], m_vertexes[i - 6], m_vertexes[i - 5]));
+			tsg::logger::get_instance().write(tsg::string("Vertex {}: pos=({}, {}, {})", i / 7u - 1, m_vertexes[i - 7u], m_vertexes[i - 6u], m_vertexes[i - 5u]));
 		}
 	}
 	~regpoly_vertex() {
@@ -135,7 +135,6 @@ public:
 		// unbind all
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 	}
 	void use() override {
 		glBindVertexArray(m_adaptee);
@@ -145,10 +144,72 @@ public:
 		glDrawArrays(GL_LINE_LOOP, 0, N);
 		glBindVertexArray(0);
 		check_error(__FILE__, __LINE__);
-
 	}
 private:
-	float m_vertexes[7 * N];
-	int m_indexes[N];
+	float m_vertexes[7u * N];
+};
 
+template <std::size_t Dim> requires geometry::GeometricDimension<Dim>
+class box_vertex : public vertex {
+public:
+	box_vertex(geometry::box<Dim> * const box, const float r = 1.0f, const float b = 1.0f, const float g = 1.0f, const float a = 1.0f) : m_box(box) {
+		std::size_t i{ 0u };
+		std::size_t j{ 0u };
+		while (i < 7u * Dim * Dim) {
+			// first vertex position
+			m_vertexes[i++] = m_box->get_edges().at(j).get_start()[0]; //m_box->get_vertexes().at(j)[0];
+			m_vertexes[i++] = m_box->get_edges().at(j).get_start()[1]; //m_box->get_vertexes().at(j)[1];
+			if constexpr (Dim == 3) {
+				m_vertexes[i++] = m_box->get_edges().at(j).get_start()[2]; //m_box->get_vertexes().at(j)[2];
+			}
+			else {
+				m_vertexes[i++] = 0.0f;
+			}
+			m_vertexes[i++] = r;
+			m_vertexes[i++] = g;
+			m_vertexes[i++] = b;
+			m_vertexes[i++] = a;
+			++j;
+			tsg::logger::get_instance().write(tsg::string("Vertex {}: pos=({}, {}, {})", i / 7 - 1, m_vertexes[i - 7], m_vertexes[i - 6], m_vertexes[i - 5]));
+		}
+	}
+	~box_vertex() {
+		glDeleteBuffers(1, &m_vertex_buffer);
+		glDeleteVertexArrays(1, &m_adaptee);
+	}
+	void init() override {
+		// line - buffers and arrays
+		glGenVertexArrays(1, &m_adaptee);
+		check_error(__FILE__, __LINE__);
+		glBindVertexArray(m_adaptee);
+		check_error(__FILE__, __LINE__);
+		glGenBuffers(1, &m_vertex_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertexes), m_vertexes, GL_STATIC_DRAW);
+		check_error(__FILE__, __LINE__);
+		// position attribute
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, reinterpret_cast<void*>(0));
+		glEnableVertexAttribArray(0);
+		check_error(__FILE__, __LINE__);
+		// color attribute
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, reinterpret_cast<void*>(sizeof(float) * 3));
+		glEnableVertexAttribArray(1);
+		check_error(__FILE__, __LINE__);
+		// unbind all
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	void use() override {
+		glBindVertexArray(m_adaptee);
+		check_error(__FILE__, __LINE__);
+	}
+	void draw() override {
+		glDrawArrays(GL_LINE_LOOP, 0, Dim * Dim);
+		glBindVertexArray(0);
+		check_error(__FILE__, __LINE__);
+	}
+private:
+	// N dimensional Box has N^2 vertexes, each one with 3 position coords and 4 color RGBA
+	float m_vertexes[7u * Dim * Dim];
+	geometry::box<Dim>* m_box;
 };
