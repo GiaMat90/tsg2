@@ -93,8 +93,8 @@ int main() {
 #endif
 	/**/
 #if DRAW_TRIANGLE_VERTEXES
-	regpoly_vertex<5> triangle(0.5f, 0.75f, 0.25f, 1.0f);
-	triangle.init();
+	regpoly_vertex<10000> polygon(0.75f, 0.75f, 0.55f, 1.0f);
+	polygon.init();
 #endif
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -149,8 +149,8 @@ int main() {
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);
 #if DRAW_TRIANGLE_VERTEXES
-		triangle.use();
-		triangle.draw();
+		polygon.use();
+		polygon.draw();
 #endif
 		// unsuse line shader
 		line_shader.unuse();
