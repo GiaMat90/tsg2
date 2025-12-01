@@ -106,11 +106,7 @@ void glfw_renderer::render() {
 	if (m_bv_obj.size() > 0) {
 		//// use programs previously loaded
 		m_line_shader.use();
-		//// use vertexes previously loaded
-		m_line_vertex.use();
-		for (auto& bv : m_bv_obj) {
-			//bv->update();m_bv_obj
-			//draw(bv->get_texture());
+		for (const auto& bv : m_bv_obj) {
 			draw(bv);
 		}
 	}
@@ -172,7 +168,7 @@ void glfw_renderer::draw(sprite* const s) {
 		transform = glm::translate(transform, glm::vec3(sprite->get_where()[AXES::X], sprite->get_where()[AXES::Y], sprite->get_where()[AXES::Z]));
 		transform = glm::rotate(transform, sprite->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		unsigned int transformLoc = glGetUniformLocation(m_sprite_shader.get_adaptee_v(), "transform");
+		GLuint transformLoc = glGetUniformLocation(m_sprite_shader.get_adaptee_v(), "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);
 
