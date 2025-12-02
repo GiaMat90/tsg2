@@ -2,7 +2,7 @@
 #include "arrow_and_bubbles.h"
 
 int main() {
-	tsg::print("Arrow and Bubbles start");
+	tsg::print("Arrow and Bubbles starts");
 	try {
 		arrow_and_bubbles g("Arrow and Bubbles.exe", 1024, 768, 60);
 		g.initialize();
@@ -15,5 +15,5 @@ int main() {
 	catch (...) {
 		tsg::print("Unkown exception occured");
 	}
-	tsg::print("Goodbye Triangle");
+	tsg::print("Arrow and Bubles ends");
 }

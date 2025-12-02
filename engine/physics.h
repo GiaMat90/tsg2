@@ -187,11 +187,8 @@ public:
 						auto next_obj = *next_it;
 						if (m_contact_engine.resolve(obj->get_bounding_volume(), next_obj->get_bounding_volume())) {
 							resolve_contact(obj, next_obj);
-							++next_it;
 						}
-						else {
-							next_it = m_objects.end();
-						}
+						++next_it;
 					}
 				}
 			}

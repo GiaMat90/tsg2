@@ -4,6 +4,7 @@
 #include <glfw_port/vertex.h>
 #include <glfw_port/gl_utility.h>
 #include <geometry.h>
+#include <physics.h>
 // tsg
 #include <tsg/logger.h>
 #include <tsg/io.h>	// print
@@ -33,6 +34,9 @@ void check_glfw_error() {
 	}
 }
 
+
+physics<2>::physical_object obj;
+
 GLFWwindow* const init_window() {
 	// initialize window
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -57,6 +61,8 @@ void process_input(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 	}
 }
+
+
 
 int main() {
 	tsg::logger::get_instance().write();
@@ -86,6 +92,11 @@ int main() {
 		line_shader.use();
 		geometry::box<2> box2d({ 0.0f, 0.0f }, { 0.5f, 0.5f });
 		box_vertex<2> box2d_vertex(&box2d, 0.5f, 0.75f, 0.25f, 1.0f);
+		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+		transformLoc = glGetUniformLocation(line_shader.get_adaptee_v(), "transform");
+		check_error(__FILE__, __LINE__);
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+		check_error(__FILE__, __LINE__);
 		box2d_vertex.init();
 		box2d_vertex.use();
 		box2d_vertex.draw();

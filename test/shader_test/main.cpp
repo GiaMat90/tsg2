@@ -16,10 +16,10 @@
 
 #define GL_POLY_MODE 0
 /* Choice what do you want draw */
-#define DRAW_TEXTURE_VERTEXES 1
-#define DRAW_LINE_VERTEXES    1
+#define DRAW_TEXTURE_VERTEXES 0
+#define DRAW_LINE_VERTEXES    0
 #define DRAW_REGPOLY_VERTEXES 1
-#define DRAW_BOX2D_VERTEXES   1
+#define DRAW_BOX2D_VERTEXES   0
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 800
@@ -94,12 +94,12 @@ int main() {
 #endif
 	/**/
 #if DRAW_LINE_VERTEXES
-	line_vertex line(0.75f, 0.25f, 0.5f, 1.0f);
+	line_vertex line(0.8f, 0.7f, 0.7f, 1.0f);
 	line.init();
 #endif
 	/**/
 #if DRAW_REGPOLY_VERTEXES
-	regpoly_vertex<10000> polygon(0.75f, 0.75f, 0.55f, 1.0f);
+	regpoly_vertex<10'000> polygon(0.8f, 0.7f, 0.7f, 1.0f);
 	polygon.init();
 #endif
 #if DRAW_BOX2D_VERTEXES

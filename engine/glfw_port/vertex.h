@@ -92,8 +92,9 @@ template <std::size_t N>
 class regpoly_vertex : public vertex {
 public:
 	regpoly_vertex(const float r = 1.0f, const float b = 1.0f, const float g = 1.0f, const float a = 1.0f) {
+		static_assert(N > 1);
 		constexpr float delta_alpha{ ((360.0f / N) * std::numbers::pi) / 180.0f };
-		constexpr float radius{ 0.75f };
+		constexpr float radius{ 1.0f };
 		tsg::logger::get_instance().write(tsg::string("dalpha={}, radius={}", delta_alpha, radius));
 		float alpha{ 0.0f };
 		std::size_t i{ 0u };

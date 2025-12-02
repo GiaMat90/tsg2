@@ -89,6 +89,7 @@ void glfw_renderer::render() {
 		for (const auto& s : m_sprites_obj) {
 			this->draw(s->get_sprite());
 		}
+		m_sprite_shader.unuse();
 	}
 	/* drawing meshes */
 	if (m_meshes_obj.size() > 0) {
@@ -101,6 +102,7 @@ void glfw_renderer::render() {
 		for (const auto& m : m_meshes_obj) {
 			this->draw(m->get_mesh());
 		}
+		m_mesh_shader.unuse();
 	}
 	/* drawing bounding volumes */
 	if (m_bv_obj.size() > 0) {
@@ -109,6 +111,7 @@ void glfw_renderer::render() {
 		for (const auto& bv : m_bv_obj) {
 			draw(bv);
 		}
+		m_line_shader.unuse();
 	}
 	/* Swap front and back buffers */
 	glfwSwapBuffers(m_window->get_adaptee_r());
