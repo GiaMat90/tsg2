@@ -3,6 +3,7 @@
 
 /* std includes */
 #include <vector>
+#include <cassert>
 
 enum class INPUT_TYPE {
 	KEYBOARD,
@@ -51,11 +52,14 @@ enum class INPUT_KEY : int {
 	KEY_B,
 	KEY_N,
 	KEY_M,
-	MAX_KEY = KEY_M
+	MOUSE_LEFT,
+	MOUSE_RIGHT,
+	MOUSE_MIDDLE,
 };
 enum class INPUT_MOUSE {
 	LEFT,
-	RIGHT
+	RIGHT,
+	SCROLL
 };
 
 class input_engine {
@@ -74,7 +78,9 @@ public:
 template <typename WindowImpl, typename InputImpl>
 class input : public input_engine {
 public:
-	input(WindowImpl * w) : input_engine(), m_window(w) {};
+	input(WindowImpl* w) : input_engine(), m_window(w) {
+		assert(w);
+	};
 	virtual ~input() = default;
 public:
 	inline void process_input() {

@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <utility>
 
+#define FREE_WORLD 1
+
 using geometry::AXES;
 using geometry::scalar;
 using geometry::quaternion;
@@ -125,8 +127,6 @@ public:
 				}
 			}
 			else if constexpr (Dim == 2) {
-				tsg::logger::get_instance().write(tsg::string("PhysicalWorld::Computing max(world)=({},{})",
-					m_limits.get_max(AXES::X), m_limits.get_max(AXES::Y)));
 				/* Sorting objects x-based */
 				std::sort(m_objects.begin(), m_objects.end(), [](physical_object* a, physical_object* b) 
 					{
@@ -135,10 +135,8 @@ public:
 				);
 				/* First check if there is contact with world walls */
 				for (auto it = m_objects.begin(); it != m_objects.end(); ++it) {
-					tsg::logger::get_instance().write(tsg::string("PhysicalWorld::Computing max(bv)=({},{})",
-						(*it)->get_bounding_volume()->get_max(AXES::X),
-						(*it)->get_bounding_volume()->get_max(AXES::Y)));
 					auto obj = *it;
+#if !FREE_WORLD
 					auto wall_contact = [&](const vector& normal) {
 							scalar seperataing_velocity{ vector::dot((obj->m_velocity), normal) };
 							vector impulse{ (-2 * seperataing_velocity / obj->m_inverse_mass) * normal };
@@ -181,6 +179,7 @@ public:
 						wall_contact({ scalar(0), scalar(1) });
 						return;
 					}
+#endif
 					/* Search contacts with next objects */
 					auto next_it = std::next(it);
 					while (next_it != m_objects.end()) {
@@ -251,21 +250,6 @@ public:
 	public:
 		// updateable method overrides
 		virtual inline void update(const scalar delta_time) {
-			if constexpr (Dim == 2) {
-				tsg::logger::get_instance().write("{}: p=({},{}), v=({},{}), a=({},{})", this,
-					m_position[geometry::AXES::X], m_position[geometry::AXES::Y],
-					m_velocity[geometry::AXES::X], m_velocity[geometry::AXES::Y],
-					m_acceleration[geometry::AXES::X], m_acceleration[geometry::AXES::Y]);
-			}
-			else if constexpr (Dim == 3) {
-				tsg::logger::get_instance().write("{}: p=({},{},{}), v=({},{},{}), a=({},{},{})", this,
-					m_position[geometry::AXES::X], m_position[geometry::AXES::Y], m_position[geometry::AXES::Z],
-					m_velocity[geometry::AXES::X], m_velocity[geometry::AXES::Y], m_velocity[geometry::AXES::Z],
-					m_acceleration[geometry::AXES::X], m_acceleration[geometry::AXES::Y], m_acceleration[geometry::AXES::Z]);
-			}
-			else {
-				assert(0);
-			}
 			/*
 			* Consume the acceleration due to forces
 			*/
@@ -299,7 +283,7 @@ public:
 		}
 		inline void rotate(const scalar angle) {
 			m_rotation += angle;
-			m_bounding_volume.rotate(angle);
+			m_bounding_volume->rotate(angle);
 		}
 	public:
 		/* Bounding volume stuff */

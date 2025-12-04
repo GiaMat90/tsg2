@@ -2,10 +2,12 @@
 
 #include "renderer.h"
 #include "glfw_window.h"
+#include "glfw_camera.h"
+
 #include "shader.h"
 #include "vertex.h"
 
-class glfw_renderer : public renderer<glfw_window, glfw_renderer>
+class glfw_renderer : public renderer<glfw_window, glfw_renderer, glfw_camera>
 {
 public:
 	template <typename S>

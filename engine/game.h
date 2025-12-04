@@ -7,6 +7,7 @@
 #include "texture.h"
 #include "physics.h"
 #include "game_event.h"
+#include "camera.h"
 
 /* tsg includes */
 #include <tsg/types.h>
@@ -56,7 +57,7 @@ protected: // virtual methods
 	/* initialize objects */
 	void initialize_objects() { static_cast<GameImpl*>(this)->initialize_objects(); };
 protected:
-	void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
+	inline void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 public:
 	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
 	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };

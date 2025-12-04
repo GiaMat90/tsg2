@@ -13,7 +13,7 @@
 #include <exception>
 #include <vector>
 
-template <typename WindowImpl, typename RendererImpl>
+template <typename WindowImpl, typename RendererImpl, typename CameraImpl>
 class renderer {
 	using sprites = std::vector<sprite_object*>;
 	using textures = std::vector<texture_object*>;
@@ -24,17 +24,9 @@ public:
 	class creation_exception : public std::exception {
 		const char* what() { return "renderer creation exception"; }
 	};
-	renderer(WindowImpl* w) : m_window(w) {};
+	renderer(WindowImpl * const w) : m_window(w), m_camera(w) {};
 	virtual ~renderer() {
-		/* no more needed, no more copies */
-		//if (m_bv_obj.size() > 0) {
-		//	for (auto& bv : m_bv_obj) {
-		//		if (bv) {
-		//			delete bv;
-		//		}
-		//	}
-		//	m_bv_obj.clear();
-		//}
+		/* TODO */
 	};
 public: 
 	inline void render() { static_cast<RendererImpl*>(this)->render(); };
@@ -73,9 +65,10 @@ public:
 	}
 	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) {
 		assert(bv);
-		//drawable_bounding_volume* p_bdv = new drawable_bounding_volume(bv, scale);
-		//m_bv_obj.emplace_back(p_bdv);
 		m_bv_obj.emplace_back(bv);
+	}
+	inline void add_camera(CameraImpl* const c) {
+		assert(c);
 	}
 protected:
 	WindowImpl* m_window;
@@ -83,5 +76,6 @@ protected:
 	sprites m_sprites_obj;
 	meshes m_meshes_obj;
 	bounding_volumes m_bv_obj;
-	bool m_bounding_volume_rendering{ false };
+	bool m_bounding_volume_rendering{ false }; // <- evaluate to remove
+	CameraImpl m_camera;
 };

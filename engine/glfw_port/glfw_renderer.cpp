@@ -22,8 +22,7 @@
 
 using geometry::AXES;
 
-
-glfw_renderer::glfw_renderer(glfw_window * w) : renderer<glfw_window, glfw_renderer>(w) {
+glfw_renderer::glfw_renderer(glfw_window * w) : renderer<glfw_window, glfw_renderer, glfw_camera>(w) {
 	// NOTE: OpenGL error checks have been omitted for brevity
 	if (0 == gladLoadGL(glfwGetProcAddress)) {
 		throw exception("gladLoadGL Error");
