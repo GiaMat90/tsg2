@@ -65,6 +65,7 @@ void arrow_and_bubbles::create_physics() {
 }
 
 void arrow_and_bubbles::initialize_objects() {
+	set_camera_initial_zoom(0.5f);
 	// camera stuff
 	INCLUDE_ARROW(set_camera_target(&m_arrow));
 	// input engine stuff

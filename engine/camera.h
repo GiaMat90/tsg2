@@ -30,6 +30,7 @@ public:
 	camera(WindowImpl* const w) : m_window(w) { assert(m_window); };
 	virtual ~camera() = default;
 	virtual void init() = 0;
+	virtual void set_initial_zoom(const float z) = 0;
 	void set_target(camera_target* const t) { m_target = t; };
 	void set_option(const OPTIONS opt) {
 		m_options.set(static_cast<std::size_t>(opt));

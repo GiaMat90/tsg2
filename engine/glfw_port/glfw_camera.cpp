@@ -33,7 +33,7 @@ private:
 	// parameters
 	float m_speed{ 0.0f };
 	float m_sensitivity{ 0.0f };
-	float m_zoom{ 1.0f };
+	float m_zoom{ 0.0f };
 };
 
 static glfw_camera_data camera_data;
@@ -65,7 +65,12 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	/* TODO: Evaluate to crop the zoom */
-	camera_data.m_zoom += static_cast<float>(yoffset);
+	if ((camera_data.m_zoom + static_cast<float>(yoffset) >= -180.0f) && 
+		(camera_data.m_zoom + static_cast<float>(yoffset) < 0.0f)) 
+	{
+		camera_data.m_zoom += static_cast<float>(yoffset);
+	}
+	tsg::print("zoom {}", camera_data.m_zoom);
 }
 
 glfw_camera::glfw_camera(glfw_window * const w) : camera(w) {
@@ -86,6 +91,11 @@ void glfw_camera::init() {
 	// make system sensible to mouse
 	glfwSetInputMode(m_window->get_adaptee_r(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	check_error();
+}
+
+void glfw_camera::set_initial_zoom(const float z) {
+	assert(z > 0.0f && z < 1.0f);
+	camera_data.m_zoom = -180.0f + (z * 180.0f);
 }
 
 glm::mat4 glfw_camera::get_view() {

@@ -76,6 +76,9 @@ public:
 	inline void set_camera_target(camera_target* const t) {
 		m_camera.set_target(t);
 	}
+	inline void set_camera_initial_zoom(const scalar z) {
+		m_camera.set_initial_zoom(z);
+	}
 protected:
 	WindowImpl* m_window;
 	textures m_textures_obj;
