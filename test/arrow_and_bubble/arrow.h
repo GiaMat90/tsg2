@@ -3,8 +3,9 @@
 #include <game_object.h>	// sprite_object
 #include <input.h>			// playable_object
 #include <physics.h>		// physical_object
+#include <camera.h>			// camera target
 
-class arrow : public sprite_object, public playable_object, public physics<2>::physical_object {
+class arrow : public sprite_object, public playable_object, public physics<2>::physical_object, public camera_target {
 public:
 	arrow();
 	~arrow() = default;
@@ -14,4 +15,7 @@ public:
 public:
 	// playable_object overrides
 	void process_input(input_engine* const input) override;
+public:
+	// camera_target overrides
+	camera_target::position get_position() const override;
 };

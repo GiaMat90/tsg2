@@ -60,20 +60,12 @@ static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 	// update static variables
 	pos_x = xposIn;
 	pos_y = yposIn;
-	// log print
-	tsg::print("Mouse callback (x,y)=({},{})", pos_x, pos_y);
 }
 
 static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+	/* TODO: Evaluate to crop the zoom */
 	camera_data.m_zoom += static_cast<float>(yoffset);
-	//if (camera_data.m_zoom > 45.0f) {
-	//	camera_data.m_zoom = 45.0f;
-	//} 
-	//if (camera_data.m_zoom < 1.0f) {
-	//	camera_data.m_zoom = 1.0f;
-	//}
-	tsg::print("Scroll callback (x,y)=({},{}), zoom={}", xoffset, yoffset, camera_data.m_zoom);
 }
 
 glfw_camera::glfw_camera(glfw_window * const w) : camera(w) {
@@ -82,7 +74,7 @@ glfw_camera::glfw_camera(glfw_window * const w) : camera(w) {
 	glfwSetScrollCallback(m_window->get_adaptee_r(), scroll_callback);
 	// make system sensible to mouse
 	glfwSetInputMode(m_window->get_adaptee_r(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	//check_error(); // <- get an assert, TODO understand why XD
+	//check_error(); // <- get an assert, TODO understand why and fix
 #endif
 }
 
@@ -97,25 +89,38 @@ void glfw_camera::init() {
 }
 
 glm::mat4 glfw_camera::get_view() {
-	//return glm::lookAt(camera_data.m_position, camera_data.m_position + camera_data.m_front, camera_data.m_up);
-	//return glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	return glm::lookAt(
-		glm::vec3(
-			camera_data.m_position.x / m_window->get_width(),
-			camera_data.m_position.y / m_window->get_height(),
-			1.0f /*camera_data.m_zoom * static_cast<float>(m_window->get_width()) / static_cast<float>(m_window->get_height())*/),
-		glm::vec3(camera_data.m_position.x / m_window->get_width(), camera_data.m_position.y / m_window->get_height(), 0.0f),
-		glm::vec3(0.0f, -1.0f, 0.0f)
-	);
+	/* As per now this is good tested for 2D case. */
+	if (m_target) {
+		camera_data.m_position.x = m_target->get_position()[0];
+		camera_data.m_position.y = m_target->get_position()[1];
+		camera_data.m_position.z = m_target->get_position()[2];
+		return glm::lookAt(
+			glm::vec3(
+				camera_data.m_position.x,
+				camera_data.m_position.y,
+				1.0f),
+			glm::vec3(camera_data.m_position.x, camera_data.m_position.y, 0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f)
+		);
+	}
+	else {
+		//return glm::lookAt(camera_data.m_position, camera_data.m_position + camera_data.m_front, camera_data.m_up);
+		//return glm::lookAt(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		return glm::lookAt(
+			glm::vec3(
+				camera_data.m_position.x / m_window->get_width(),
+				camera_data.m_position.y / m_window->get_height(),
+				1.0f /*camera_data.m_zoom * static_cast<float>(m_window->get_width()) / static_cast<float>(m_window->get_height())*/),
+			glm::vec3(camera_data.m_position.x / m_window->get_width(), camera_data.m_position.y / m_window->get_height(), 0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f)
+		);
+	}
 	//return glm::mat4(1.0f);
 }
 
 glm::mat4 glfw_camera::get_projection() {
 	// TODO: understand well the role of the last two parameters: its correct that they are in camera class?
 	return glm::perspective(glm::radians(camera_data.m_zoom), static_cast<float>(m_window->get_width()) / static_cast<float>(m_window->get_height()), 0.1f, 100.0f);
-	//auto projection{ glm::mat4(1.0f) };
-	//return glm::scale(projection, glm::vec3(camera_data.m_zoom, camera_data.m_zoom, 1.0f));
-	//return glm::mat4(1.0f);
 }
 
 #endif

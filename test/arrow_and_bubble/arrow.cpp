@@ -5,7 +5,7 @@
 using geometry::scalar;
 using geometry::cos;
 
-arrow::arrow() : sprite_object(), physics<2>::physical_object() {}
+arrow::arrow() : sprite_object(), physics<2>::physical_object(), camera_target() {}
 
 void arrow::init() {
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
@@ -22,13 +22,6 @@ void arrow::init() {
 void arrow::update(const scalar delta_time) {
 	physical_object::update(delta_time); // update physics, position and rotation
 	sprite_object::update(m_position, m_rotation);
-	const auto const bv = static_cast<geometry::box<2>*>(m_bounding_volume);
-	for (std::size_t i{ 0u }; i < 4u; ++i) {
-		tsg::logger::get_instance().write(tsg::string("ArrowBoxVertex: pos=({}, {}, {})",
-			bv->get_edges().at(i).get_start().get<0>(),
-			bv->get_edges().at(i).get_start().get<1>(),
-			bv->get_edges().at(i).get_start().get<2>()));
-	}
 }
 
 void arrow::process_input(input_engine* const input) {
@@ -72,3 +65,7 @@ void arrow::process_input(input_engine* const input) {
 		/* JUMP */
 	}
 };
+
+camera_target::position arrow::get_position() const {
+	return tsg::vector<scalar, 3>(m_position);
+}

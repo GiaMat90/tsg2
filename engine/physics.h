@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <utility>
 
-#define FREE_WORLD 0
+#define FREE_WORLD 1
 
 using geometry::AXES;
 using geometry::scalar;

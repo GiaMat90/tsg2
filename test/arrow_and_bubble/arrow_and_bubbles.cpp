@@ -65,6 +65,8 @@ void arrow_and_bubbles::create_physics() {
 }
 
 void arrow_and_bubbles::initialize_objects() {
+	// camera stuff
+	INCLUDE_ARROW(set_camera_target(&m_arrow));
 	// input engine stuff
 	INCLUDE_ARROW(add_playable(&m_arrow));
 	// physic engine stuff

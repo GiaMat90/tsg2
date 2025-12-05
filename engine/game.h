@@ -64,7 +64,8 @@ public:
 	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
 	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
 	inline void add_playable(playable_object* const o) { m_input.add_playable(o); };
-	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); }
+	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); };
+	inline void set_camera_target(camera_target* const t) { m_renderer.set_camera_target(t); };
 protected: // attributes
 	GAME_STATE m_state{ GAME_STATE::NONE };
 	window_impl m_window;

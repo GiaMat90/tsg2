@@ -13,6 +13,9 @@
 #include <exception>
 #include <vector>
 
+// forward declarations
+class camera_target;
+
 template <typename WindowImpl, typename RendererImpl, typename CameraImpl>
 class renderer {
 	using sprites = std::vector<sprite_object*>;
@@ -69,6 +72,9 @@ public:
 	}
 	inline void add_camera(CameraImpl* const c) {
 		assert(c);
+	}
+	inline void set_camera_target(camera_target* const t) {
+		m_camera.set_target(t);
 	}
 protected:
 	WindowImpl* m_window;
