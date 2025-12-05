@@ -21,6 +21,8 @@
 #elifdef GLES_GAME
 /* TODO */
 #include "gles_port/gles_port.h"
+#elifdef DIRECTX
+/* TODO */
 #endif
 
 template <size_t Dim, typename GameImpl, typename GraphicImpl = graphic_impl >

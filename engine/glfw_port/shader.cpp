@@ -1,7 +1,6 @@
 #ifdef GLFW_GAME 
 
 #include "shader.h"
-#include "gl_utility.h" // gl_check_error
 
 /* std includes */
 #include <fstream>	// ifstream

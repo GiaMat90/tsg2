@@ -67,6 +67,7 @@ void glfw_renderer::render() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glEnable(GL_DEPTH_TEST);
 	check_error(__FILE__, __LINE__);
 	
 	/* draw textures */
@@ -83,6 +84,8 @@ void glfw_renderer::render() {
 	if (m_sprites_obj.size() > 0) {
 		// use programs previously loaded
 		m_sprite_shader.use();
+		m_sprite_shader.load_uniform("projection", m_camera.get_projection());
+		m_sprite_shader.load_uniform("view", m_camera.get_view());
 		// use vertexes previously loaded
 		m_sprite_vertex.use();
 		for (const auto& s : m_sprites_obj) {
@@ -107,6 +110,8 @@ void glfw_renderer::render() {
 	if (m_bv_obj.size() > 0) {
 		//// use programs previously loaded
 		m_line_shader.use();
+		m_line_shader.load_uniform("view", m_camera.get_projection());
+		m_line_shader.load_uniform("projection", m_camera.get_view());
 		for (const auto& bv : m_bv_obj) {
 			draw(bv);
 		}
@@ -130,17 +135,17 @@ void glfw_renderer::set_draw_color(const color& c)
 
 void glfw_renderer::draw(texture* const t) {
 	if (auto texture = dynamic_cast<glfw_texture*>(t)) {
-		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		transform = glm::scale(transform, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f));
-		transform = glm::translate(transform, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
-		transform = glm::rotate(transform, texture->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		model = glm::scale(model, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f)); // <- old, TOREMOVE
+		model = glm::translate(model, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
+		model = glm::rotate(model, texture->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		if (glIsTexture(texture->get_adaptee_v()) != GL_TRUE) {
 			assert(0); // texture is not a valid OpenGL texture
 		}
 
-		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.get_adaptee_v(), "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.get_adaptee_v(), "model");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
 		check_error(__FILE__, __LINE__);
 
 		glBindTexture(GL_TEXTURE_2D, texture->get_adaptee_v());
@@ -165,14 +170,14 @@ void glfw_renderer::draw(sprite* const s) {
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
 		assert(boundTexture == sprite->get_adaptee_v());
 
-		glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-		transform = glm::scale(transform, glm::vec3(sprite->get_scale(), sprite->get_scale(), 1.0f));
-		transform = glm::translate(transform, glm::vec3(sprite->get_where()[AXES::X], sprite->get_where()[AXES::Y], sprite->get_where()[AXES::Z]));
-		transform = glm::rotate(transform, sprite->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		//model = glm::scale(model, glm::vec3(sprite->get_scale(), sprite->get_scale(), 1.0f));
+		model = glm::translate(model, glm::vec3(sprite->get_where()[AXES::X], sprite->get_where()[AXES::Y], sprite->get_where()[AXES::Z]));
+		model = glm::rotate(model, sprite->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		GLuint transformLoc = glGetUniformLocation(m_sprite_shader.get_adaptee_v(), "transform");
-		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-		check_error(__FILE__, __LINE__);
+		m_sprite_shader.load_uniform("model", model);
+		//GLuint transformLoc = glGetUniformLocation(m_sprite_shader.get_adaptee_v(), "transform");
+		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		check_error(__FILE__, __LINE__);
@@ -223,15 +228,17 @@ void glfw_renderer::draw(geometry::box3D * const box) {
 
 void glfw_renderer::draw(geometry::box2D * const box) {
 	box_vertex<2> box2d_vertex(box, 0.9f, 0.8f, 0.7f, 1.0f);
-	glm::mat4 transform{ glm::mat4(1.0f) };  // make sure to initialize matrix to identity matrix first
-	float scale{ 0.5f };
-	transform = glm::scale(transform, glm::vec3(scale, scale, scale));
+	//glm::mat4 transform{ glm::mat4(1.0f) };  // make sure to initialize matrix to identity matrix first
+	//float scale{ 0.5f };
+	//transform = glm::scale(transform, glm::vec3(scale, scale, scale));
 	//transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
 	//transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	GLint transformLoc = glGetUniformLocation(m_line_shader.get_adaptee_v(), "transform");
-	check_error(__FILE__, __LINE__);
-	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-	check_error(__FILE__, __LINE__);
+	//GLint transformLoc = glGetUniformLocation(m_line_shader.get_adaptee_v(), "transform");
+	//check_error(__FILE__, __LINE__);
+	//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+	//check_error(__FILE__, __LINE__);		
+	glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	m_line_shader.load_uniform("model", model);
 	box2d_vertex.init();
 	box2d_vertex.use();
 	box2d_vertex.draw();	
