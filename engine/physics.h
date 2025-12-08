@@ -246,7 +246,7 @@ public:
 			}
 		};
 	public:
-		inline void set_physical_world(physical_world* const world) { m_world = world; }
+		inline void init() { assert(m_world); };
 	public:
 		// updateable method overrides
 		virtual inline void update(const scalar delta_time) {

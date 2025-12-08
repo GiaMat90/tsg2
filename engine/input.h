@@ -59,6 +59,7 @@ enum class INPUT_KEY : int {
 enum class INPUT_MOUSE {
 	LEFT,
 	RIGHT,
+	MIDDLE,
 	SCROLL
 };
 
@@ -73,17 +74,20 @@ public:
 	virtual bool is_mouse_clicked(const INPUT_MOUSE side) = 0;
 	virtual bool is_mouse_pressed(const INPUT_MOUSE side) = 0;
 	virtual bool is_mouse_released(const INPUT_MOUSE side) = 0;
+	virtual void get_mouse_position(float& x, float& y) = 0;
 };
 
-template <typename WindowImpl, typename InputImpl>
+template <typename WindowImpl, typename CameraImpl, typename InputImpl>
 class input : public input_engine {
 public:
-	input(WindowImpl* w) : input_engine(), m_window(w) {
+	input(WindowImpl * const w, CameraImpl * const c) : input_engine(), m_window(w), m_camera(c) {
 		assert(w);
+		assert(c);
 	};
 	virtual ~input() = default;
 public:
 	inline void process_input() {
+		m_camera->update_camera(this);
 		for (auto p : m_playables) {			
 			p->process_input(this);
 		}
@@ -96,6 +100,7 @@ public:
 	bool is_mouse_clicked(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_clicked(side); };
 	bool is_mouse_pressed(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_pressed(side); };
 	bool is_mouse_released(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_released(side); };
+	void get_mouse_position(float& x, float& y) override { return static_cast<InputImpl *>(this)->get_mouse_position(x, y); };
 	// gamepad
 	/* TODO */
 	// joystick
@@ -106,6 +111,8 @@ public:
 		m_playables.push_back(d);
 	}
 protected:
-	WindowImpl * m_window;
+	WindowImpl* m_window{ nullptr };
+	CameraImpl* m_camera{ nullptr };
 	std::vector<playable_object*> m_playables;
+
 };

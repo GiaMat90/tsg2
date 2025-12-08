@@ -7,6 +7,8 @@
 // std includes
 #include <bitset>
 
+class input_engine;
+
 class camera_target {
 protected:
 	using position = tsg::vector<float, 3>;
@@ -16,23 +18,35 @@ public:
 	virtual position get_position() const = 0;
 };
 
-template <typename WindowImpl>
+enum class CAMERA_OPTIONS : std::size_t {
+	DIMENSION2,
+	DIMENSION3,
+	FIXED = 0u,
+	FOLLOW_TARGET,
+	MOUSE_CONTROLLED,	
+	SCROLLABLE_ZOOM,
+	LEFT_CLICK_DRAG,
+	KEY_CONTROLLED,
+	MAX_OPTION = KEY_CONTROLLED
+};
+
+template <typename WindowImpl, typename CameraImpl>
 class camera {
 public:
-	enum class OPTIONS : std::size_t {
-		FIXED = 0u,
-		FOLLOW_TARGET,
-		ZOOMABLE,
-		MOUSE_CONTROLLED,
-		KEY_CONTROLLED
-	};
 public:
 	camera(WindowImpl* const w) : m_window(w) { assert(m_window); };
 	virtual ~camera() = default;
-	virtual void init() = 0;
-	virtual void set_initial_zoom(const float z) = 0;
-	void set_target(camera_target* const t) { m_target = t; };
-	void set_option(const OPTIONS opt) {
+public:
+	// static callbacks
+	static void translate(const tsg::vector<float, 3>& v);
+public:
+	inline void init() const { static_cast<CameraImpl*>(this)->init(); }
+	inline void update_camera(input_engine* const i) const { static_cast<CameraImpl* const>(this)->update_camera(i); }
+public:
+	// setters
+	inline void set_initial_zoom(const float z) const { static_cast<CameraImpl*>(this)->set_initial_zoom(z); };
+	inline void set_target(camera_target* const t) { assert(t);  m_target = t; };
+	inline void set_option(const CAMERA_OPTIONS opt) {
 		m_options.set(static_cast<std::size_t>(opt));
 	};
 protected:

@@ -3,6 +3,7 @@
 #include <game.h>
 #include "arrow.h"
 #include "bubble.h"
+#include <vector>
 
 #define NUMBER_OF_BUBBLE 20
 #define FORCE_INCLUDE_ARROW 1
@@ -17,6 +18,7 @@ public: // override public-methods
 	void run_game();
 	void shutdown();
 	void initialize_objects();
+	void initialize_camera();
 	void create_physics();
 protected: // override private-methods
 	void process_input();
@@ -24,6 +26,6 @@ protected: // override private-methods
 	void generate_output();
 private: // object
 	arrow m_arrow;
-	bubble m_bubbles[NUMBER_OF_BUBBLE];
+	std::vector<bubble> m_bubbles;
 };
 

@@ -34,6 +34,7 @@ arrow_and_bubbles::arrow_and_bubbles(const std::string& window_text, const unsig
 	game(window_text, h, w, fps)
 {
 	tsg::logger::get_instance().write("arrow_and_bubbles ctor");
+	m_bubbles.reserve(NUMBER_OF_BUBBLE);
 }
 
 arrow_and_bubbles::~arrow_and_bubbles() {
@@ -42,6 +43,7 @@ arrow_and_bubbles::~arrow_and_bubbles() {
 
 void arrow_and_bubbles::initialize() {
 	create_physics();
+	initialize_camera();
 	initialize_objects();
 	m_state = GAME_STATE::RUNNING;
 }
@@ -64,10 +66,18 @@ void arrow_and_bubbles::create_physics() {
 	m_physics.set_limits({ scalar(m_window.get_width()), scalar(m_window.get_height()) }, scale);
 }
 
-void arrow_and_bubbles::initialize_objects() {
-	set_camera_initial_zoom(0.5f);
+void arrow_and_bubbles::initialize_camera() {
 	// camera stuff
-	INCLUDE_ARROW(set_camera_target(&m_arrow));
+	set_camera_initial_zoom(0.5f);
+	set_camera_option(CAMERA_OPTIONS::DIMENSION2);
+	set_camera_option(CAMERA_OPTIONS::MOUSE_CONTROLLED);
+	set_camera_option(CAMERA_OPTIONS::SCROLLABLE_ZOOM);
+	set_camera_option(CAMERA_OPTIONS::LEFT_CLICK_DRAG);
+	//INCLUDE_ARROW(set_camera_target(&m_arrow));
+	camera_init();
+}
+
+void arrow_and_bubbles::initialize_objects() {
 	// input engine stuff
 	INCLUDE_ARROW(add_playable(&m_arrow));
 	// physic engine stuff
@@ -78,6 +88,7 @@ void arrow_and_bubbles::initialize_objects() {
 	INCLUDE_ARROW(m_arrow.init());
 	INCLUDE_ARROW(INCLUDE_BOUNDING_VOLUME(add_bounding_volume(m_arrow.get_bounding_volume(), m_arrow.get_sprite()->get_scale())));
 	for (std::size_t i = 0u; i < NUMBER_OF_BUBBLE; ++i) {
+		INCLUDE_BUBBLE(m_bubbles.emplace_back());
 		INCLUDE_BUBBLE(add_physical_object(&m_bubbles[i]));
 		INCLUDE_BUBBLE(INCLUDE_BOUNDING_VOLUME(m_bubbles[i].print_bounding_volume(true)));
 		INCLUDE_BUBBLE(add_drawable(&m_bubbles[i]));

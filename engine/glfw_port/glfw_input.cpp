@@ -8,6 +8,7 @@
 /* std inlcudes */
 #include <cassert>
 #include <map>
+#include <unordered_map>
 
 static const std::map<INPUT_KEY, int> g_keyboard_glfw_mapping{
 	{ INPUT_KEY::KEY_ESC, GLFW_KEY_ESCAPE},
@@ -52,30 +53,39 @@ static const std::map<INPUT_KEY, int> g_keyboard_glfw_mapping{
 	{ INPUT_KEY::KEY_M, GLFW_KEY_M },
 };
 
-glfw_input::glfw_input(glfw_window * w) : input<glfw_window, glfw_input>(w) {}
+static const std::unordered_map<INPUT_MOUSE, int> g_mouse_glfw_mapping{
+	{ INPUT_MOUSE::LEFT, GLFW_MOUSE_BUTTON_LEFT },
+	{ INPUT_MOUSE::RIGHT, GLFW_MOUSE_BUTTON_RIGHT },
+	{ INPUT_MOUSE::MIDDLE, GLFW_MOUSE_BUTTON_MIDDLE },
+};
+glfw_input::glfw_input(glfw_window * const w, glfw_camera * const c) : input<glfw_window, glfw_camera, glfw_input>(w, c) {}
 glfw_input::~glfw_input(){}
 
 // overloaded methods
 bool glfw_input::is_key_pressed(const INPUT_KEY key) {
-	const bool res{ glfwGetKey(m_window->get_adaptee_r(),g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS };
-	check_error();
-	return res;
+	return glfwGetKey(m_window->get_adaptee_r(), g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS;
 };
 // mouse
 bool glfw_input::is_mouse_clicked(const INPUT_MOUSE side) {
-	/* TODO */
-	assert(false);
-	return false;
+	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
+	check_error(__FILE__, __LINE__);
+	return res;
 }
 bool glfw_input::is_mouse_pressed(const INPUT_MOUSE side) {
-	/* TODO */
-	assert(false);
-	return false;
+	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_PRESS };
+	check_error(__FILE__, __LINE__);
+	return res;
 }
 bool glfw_input::is_mouse_released(const INPUT_MOUSE side) {
-	/* TODO */
-	assert(false);
-	return false;
+	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
+	check_error(__FILE__, __LINE__);
+	return res;
+}
+void glfw_input::get_mouse_position(float& x, float& y) {
+	double xpos, ypos;
+	glfwGetCursorPos(m_window->get_adaptee_r(), &xpos, &ypos);
+	x = static_cast<float>(xpos) / static_cast<float>(m_window->get_width());
+	y = static_cast<float>(ypos) / static_cast<float>(m_window->get_height());
 }
 
 #endif

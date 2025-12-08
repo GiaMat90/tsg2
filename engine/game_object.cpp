@@ -11,6 +11,10 @@ sprite_object::~sprite_object() {
 	}
 }
 
+void sprite_object::init() const {
+	assert(m_sprite);
+}
+
 void sprite_object::update(const position& p, const angle a) {
 	if (m_sprite) {
 		m_sprite->set_where(p);

@@ -19,7 +19,7 @@ public:
 		S m_s{};
 	};
 public:
-	glfw_renderer(glfw_window * w);
+	glfw_renderer(glfw_window * const w, glfw_camera * const c);
 	~glfw_renderer();
 public: // overrided methods
 	void render();

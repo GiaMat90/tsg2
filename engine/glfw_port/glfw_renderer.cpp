@@ -22,7 +22,7 @@
 
 using geometry::AXES;
 
-glfw_renderer::glfw_renderer(glfw_window * w) : renderer<glfw_window, glfw_renderer, glfw_camera>(w) {
+glfw_renderer::glfw_renderer(glfw_window * const w, glfw_camera * const c) : renderer<glfw_window, glfw_renderer, glfw_camera>(w, c) {
 	// NOTE: OpenGL error checks have been omitted for brevity
 	if (0 == gladLoadGL(glfwGetProcAddress)) {
 		throw exception("gladLoadGL Error");
@@ -84,8 +84,8 @@ void glfw_renderer::render() {
 	if (m_sprites_obj.size() > 0) {
 		// use programs previously loaded
 		m_sprite_shader.use();
-		m_sprite_shader.load_uniform("projection", m_camera.get_projection());
-		m_sprite_shader.load_uniform("view", m_camera.get_view());
+		m_sprite_shader.load_uniform("projection", m_camera->get_projection());
+		m_sprite_shader.load_uniform("view", m_camera->get_view());
 		// use vertexes previously loaded
 		m_sprite_vertex.use();
 		for (const auto& s : m_sprites_obj) {
@@ -110,8 +110,8 @@ void glfw_renderer::render() {
 	if (m_bv_obj.size() > 0) {
 		//// use programs previously loaded
 		m_line_shader.use();
-		m_line_shader.load_uniform("view", m_camera.get_projection());
-		m_line_shader.load_uniform("projection", m_camera.get_view());
+		m_line_shader.load_uniform("view", m_camera->get_projection());
+		m_line_shader.load_uniform("projection", m_camera->get_view());
 		for (const auto& bv : m_bv_obj) {
 			draw(bv);
 		}

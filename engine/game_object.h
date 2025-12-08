@@ -55,6 +55,7 @@ public:
 	virtual ~sprite_object();
 public:
 	void update(const position&, const angle);
+	void init() const;
 public:
 	inline sprite * const get_sprite() const { return m_sprite; }
 	inline void set_sprite(sprite* s) { m_sprite = s; }

@@ -27,7 +27,7 @@ public:
 	class creation_exception : public std::exception {
 		const char* what() { return "renderer creation exception"; }
 	};
-	renderer(WindowImpl * const w) : m_window(w), m_camera(w) {};
+	renderer(WindowImpl * const w, CameraImpl * const c) : m_window(w), m_camera(c) {};
 	virtual ~renderer() {
 		/* TODO */
 	};
@@ -73,18 +73,12 @@ public:
 	inline void add_camera(CameraImpl* const c) {
 		assert(c);
 	}
-	inline void set_camera_target(camera_target* const t) {
-		m_camera.set_target(t);
-	}
-	inline void set_camera_initial_zoom(const scalar z) {
-		m_camera.set_initial_zoom(z);
-	}
 protected:
 	WindowImpl* m_window;
+	CameraImpl* m_camera;
 	textures m_textures_obj;
 	sprites m_sprites_obj;
 	meshes m_meshes_obj;
 	bounding_volumes m_bv_obj;
 	bool m_bounding_volume_rendering{ false }; // <- evaluate to remove
-	CameraImpl m_camera;
 };
