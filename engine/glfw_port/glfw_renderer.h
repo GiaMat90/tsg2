@@ -25,13 +25,13 @@ public: // overrided methods
 	void render();
 	void clear();
 	void set_draw_color(const color&);
-	void draw(texture* const);
-	void draw(sprite* const);
-	void draw(mesh*);
-	void draw(font*);
-	void draw(geometry::bounding_volume* const);
-	void draw(geometry::box3D * const);
-	void draw(geometry::box2D * const); 
+	void draw(texture const * const);
+	void draw(sprite * const);
+	void draw(mesh const * const);
+	void draw(font const * const);
+	void draw(geometry::bounding_volume const * const);
+	void draw(geometry::box3D const * const);
+	void draw(geometry::box2D const * const); 
 	void draw(const drawable_bounding_volume&);
 private:
 	/* to render 2D texture */

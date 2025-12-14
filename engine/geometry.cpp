@@ -97,6 +97,16 @@ namespace geometry {
 		/* can't be pure virtual because of it depends ont the dimension... */
 		assert(0); // not implemented
 	};
+	bool bounding_volume::contains(const tsg::vector<scalar, 2>& pos) const {
+		/* can't be pure virtual because of it depends ont the dimension... */
+		assert(0); // not implemented
+		return false;
+	};
+	bool bounding_volume::contains(const tsg::vector<scalar, 3>& pos) const {
+		/* can't be pure virtual because of it depends ont the dimension... */
+		assert(0); // not implemented
+		return false;
+	};
 
 	/*
 	* Intertia factory impl

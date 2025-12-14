@@ -5,7 +5,12 @@
 #include <physics.h>
 #include <contact.h>
 
-bubble::bubble() : sprite_object(), physics<2>::physical_object() {}
+bubble::bubble() : actor(), sprite_object(), physics<2>::physical_object() 
+{
+	/* setting actor features */
+	actor::features f{ .max_health{life_t(1)}, .attack_power{life_t(0)}, .defense{life_t(0)}, .heal_power{life_t(0)} };
+	set_features(f);
+}
 
 void bubble::init() {
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\bubble.png")).string());

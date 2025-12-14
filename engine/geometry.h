@@ -290,6 +290,8 @@ namespace geometry {
 	public:
 		virtual void translate(const tsg::vector<scalar, 2>& pos);
 		virtual void translate(const tsg::vector<scalar, 3>& pos);
+		virtual bool contains(const tsg::vector<scalar, 2>& pos) const;
+		virtual bool contains(const tsg::vector<scalar, 3>& pos) const;
 	public:
 		/* pure virtual */
 		virtual void rotate(const scalar angle) = 0;
@@ -394,7 +396,7 @@ namespace geometry {
 			assert(false);
 		}
 	public:
-		bool contains(const point& p) {
+		bool contains(const point& p) const override {
 			vector v = p - m_center;
 			for (size_t i = 0u; i < Dim; ++i) {
 				scalar projection = vector::dot(v, m_base.get_row(i));
@@ -557,6 +559,9 @@ namespace geometry {
 		inline scalar get_max(const std::size_t axes) const override {
 			assert(axes < Dim);
 			return m_center[axes] + m_radius;
+		};
+		inline bool contains(const point& p) const override {
+			return (p - m_center).get_norm() <= m_radius + scalar_zero;
 		};
 	private:
 		point m_center;

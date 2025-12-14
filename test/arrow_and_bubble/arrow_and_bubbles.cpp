@@ -70,10 +70,16 @@ void arrow_and_bubbles::initialize_camera() {
 	// camera stuff
 	set_camera_initial_zoom(0.5f);
 	set_camera_option(CAMERA_OPTIONS::DIMENSION2);
+	/* Mouse controlled */ 
 	set_camera_option(CAMERA_OPTIONS::MOUSE_CONTROLLED);
 	set_camera_option(CAMERA_OPTIONS::SCROLLABLE_ZOOM);
-	set_camera_option(CAMERA_OPTIONS::LEFT_CLICK_DRAG);
-	//INCLUDE_ARROW(set_camera_target(&m_arrow));
+	//set_camera_option(CAMERA_OPTIONS::LEFT_CLICK_DRAG); 
+	/* Keyboard controlled */
+	set_camera_option(CAMERA_OPTIONS::KEY_CONTROLLED);
+	set_camera_option(CAMERA_OPTIONS::WASD_CONTROLLED);
+	/* Optional target */ // this option disabled all previous camera controls
+	set_camera_option(CAMERA_OPTIONS::FOLLOW_TARGET);
+	INCLUDE_ARROW(set_camera_target(&m_arrow));
 	camera_init();
 }
 
@@ -105,10 +111,48 @@ void arrow_and_bubbles::process_input() {
 };
 
 void arrow_and_bubbles::update_game() {
-	auto tick = m_timer.tick();
-	m_physics.update(tick);
+	const auto tick = m_timer.tick();
+	/* Actor interactions */
+	bool update_engine_containers{ false };
+	if (actor::State::Attacking == m_arrow.get_state()) {
+		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
+			return b.get_bounding_volume()->contains(m_arrow.get_position());
+		});
+		if(m_bubbles.end() != victim) {
+			victim->set_state(actor::State::Dead);
+			victim->set_visible(drawable::State::Invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
+			update_engine_containers = true;
+		}
+		m_arrow.set_state(actor::State::Idle);
+	}
+	/* Update all objects */ // <- this doesn't works because the bounding volume result not istantiated yet when updating the physics
+	if (false /*update_engine_containers*/) {
+		auto it{ m_bubbles.begin() };
+		while (it != m_bubbles.end()) {
+			remove_physical_object(&*it);
+			remove_drawable(&*it);
+			++it;
+		}
+		std::erase_if(m_bubbles, [&](bubble& b) {
+			return actor::State::Dead == b.get_state();
+			if (actor::State::Dead == b.get_state()) {
+				remove_physical_object(&b);
+				remove_drawable(&b);
+				return true;
+			}
+			else {
+				return false;
+			}
+			});
+		for (auto& b : m_bubbles) {
+			add_physical_object(&b);
+			add_drawable(&b);
+		}
+	}
+	/**/
+	update_physics(tick);
 }
 
 void arrow_and_bubbles::generate_output() {
-	m_renderer.render();
+	render_scene();
 }

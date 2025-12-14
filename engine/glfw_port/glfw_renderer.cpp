@@ -74,7 +74,9 @@ void glfw_renderer::render() {
 		// use vertexes previously loaded
 		m_texture_vertex.use();
 		for (const auto& t : m_textures_obj) {
-			this->draw(t->get_texture());
+			if (t->is_visible()) {
+				this->draw(t->get_texture());
+			}
 		}
 	}
 	/* drawing sprites */
@@ -86,7 +88,9 @@ void glfw_renderer::render() {
 		// use vertexes previously loaded
 		m_sprite_vertex.use();
 		for (const auto& s : m_sprites_obj) {
-			this->draw(s->get_sprite());
+			if (s->is_visible()) {
+				this->draw(s->get_sprite());
+			}
 		}
 		m_sprite_shader.unuse();
 	}
@@ -99,7 +103,9 @@ void glfw_renderer::render() {
 		// use vertexes previously loaded
 		m_mesh_vertex.use();
 		for (const auto& m : m_meshes_obj) {
-			this->draw(m->get_mesh());
+			if (m->is_visible()) {
+				this->draw(m->get_mesh());
+			}
 		}
 		m_mesh_shader.unuse();
 	}
@@ -110,7 +116,7 @@ void glfw_renderer::render() {
 		m_line_shader.load_uniform("view", m_camera->get_projection());
 		m_line_shader.load_uniform("projection", m_camera->get_view());
 		for (const auto& bv : m_bv_obj) {
-			draw(bv);
+			this->draw(bv);
 		}
 		m_line_shader.unuse();
 	}
@@ -130,8 +136,8 @@ void glfw_renderer::set_draw_color(const color& c)
 	assert(0);
 }
 
-void glfw_renderer::draw(texture* const t) {
-	if (auto texture = dynamic_cast<glfw_texture*>(t)) {
+void glfw_renderer::draw(texture const * const t) {
+	if (auto texture = dynamic_cast<glfw_texture const *>(t)) {
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		model = glm::scale(model, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f)); // <- old, TOREMOVE
 		model = glm::translate(model, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
@@ -157,7 +163,7 @@ void glfw_renderer::draw(texture* const t) {
 	}
 }
 
-void glfw_renderer::draw(sprite* const s) {
+void glfw_renderer::draw(sprite * const s) {
 	if (auto sprite = dynamic_cast<glfw_sprite*>(s)) {
 		assert(glIsTexture(sprite->get_adaptee_v()));
 
@@ -185,26 +191,26 @@ void glfw_renderer::draw(sprite* const s) {
 	}
 }
 
-void glfw_renderer::draw(mesh* m) {
+void glfw_renderer::draw(mesh const * const m) {
 	/* TODO */
 	assert(0);
 }
 
-void glfw_renderer::draw(font* f) {
+void glfw_renderer::draw(font const * const f) {
 	/* TODO */
 	assert(0);
 }
 
-void glfw_renderer::draw(geometry::bounding_volume* const bv) {
+void glfw_renderer::draw(geometry::bounding_volume const * const bv) {
 	switch (bv->get_type())
 	{
 	case geometry::bounding_volume::type::aabb:
 	case geometry::bounding_volume::type::obb:
 		if(bv->get_dimension() == 3) {
-			draw(static_cast<geometry::box3D*>(bv));
+			draw(static_cast<geometry::box3D const * const>(bv));
 		}
 		else if(bv->get_dimension() == 2) {
-			draw(static_cast<geometry::box2D*>(bv));
+			draw(static_cast<geometry::box2D const * const>(bv));
 		}
 		else {
 			assert(0); // unsupported dimension
@@ -219,11 +225,11 @@ void glfw_renderer::draw(geometry::bounding_volume* const bv) {
 }
 
 /* TODO */
-void glfw_renderer::draw(geometry::box3D * const box) {
+void glfw_renderer::draw(geometry::box3D const * const box) {
 	assert(0);
 }
 
-void glfw_renderer::draw(geometry::box2D * const box) {
+void glfw_renderer::draw(geometry::box2D const * const box) {
 	box_vertex<2> box2d_vertex(box, 0.9f, 0.8f, 0.7f, 1.0f);
 	//glm::mat4 transform{ glm::mat4(1.0f) };  // make sure to initialize matrix to identity matrix first
 	//float scale{ 0.5f };

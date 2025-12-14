@@ -22,7 +22,7 @@ class renderer {
 	using textures = std::vector<texture_object*>;
 	using meshes = std::vector<mesh_object*>;
 	//using bounding_volumes = std::vector<drawable_bounding_volume*>;
-	using bounding_volumes = std::vector<geometry::bounding_volume*>;
+	using bounding_volumes = std::vector<geometry::bounding_volume const *>;
 public:
 	class creation_exception : public std::exception {
 		const char* what() { return "renderer creation exception"; }
@@ -59,19 +59,48 @@ public:
 			m_meshes_obj.push_back(m);
 		}
 		else if(auto bv = dynamic_cast<drawable_bounding_volume*>(obj)) {
-			//m_textures_obj.push_back(bv);
+			assert(0);
+		}
+		else {
+			// What kind of drawable is this?
+			assert(0);
+		}
+	}
+	inline void add_bounding_volume(geometry::bounding_volume const * const bv, const scalar scale) {
+		assert(bv);
+		m_bv_obj.emplace_back(bv);
+	}
+	inline void add_camera(CameraImpl* const c) {
+		assert(c);
+	}
+	inline void remove_drawable(drawable* const obj) {
+		if (auto s = dynamic_cast<sprite_object*>(obj)) {
+			auto it{ std::find(m_sprites_obj.begin(), m_sprites_obj.end(), s) };
+			assert(it != m_sprites_obj.end());
+			m_sprites_obj.erase(it);
+		}
+		else if (auto t = dynamic_cast<texture_object*>(obj)) {
+			auto it{ std::find(m_textures_obj.begin(), m_textures_obj.end(), t) };
+			assert(it != m_textures_obj.end());
+			m_textures_obj.erase(it);
+		}
+		else if (auto m = dynamic_cast<mesh_object*>(obj)) {
+			auto it{ std::find(m_meshes_obj.begin(), m_meshes_obj.end(), m) };
+			assert(it != m_meshes_obj.end());
+			m_meshes_obj.erase(it);
+		}
+		else if (auto bv = dynamic_cast<drawable_bounding_volume*>(obj)) {
 			assert(0);
 		}
 		else {
 			throw std::runtime_error("Unsupported drawable type");
 		}
 	}
-	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) {
-		assert(bv);
-		m_bv_obj.emplace_back(bv);
-	}
-	inline void add_camera(CameraImpl* const c) {
-		assert(c);
+	inline void clean_drawables() {
+		m_sprites_obj.clear();
+		m_textures_obj.clear();
+		m_meshes_obj.clear();
+		m_bv_obj.clear();
 	}
 protected:
 	WindowImpl* m_window;

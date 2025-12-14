@@ -12,7 +12,7 @@ template <std::size_t Dim> requires geometry::GeometricDimension<Dim>
 class contact_engine {
 	using resolve_map_t = std::map<
 		std::pair<geometry::bounding_volume::type, geometry::bounding_volume::type>,
-		std::function<void(geometry::bounding_volume&, geometry::bounding_volume&)>>;
+		std::function<void(const geometry::bounding_volume&, const geometry::bounding_volume&)>>;
 	using vector = tsg::vector<scalar, Dim>;
 	using point = tsg::vector<scalar, Dim>;
 	using box = geometry::box<Dim>;
@@ -28,7 +28,7 @@ public:
 	contact_engine() = default;
 	~contact_engine() = default;
 public:
-	bool resolve(geometry::bounding_volume * const first, geometry::bounding_volume * const second) {
+	bool resolve(geometry::bounding_volume const * const first, geometry::bounding_volume const * const second) {
 		const auto it = m_resolve_map.find(std::make_pair(first->get_type(), second->get_type()));
 		if (it != m_resolve_map.end()) {
 			it->second(*first, *second);
@@ -217,31 +217,31 @@ private:
 	{
 		{
 			{geometry::bounding_volume::type::aabb, geometry::bounding_volume::type::aabb},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { computeAABB(static_cast<box&>(l), static_cast<box&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { computeAABB(static_cast<const box&>(l), static_cast<const box&>(r)); }
 		},
 		{
 			{geometry::bounding_volume::type::obb, geometry::bounding_volume::type::obb},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { computeOBB(static_cast<box&>(l), static_cast<box&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { computeOBB(static_cast<const box&>(l), static_cast<const box&>(r)); }
 		},
 		{
 			{geometry::bounding_volume::type::aabb, geometry::bounding_volume::type::obb},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { computeAABBOBB(static_cast<box&>(l), static_cast<box&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { computeAABBOBB(static_cast<const box&>(l), static_cast<const box&>(r)); }
 		},
 		{
 			{geometry::bounding_volume::type::obb, geometry::bounding_volume::type::aabb},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { computeAABBOBB(static_cast<box&>(r), static_cast<box&>(l)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { computeAABBOBB(static_cast<const box&>(r), static_cast<const box&>(l)); }
 		},
 		{
 			{geometry::bounding_volume::type::aabb, geometry::bounding_volume::type::sphere},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { compute(static_cast<box&>(l), static_cast<sphere&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { compute(static_cast<const box&>(l), static_cast<const sphere&>(r)); }
 		},
 		{
 			{geometry::bounding_volume::type::obb, geometry::bounding_volume::type::sphere},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { compute(static_cast<box&>(l), static_cast<sphere&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { compute(static_cast<const box&>(l), static_cast<const sphere&>(r)); }
 		},
 		{
 			{geometry::bounding_volume::type::sphere, geometry::bounding_volume::type::sphere},
-			[&](geometry::bounding_volume& l, geometry::bounding_volume& r) -> void { compute(static_cast<sphere&>(l), static_cast<sphere&>(r)); }
+			[&](const geometry::bounding_volume& l, const geometry::bounding_volume& r) -> void { compute(static_cast<const sphere&>(l), static_cast<const sphere&>(r)); }
 		}
 	};
 };

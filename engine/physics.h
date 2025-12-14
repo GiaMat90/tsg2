@@ -304,7 +304,7 @@ public:
 			}
 		};
 		inline void set_bounding_volume(const bounding_volume& other) { *m_bounding_volume = other; };
-		bounding_volume * const get_bounding_volume() { return m_bounding_volume; }
+		bounding_volume const * const get_bounding_volume() const { return m_bounding_volume; }
 		inline void set_mass(const scalar m) {
 			if (m > scalar(0)) {
 				m_inverse_mass = scalar(1) / m;
@@ -316,6 +316,7 @@ public:
 	public:
 		inline scalar get_mass() const { return scalar(1) / m_inverse_mass; }
 		inline void set_infinite_mass() { m_inverse_mass = scalar(0); }
+		inline vector get_position() const { return m_position; }
 	protected:
 		inline void go_forward() { /* TODO */ assert(0); }
 		inline void go_backward() { /* TODO */ assert(0); }
@@ -351,7 +352,7 @@ public:
 		// dampings
 		scalar m_linear_damping{};
 		scalar m_angular_damping{};
-	};
+	}; // class physical_object
 public:
 	/* ctors and dtors methods */
 	physics() {
@@ -399,6 +400,14 @@ public:
 	inline void add_physical_object(physical_object* o) {
 		o->m_world = m_world;
 		m_world->m_objects.push_back(o);
+	}
+	inline void remove_physical_object(physical_object* o) {
+		auto it = std::find(m_world->m_objects.begin(), m_world->m_objects.end(), o);		
+		assert(it != m_world->m_objects.end());
+		m_world->m_objects.erase(it);
+	}
+	inline void clean_objects() {
+		m_world->m_objects.clear();
 	}
 protected:
 	physical_world* m_world{ nullptr };

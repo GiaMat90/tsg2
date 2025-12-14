@@ -24,6 +24,7 @@ class glfw_camera_data {
 	friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	friend void mouse_callback_2D(GLFWwindow* window, double xposIn, double yposIn);
 	friend void mouse_callback_3D(GLFWwindow* window, double xposIn, double yposIn);
+	friend void mouse_2D();
 private:
 	// positions
 	glm::vec3 m_position{};
@@ -35,18 +36,27 @@ private:
 	float m_yaw{ 0.0f };
 	float m_pitch{ 0.0f };
 	// parameters
-	float m_speed{ 0.0f };
+	float m_speed{ 10.0f };
 	float m_sensitivity{ 0.0f };
 	float m_zoom{ 0.0f };
 };
 
+struct mouse_position {
+	float x{ 0.0f };
+	float y{ 0.0f };
+};
+
 static glfw_camera_data camera_data;
+static mouse_position last_mouse_pos;
 
 /* OpenGL callbacks */
+static void capture_mouse_position(GLFWwindow*, double xposIn, double yposIn) {
+	last_mouse_pos.x = static_cast<float>(xposIn);
+	last_mouse_pos.y = static_cast<float>(yposIn);
+}
 static void empty_mouse_callback(GLFWwindow*, double, double) {
 	return; // do nothing
 };
-
 static void mouse_callback_2D(GLFWwindow*, double xposIn, double yposIn) {
 	/* Initial value */
 	static float pos_x{ static_cast<float>(xposIn) };
@@ -87,6 +97,18 @@ static void scroll_callback(GLFWwindow*, double, double yoffset)
 		camera_data.m_zoom += static_cast<float>(yoffset);
 	}
 }
+/* Compute camera methods */
+static void mouse_2D() {	
+	/* Initial value */
+	static float pos_x{ static_cast<float>(last_mouse_pos.x) };
+	static float pos_y{ static_cast<float>(last_mouse_pos.y) };
+	// 2D case
+	camera_data.m_position.x += static_cast<float>(last_mouse_pos.x) - pos_x;
+	camera_data.m_position.y -= static_cast<float>(last_mouse_pos.y) - pos_y;
+	// update static variables
+	pos_x = static_cast<float>(last_mouse_pos.x);
+	pos_y = static_cast<float>(last_mouse_pos.y);
+}
 /* Camera static methods */
 void camera<glfw_window, glfw_camera>::translate(const tsg::vector<float, 3>& v) {
 	camera_data.m_position.x += v[0];
@@ -106,7 +128,7 @@ void glfw_camera::init() const {
 			glfwSetScrollCallback(m_window->get_adaptee_r(), scroll_callback);
 		}
 		if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::LEFT_CLICK_DRAG))) {
-			glfwSetCursorPosCallback(m_window->get_adaptee_r(), empty_mouse_callback);
+			glfwSetCursorPosCallback(m_window->get_adaptee_r(), capture_mouse_position);
 		}
 		if(m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::FOLLOW_TARGET))) {
 			assert(m_target);
@@ -114,27 +136,33 @@ void glfw_camera::init() const {
 		/* Click events */
 	}
 	if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::KEY_CONTROLLED))) {
-		/* TODO */
-		tsg::logger::get_instance().write("glfw_camera: key control enabled");
-		assert(0);
+		/* Nothing To Do */
 	}
 
 }
 
 void glfw_camera::update_camera(input_engine* const input) const {
+	if(m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::FOLLOW_TARGET))) {
+		return;
+	}
 	if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::LEFT_CLICK_DRAG))) {
 		if (input->is_mouse_pressed(INPUT_MOUSE::LEFT))
 		{
-			glfwSetCursorPosCallback(m_window->get_adaptee_r(), mouse_callback_2D);
-
+			mouse_2D();
 		}
 		if(input->is_mouse_released(INPUT_MOUSE::LEFT))
 		{
-			glfwSetCursorPosCallback(m_window->get_adaptee_r(), empty_mouse_callback);
 		}
-	} else if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::KEY_CONTROLLED))) {
-		/* TODO */
-		assert(0);
+	} else if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::WASD_CONTROLLED))) {
+		if(input->is_key_pressed(INPUT_KEY::KEY_W)) {
+			camera_data.m_position.y += camera_data.m_speed;
+		} else if (input->is_key_pressed(INPUT_KEY::KEY_S)) {
+			camera_data.m_position.y -= camera_data.m_speed;
+		} else if ( input->is_key_pressed(INPUT_KEY::KEY_A)) {
+			camera_data.m_position.x -= camera_data.m_speed;
+		} else if (input->is_key_pressed(INPUT_KEY::KEY_D)) {
+			camera_data.m_position.x += camera_data.m_speed;
+		} 
 	}
 }
 void glfw_camera::set_initial_zoom(const float z) const {
@@ -146,10 +174,10 @@ glm::mat4 glfw_camera::get_view() const {
 	/* As per now this is well tested for 2D case. */
 	if (m_target) {
 		/* target should be already in NDC */
-		assert(m_target->get_position()[0] * m_target->get_position()[1] * m_target->get_position()[2] <= 1.0f);
-		camera_data.m_position.x = m_target->get_position()[0];
-		camera_data.m_position.y = m_target->get_position()[1];
-		camera_data.m_position.z = m_target->get_position()[2];
+		assert(m_target->get_target_position()[0] * m_target->get_target_position()[1] * m_target->get_target_position()[2] <= 1.0f);
+		camera_data.m_position.x = m_target->get_target_position()[0];
+		camera_data.m_position.y = m_target->get_target_position()[1];
+		camera_data.m_position.z = m_target->get_target_position()[2];
 		return glm::lookAt(
 			glm::vec3(camera_data.m_position.x, camera_data.m_position.y, 1.0f),
 			glm::vec3(camera_data.m_position.x, camera_data.m_position.y, 0.0f),

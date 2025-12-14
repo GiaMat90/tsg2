@@ -21,11 +21,20 @@ public:
 */
 class drawable : public game_object {
 public:
+	enum class State {
+		Visible,
+		Invisible,
+		MaxState = Invisible
+	};
+public:
 	drawable() = default;
 	virtual ~drawable() = default;
 	void print_bounding_volume(const bool print = false) { m_has_bounding_volume = print; }
 	bool has_bounding_volume() const { return m_has_bounding_volume; }
+	inline void set_visible(const State s) { m_state = s; }
+	inline bool is_visible() const { return m_state == State::Visible; }
 protected:
+	State m_state{ State::Visible };
 	bool m_has_bounding_volume{ false };
 };
 

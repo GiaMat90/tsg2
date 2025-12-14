@@ -3,6 +3,7 @@
 #include <tsg/os.h>
 
 #define MOUSE_DRIVEN 1
+#define MOUSE_DRAG 0
 
 using geometry::scalar;
 using geometry::cos;
@@ -32,10 +33,13 @@ void arrow::update(const scalar delta_time) {
 
 void arrow::process_input(input_engine* const input) {
 #if MOUSE_DRIVEN
+	/*/
 	float x{}, y{};
 	input->get_mouse_position(x, y);
 	tsg::print("mouse pos ({},{})", x, y);
-	constexpr geometry::scalar sensitivity{ 2.0f }; // TODO: adjust by sensitivity
+	/**/
+	//constexpr geometry::scalar sensitivity{ 2.0f }; // TODO(maybe): adjust sensitivity based on the zoom level 
+#if MOUSE_DRAG
 	static geometry::vector2D offset{};
 	static bool dragging{ false };
 	if(input->is_mouse_pressed(INPUT_MOUSE::LEFT)) {
@@ -60,6 +64,14 @@ void arrow::process_input(input_engine* const input) {
 			//tsg::logger::get_instance().write("Arrow position: ({},{})", m_position[geometry::AXES::X], m_position[geometry::AXES::Y]);
 		}
 	}
+#else 
+	input->get_mouse_position(m_position[geometry::AXES::X], m_position[geometry::AXES::Y]);
+	m_position[geometry::AXES::Y] *= scalar(-1); // invert Y axis
+
+	if(input->is_mouse_pressed(INPUT_MOUSE::LEFT)) {
+		actor::set_state(actor::State::Attacking);
+	}
+#endif
 #else
 	//m_velocity.zero();
 	if (input->is_key_pressed(INPUT_KEY::KEY_W)) {
@@ -103,6 +115,6 @@ void arrow::process_input(input_engine* const input) {
 #endif
 };
 
-camera_target::position arrow::get_position() const {
+camera_target::position arrow::get_target_position() const {
 	return tsg::vector<scalar, 3>(m_position);
 }

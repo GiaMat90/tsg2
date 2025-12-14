@@ -48,7 +48,7 @@ public:
 public:
 	window * const get_window() const { return &m_window; }
 	GAME_EVENTS get_event() { return m_event.get_events(); };
-protected: // virtual methods
+protected: // "virtual" methods
 	inline void process_input() { static_cast<GameImpl*>(this)->process_input(); };
 	/* Calculate elapsed time and update game-object states */
 	inline void update_game() { static_cast<GameImpl*>(this)->update_game(); };
@@ -61,13 +61,20 @@ protected: // virtual methods
 	/* initialize camera */
 	inline void initialize_camera() { static_cast<GameImpl*>(this)->initialize_camera(); };
 protected:
+	inline void update_physics(const scalar delta_time) { m_physics.update(delta_time); };
+	inline void render_scene() { m_renderer.render(); };
+protected:
 	inline void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 	inline void camera_init() { m_camera.init(); };
 public:
 	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
-	inline void add_bounding_volume(geometry::bounding_volume* const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
+	inline void add_bounding_volume(geometry::bounding_volume const * const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
 	inline void add_playable(playable_object* const o) { m_input.add_playable(o); };
 	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); };
+	inline void remove_drawable(drawable* const obj) { m_renderer.remove_drawable(obj); };
+	inline void remove_physical_object(physics::physical_object* const o) { m_physics.remove_physical_object(o); };
+	inline void clean_drawables() { m_renderer.clean_drawables(); };
+	inline void clean_physical_objects() { m_physics.clean_objects(); };
 public:
 	/* Camera methods */
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }

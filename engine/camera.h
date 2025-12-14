@@ -15,7 +15,7 @@ protected:
 public:
 	camera_target() = default;
 	~camera_target() = default;
-	virtual position get_position() const = 0;
+	virtual position get_target_position() const = 0;
 };
 
 enum class CAMERA_OPTIONS : std::size_t {
@@ -25,8 +25,9 @@ enum class CAMERA_OPTIONS : std::size_t {
 	FOLLOW_TARGET,
 	MOUSE_CONTROLLED,	
 	SCROLLABLE_ZOOM,
-	LEFT_CLICK_DRAG,
+	LEFT_CLICK_DRAG, // <- TODO: improve
 	KEY_CONTROLLED,
+	WASD_CONTROLLED,
 	MAX_OPTION = KEY_CONTROLLED
 };
 

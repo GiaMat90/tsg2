@@ -153,7 +153,7 @@ private:
 template <std::size_t Dim> requires geometry::GeometricDimension<Dim>
 class box_vertex : public vertex {
 public:
-	box_vertex(geometry::box<Dim> * const box, const float r = 1.0f, const float b = 1.0f, const float g = 1.0f, const float a = 1.0f) : m_box(box) {
+	box_vertex(geometry::box<Dim> const * const box, const float r = 1.0f, const float b = 1.0f, const float g = 1.0f, const float a = 1.0f) : m_box(box) {
 		std::size_t i{ 0u };
 		std::size_t j{ 0u };
 		while (i < 7u * Dim * Dim) {
@@ -212,5 +212,5 @@ public:
 private:
 	// N dimensional Box has N^2 vertexes, each one with 3 position coords and 4 color RGBA
 	float m_vertexes[7u * Dim * Dim];
-	geometry::box<Dim>* m_box;
+	geometry::box<Dim> const * m_box;
 };
