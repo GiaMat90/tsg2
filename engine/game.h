@@ -38,7 +38,7 @@ public:
 		SHUT_DOWN
 	};
 	game(const std::string& txt, const unsigned h, const unsigned w, const unsigned fps) : 
-		GraphicImpl(), m_window(txt, h, w), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_event(&m_window), m_timer(fps), m_physics() {
+		GraphicImpl(), m_window(txt, h, w), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_event(&m_window, &m_input), m_timer(fps), m_physics() {
 		
 	};
 	virtual ~game() {}

@@ -48,10 +48,7 @@ glfw_renderer::glfw_renderer(glfw_window * const w, glfw_camera * const c) : ren
 	m_line_vertex.init();
 }
 
-glfw_renderer::~glfw_renderer() {
-	//glfw_DestroyRenderer(m_glfw_component);
-	glfwSetWindowShouldClose(m_window->get_adaptee_r(), GLFW_TRUE);
-}
+glfw_renderer::~glfw_renderer() { /* Nothing to do */ }
 
 // overrided methods
 void glfw_renderer::render() {

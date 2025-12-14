@@ -36,11 +36,7 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 	glfwSetFramebufferSizeCallback(m_adaptee, resize_window_callback);
 }
 
-glfw_window::~glfw_window() {
-	// In openGL it is handled with context that are free in glfwTerminate
-	// or maybe I should?
-	glfwDestroyWindow(m_adaptee);
-}
+glfw_window::~glfw_window() { /* Nothing To Do */ }
 
 #endif
 

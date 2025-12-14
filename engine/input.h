@@ -55,6 +55,7 @@ enum class INPUT_KEY : int {
 	MOUSE_LEFT,
 	MOUSE_RIGHT,
 	MOUSE_MIDDLE,
+	MAX_KEY = MOUSE_MIDDLE
 };
 enum class INPUT_MOUSE {
 	LEFT,
@@ -62,6 +63,7 @@ enum class INPUT_MOUSE {
 	MIDDLE,
 	SCROLL
 };
+
 
 class input_engine {
 public:
