@@ -21,20 +21,27 @@ target_link_libraries(engine PRIVATE tsg)
 # add preprocessors simbols
 add_compile_definitions(TSG2_STATIC)
 
+# add stbi image wrap
+file(GLOB STBI_WRAP_SOURCE 
+	"${CMAKE_CURRENT_SOURCE_DIR}/stbi_wrap/*.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/stbi_wrap/*.h"
+)
+
 if(GLFW_GAME)
 	# Add GLFW port sources to engine library
 	file(GLOB GLFW_PORT_SOURCES 
 		"${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/*.cpp"
-		"${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/*.h"
+		"${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/*.h"		
 	)
 	
 	# set to have shaders with other sources
 	file(GLOB SHADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders/*.glsl")
 	
-	target_sources(engine PRIVATE ${GLFW_PORT_SOURCES} ${SHADER_FILES})
+	target_sources(engine PRIVATE ${GLFW_PORT_SOURCES} ${SHADER_FILES} ${STBI_WRAP_SOURCE})
 
 	set_source_files_properties(${SHADER_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 	
+	source_group("engine\\stbi_wrap" FILES ${STBI_WRAP_SOURCE})
 	source_group("engine\\glfw_port" FILES ${GLFW_PORT_SOURCES})
 	source_group("engine\\glfw_port\\shaders" FILES ${SHADER_FILES})
 	
@@ -51,13 +58,6 @@ if(GLFW_GAME)
 	
 	add_compile_definitions(GLFW_INCLUDE_NONE)
 
-	# add_custom_command(TARGET engine POST_BUILD
-		# COMMAND ${CMAKE_COMMAND} -E copy_directory
-		# ${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders
-		# $<TARGET_FILE_DIR:engine>/shaders
-		# COMMENT "Copying shares files to build directory"
-	# )
-	
 	add_custom_target(copy_shaders ALL)
 
 	add_custom_command(TARGET engine POST_BUILD
