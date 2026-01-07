@@ -5,9 +5,19 @@
 // std includes
 #include <string>
 #include <cassert>
+// tsg includes
+#include <tsg/math.h>
 
 template <typename WindowImpl, typename CursorImpl>
 class cursor {
+public:
+	enum class event {
+		none = 0,
+		left_click = 1,
+		right_click = 2,
+		middle_click = 3,
+		move = 4
+	};
 public:
 	cursor(WindowImpl* const w, const std::string& image) : m_window(w), m_image(image) { assert(m_window); };
 	virtual ~cursor() = default;
@@ -16,6 +26,8 @@ public:
 		static_cast<CursorImpl*>(this)->set_cursor_image(image);
 		m_image = image;
 	};
+	inline tsg::vector<float, 2> get_position() { return static_cast<CursorImpl*>(this)->get_position(); };
+	inline event get_event() { return static_cast<CursorImpl*>(this)->get_event(); };
 protected:
 	WindowImpl* m_window{ nullptr };
 	std::string m_image{};

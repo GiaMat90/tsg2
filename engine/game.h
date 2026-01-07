@@ -38,7 +38,7 @@ public:
 		SHUT_DOWN
 	};
 	game(const std::string& txt, const unsigned h, const unsigned w, const unsigned fps) : 
-		GraphicImpl(), m_window(txt, h, w), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_event(&m_window, &m_input), m_timer(fps), m_physics() {
+		GraphicImpl(), m_window(txt, h, w), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_event(&m_window, &m_input), m_cursor(&m_window), m_timer(fps), m_physics() {
 		
 	};
 	virtual ~game() {}
@@ -75,6 +75,7 @@ public:
 	inline void remove_physical_object(physics::physical_object* const o) { m_physics.remove_physical_object(o); };
 	inline void clean_drawables() { m_renderer.clean_drawables(); };
 	inline void clean_physical_objects() { m_physics.clean_objects(); };
+	inline void set_cursor_image(const std::string& image) { m_cursor.set_cursor_image(image); };
 public:
 	/* Camera methods */
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }
@@ -87,6 +88,7 @@ protected: // attributes
 	renderer_impl m_renderer;
 	input_impl m_input;
 	game_event_impl m_event;
+	cursor_impl m_cursor;
 	game_timer_impl m_timer;
 	physics m_physics;
 };

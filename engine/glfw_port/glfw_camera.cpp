@@ -121,9 +121,10 @@ glfw_camera::glfw_camera(glfw_window * const w) : camera(w) {}
 glfw_camera::~glfw_camera() {}
 
 void glfw_camera::init() const {
+	glfwSetInputMode(m_window->get_adaptee_r(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 	if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::MOUSE_CONTROLLED))) {
 		// make sure system sensible to mouse
-		glfwSetInputMode(m_window->get_adaptee_r(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(m_window->get_adaptee_r(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::SCROLLABLE_ZOOM))) {
 			glfwSetScrollCallback(m_window->get_adaptee_r(), scroll_callback);
 		}
@@ -137,8 +138,11 @@ void glfw_camera::init() const {
 	}
 	if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::KEY_CONTROLLED))) {
 		/* Nothing To Do */
+	}		
+	/* WIP */
+	if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::SCROLLABLE_ZOOM))) {
+		glfwSetScrollCallback(m_window->get_adaptee_r(), scroll_callback);
 	}
-
 }
 
 void glfw_camera::update_camera(input_engine* const input) const {

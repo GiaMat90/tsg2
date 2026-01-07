@@ -8,14 +8,14 @@
 using geometry::scalar;
 using geometry::cos;
 
-arrow::arrow() : sprite_object(), physics<2>::physical_object(), camera_target() {}
+arrow::arrow() : sprite_object(), physics<2>::physical_object() {}
 
 void arrow::init() {
 	sprite_object::init();
 	physical_object::init();
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
 	m_sprite->set_where(texture::position({ m_position[geometry::AXES::X], m_position[geometry::AXES::Y]}));
-	m_sprite->set_scale(0.5f);
+	//m_sprite->set_scale(0.5f);
 	auto w = m_sprite->get_size().get<geometry::AXES::X>();
 	auto h = m_sprite->get_size().get<geometry::AXES::Y>();
 	geometry::vector2D half_sizes{ w / scalar(2), h / scalar(2) };
@@ -27,8 +27,8 @@ void arrow::init() {
 void arrow::update(const scalar delta_time) {
 	/* I don't want the arrow be subject the same physics than the bubbles */
 	//physical_object::update(delta_time); // update physics, position and rotation
-	constexpr scalar rotation{ 3.0f*static_cast<float>(std::numbers::pi) / 4.5f }; // rad
-	sprite_object::update(m_position, rotation);
+	//constexpr scalar rotation{ 3.0f*static_cast<float>(std::numbers::pi) / 4.5f }; // 120° in rad
+	//sprite_object::update(m_position, rotation);
 }
 
 void arrow::process_input(input_engine* const input) {
@@ -114,7 +114,3 @@ void arrow::process_input(input_engine* const input) {
 	}
 #endif
 };
-
-camera_target::position arrow::get_target_position() const {
-	return tsg::vector<scalar, 3>(m_position);
-}

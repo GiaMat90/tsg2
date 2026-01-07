@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cursor.h>
-
+// engine includes
 #include "glfw_window.h"
+// tsg includes
+#include <tsg/math.h>
 
 class glfw_cursor : public cursor<glfw_window, glfw_cursor> {
 public:
@@ -10,6 +12,8 @@ public:
 	~glfw_cursor();
 public:
 	void set_cursor_image(const std::string& image);
+	tsg::vector<float, 2> get_position();
+	cursor::event get_event();
 private:
 	GLFWcursor* m_cursor{ nullptr };
 };

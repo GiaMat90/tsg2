@@ -44,6 +44,8 @@ arrow_and_bubbles::~arrow_and_bubbles() {
 void arrow_and_bubbles::initialize() {
 	create_physics();
 	initialize_camera();
+	set_cursor_image((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
+
 	initialize_objects();
 	m_state = GAME_STATE::RUNNING;
 }
@@ -71,19 +73,16 @@ void arrow_and_bubbles::initialize_camera() {
 	set_camera_initial_zoom(0.5f);
 	set_camera_option(CAMERA_OPTIONS::DIMENSION2);
 	/* Mouse controlled */ 
-	set_camera_option(CAMERA_OPTIONS::MOUSE_CONTROLLED);
+	//set_camera_option(CAMERA_OPTIONS::MOUSE_CONTROLLED);
 	set_camera_option(CAMERA_OPTIONS::SCROLLABLE_ZOOM);
-	//set_camera_option(CAMERA_OPTIONS::LEFT_CLICK_DRAG); 
 	/* Keyboard controlled */
 	set_camera_option(CAMERA_OPTIONS::KEY_CONTROLLED);
 	set_camera_option(CAMERA_OPTIONS::WASD_CONTROLLED);
-	/* Optional target */ // this option disabled all previous camera controls
-	set_camera_option(CAMERA_OPTIONS::FOLLOW_TARGET);
-	INCLUDE_ARROW(set_camera_target(&m_arrow));
 	camera_init();
 }
 
 void arrow_and_bubbles::initialize_objects() {
+	set_cursor_image((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
 	// input engine stuff
 	INCLUDE_ARROW(add_playable(&m_arrow));
 	// physic engine stuff
@@ -114,16 +113,16 @@ void arrow_and_bubbles::update_game() {
 	const auto tick = m_timer.tick();
 	/* Actor interactions */
 	bool update_engine_containers{ false };
-	if (actor::State::Attacking == m_arrow.get_state()) {
+	
+	if (cursor_impl::event::left_click == m_cursor.get_event()){
 		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
-			return b.get_bounding_volume()->contains(m_arrow.get_position());
+			return b.get_bounding_volume()->contains(m_cursor.get_position());
 		});
 		if(m_bubbles.end() != victim) {
 			victim->set_state(actor::State::Dead);
 			victim->set_visible(drawable::State::Invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
 			update_engine_containers = true;
 		}
-		m_arrow.set_state(actor::State::Idle);
 	}
 	/* Update all objects */ // <- this doesn't works because the bounding volume result not istantiated yet when updating the physics
 	if (false /*update_engine_containers*/) {
