@@ -15,12 +15,12 @@ static void error_callback(int error, const char* description) {
 }
 
 glfw_game::glfw_game() {
-	init();
 	glfwSetErrorCallback(error_callback);
+	init();
 }
 
 glfw_game::~glfw_game() {
-	quit();
+	glfwTerminate();
 }
 
 bool glfw_game::init() {
@@ -28,6 +28,6 @@ bool glfw_game::init() {
 }
 
 void glfw_game::quit() {
-	glfwTerminate();
+	// TODO: any additional cleanup
 }
 #endif
