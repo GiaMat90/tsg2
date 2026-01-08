@@ -21,6 +21,7 @@ using geometry::bounding_volume;
 
 template <std::size_t Dim> requires geometry::GeometricDimension<Dim>
 class physics {
+public:
 	/* Generic definitions */
 	using vector = tsg::vector<scalar, Dim>;
 	using point = tsg::vector<scalar, Dim>;
@@ -408,6 +409,9 @@ public:
 	}
 	inline void clean_objects() {
 		m_world->m_objects.clear();
+	}
+	inline physical_world * const get_physical_world() const {
+		return m_world;
 	}
 protected:
 	physical_world* m_world{ nullptr };

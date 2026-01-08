@@ -10,12 +10,12 @@ public:
 		life_t heal_power{};
 	};
 public:
-	enum class State {
-		Idle,
-		Moving,
-		Attacking,
-		Dying,
-		Dead
+	enum class state {
+		idle,
+		moving,
+		attacking,
+		dying,
+		dead
 	};
 public:
 	actor() = default;
@@ -30,12 +30,12 @@ public:
 	inline void set_attack_power(const life_t p) { m_features.attack_power = p; }
 	inline void set_heal_power(const life_t p) { m_features.heal_power = p; }
 	inline void set_defense(const life_t d) { m_features.defense = d; }
-	inline void set_state(const State state) { m_state = state; }
-	inline State get_state() const { return m_state; }
+	inline void set_state(const state state) { m_state = state; }
+	inline state get_state() const { return m_state; }
 	inline void set_health(const life_t h) { m_health = h; }
 	inline life_t get_health() const { return m_health; }
 protected:
-	State m_state{ State::Idle };
+	state m_state{ state::idle };
 	features m_features{};
 	life_t m_health{ 0 };
 };

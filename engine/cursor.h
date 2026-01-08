@@ -11,6 +11,8 @@
 template <typename WindowImpl, typename CursorImpl>
 class cursor {
 public:
+	using position = tsg::vector<float, 2>;
+public:
 	enum class event {
 		none = 0,
 		left_click = 1,
@@ -26,8 +28,8 @@ public:
 		static_cast<CursorImpl*>(this)->set_cursor_image(image);
 		m_image = image;
 	};
-	inline tsg::vector<float, 2> get_position() { return static_cast<CursorImpl*>(this)->get_position(); };
-	inline event get_event() { return static_cast<CursorImpl*>(this)->get_event(); };
+	inline position get_position() const { return static_cast<CursorImpl*>(this)->get_position(); };
+	inline event get_event() const { return static_cast<CursorImpl*>(this)->get_event(); };
 protected:
 	WindowImpl* m_window{ nullptr };
 	std::string m_image{};

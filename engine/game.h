@@ -76,6 +76,9 @@ public:
 	inline void clean_drawables() { m_renderer.clean_drawables(); };
 	inline void clean_physical_objects() { m_physics.clean_objects(); };
 	inline void set_cursor_image(const std::string& image) { m_cursor.set_cursor_image(image); };
+	inline cursor_impl::position get_cursor_position() const { return m_cursor.get_position(); };
+	inline cursor_impl::event get_cursor_event() const { return m_cursor.get_event(); };	
+	inline physics::vector get_world_scale() const { return m_physics.get_physical_world()->get_scale(); };
 public:
 	/* Camera methods */
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }

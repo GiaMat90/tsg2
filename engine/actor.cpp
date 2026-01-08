@@ -9,7 +9,7 @@ void actor::hit() {
 		m_health -= m_features.defense;
 	} else {
 		m_health = 0;
-		m_state = State::Dying;
+		m_state = state::dying;
 	}
 }
 

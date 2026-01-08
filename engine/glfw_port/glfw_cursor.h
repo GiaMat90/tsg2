@@ -12,8 +12,8 @@ public:
 	~glfw_cursor();
 public:
 	void set_cursor_image(const std::string& image);
-	tsg::vector<float, 2> get_position();
-	cursor::event get_event();
+	position get_position() const;
+	event get_event() const;
 private:
 	GLFWcursor* m_cursor{ nullptr };
 };
