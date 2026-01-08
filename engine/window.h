@@ -6,8 +6,8 @@
 
 class window {
 public:
-	using width_t = std::uint32_t;
-	using height_t = std::uint32_t;
+	using width_t = int;
+	using height_t = int;
 public:
 	class window_exception : public std::exception {
 		const char* what() { return "window exception"; }
