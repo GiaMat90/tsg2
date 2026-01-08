@@ -69,7 +69,7 @@ void arrow::process_input(input_engine* const input) {
 	m_position[geometry::AXES::Y] *= scalar(-1); // invert Y axis
 
 	if(input->is_mouse_pressed(INPUT_MOUSE::LEFT)) {
-		actor::set_state(actor::State::Attacking);
+		actor::set_state(actor::state::attacking);
 	}
 #endif
 #else

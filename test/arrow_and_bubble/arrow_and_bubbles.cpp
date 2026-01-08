@@ -114,13 +114,13 @@ void arrow_and_bubbles::update_game() {
 	/* Actor interactions */
 	bool update_engine_containers{ false };
 	
-	if (cursor_impl::event::left_click == m_cursor.get_event()){
-		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
-			return b.get_bounding_volume()->contains(m_cursor.get_position());
+	if (cursor_impl::event::left_click == get_cursor_event()){
+		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {			
+			return b.get_bounding_volume()->contains(get_cursor_position());
 		});
 		if(m_bubbles.end() != victim) {
-			victim->set_state(actor::State::Dead);
-			victim->set_visible(drawable::State::Invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
+			victim->set_state(actor::state::dead);
+			victim->set_visible(drawable::state::invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
 			update_engine_containers = true;
 		}
 	}
@@ -133,8 +133,8 @@ void arrow_and_bubbles::update_game() {
 			++it;
 		}
 		std::erase_if(m_bubbles, [&](bubble& b) {
-			return actor::State::Dead == b.get_state();
-			if (actor::State::Dead == b.get_state()) {
+			return actor::state::dead == b.get_state();
+			if (actor::state::dead == b.get_state()) {
 				remove_physical_object(&b);
 				remove_drawable(&b);
 				return true;

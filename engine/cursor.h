@@ -8,7 +8,7 @@
 // tsg includes
 #include <tsg/math.h>
 
-template <typename WindowImpl, typename CursorImpl>
+template <typename WindowImpl, typename CameraImpl, typename CursorImpl>
 class cursor {
 public:
 	using position = tsg::vector<float, 2>;
@@ -21,7 +21,7 @@ public:
 		move = 4
 	};
 public:
-	cursor(WindowImpl* const w, const std::string& image) : m_window(w), m_image(image) { assert(m_window); };
+	cursor(WindowImpl* const w, CameraImpl* const c, const std::string& image) : m_window(w), m_camera(c), m_image(image) { assert(m_window); assert(m_camera); };
 	virtual ~cursor() = default;
 public:
 	inline void set_cursor_image(const std::string& image) {
@@ -32,5 +32,6 @@ public:
 	inline event get_event() const { return static_cast<CursorImpl*>(this)->get_event(); };
 protected:
 	WindowImpl* m_window{ nullptr };
+	CameraImpl* m_camera{ nullptr };
 	std::string m_image{};
 };

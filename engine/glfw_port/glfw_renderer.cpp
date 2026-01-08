@@ -56,7 +56,7 @@ void glfw_renderer::render() {
 	check_error(__FILE__, __LINE__);
 	int width, height;
 	glfwGetFramebufferSize(m_window->get_adaptee_r(), &width, &height);
-	const float ratio = width / static_cast<float>(height);
+	const float ratio = static_cast<float>(width) / static_cast<float>(height);
 
 	glViewport(0, 0, width, height);
 	glClearColor(0.1f, 0.2f, 0.3f, 1.0f);		// petrolio
@@ -113,8 +113,8 @@ void glfw_renderer::render() {
 	if (m_bv_obj.size() > 0) {
 		//// use programs previously loaded
 		m_line_shader.use();
-		m_line_shader.load_uniform("view", m_camera->get_projection());
-		m_line_shader.load_uniform("projection", m_camera->get_view());
+		m_line_shader.load_uniform("view", m_camera->get_view());
+		m_line_shader.load_uniform("projection", m_camera->get_projection());
 		for (const auto& bv : m_bv_obj) {
 			this->draw(bv);
 		}
@@ -138,14 +138,12 @@ void glfw_renderer::set_draw_color(const color& c)
 
 void glfw_renderer::draw(texture const * const t) {
 	if (auto texture = dynamic_cast<glfw_texture const *>(t)) {
+		assert(glIsTexture(texture->get_adaptee_v())); // chack if texture is not a valid OpenGL texture
+
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		model = glm::scale(model, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f)); // <- old, TOREMOVE
 		model = glm::translate(model, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
 		model = glm::rotate(model, texture->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		if (glIsTexture(texture->get_adaptee_v()) != GL_TRUE) {
-			assert(0); // texture is not a valid OpenGL texture
-		}
 
 		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.get_adaptee_v(), "model");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));

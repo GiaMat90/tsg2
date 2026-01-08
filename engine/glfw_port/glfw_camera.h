@@ -7,10 +7,11 @@
 #include <glm/glm.hpp>
 
 class glfw_renderer;
-class glfw_game;
+class glfw_cursor;
 
 class glfw_camera : public camera<glfw_window, glfw_camera> {
 	friend glfw_renderer;
+	friend glfw_cursor;
 public:
 	glfw_camera(glfw_window * const);
 	virtual ~glfw_camera();
