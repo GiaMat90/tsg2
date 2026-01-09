@@ -13,7 +13,13 @@ public:
 	~glfw_cursor();
 public:
 	void set_cursor_image(const std::string& image);
-	position get_position() const;
+	template <std::size_t Dim> requires (Dim == 2 || Dim == 3)
+	inline tsg::vector<float, Dim> get_world_position() const {
+		double xpos, ypos;
+		glfwGetCursorPos(m_window->cget_raw_attribute(), &xpos, &ypos);
+		return m_camera->screen_to_world<Dim>(static_cast<float>(xpos), static_cast<float>(ypos));
+	};
+	screen_position get_screen_position() const;
 	event get_event() const;
 private:
 	GLFWcursor* m_cursor{ nullptr };

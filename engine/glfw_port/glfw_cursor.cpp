@@ -3,9 +3,6 @@
 #include <stbi_wrap/stbi.h>
 // tsg includes
 #include <tsg/logger.h>
-// glm includes
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 static cursor<glfw_window, glfw_camera, glfw_cursor>::event g_cursor_event = cursor<glfw_window, glfw_camera, glfw_cursor>::event::none;
 
@@ -72,16 +69,13 @@ void glfw_cursor::set_cursor_image(const std::string& image) {
     }
 }
 
-tsg::vector<float, 2> glfw_cursor::get_position() const {
+tsg::vector<float, 2> glfw_cursor::get_screen_position() const {
     double xpos, ypos;
     glfwGetCursorPos(m_window->cget_raw_attribute(), &xpos, &ypos);
-	// Reverse the viewport transformation: from screen coordinates to NDC
-    float x = (2.0f * xpos) / m_window->get_width() - 1.0f;  
-    float y = 1.0f - (2.0f * ypos) / m_window->get_height();  
-	auto model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-	model = glm::translate(model, glm::vec3(x, y, 0.0f));
-    auto world_position = glm::inverse(m_camera->get_projection() * m_camera->get_view()) * glm::vec4(x, y, 0.0f, 1.0f);
-	return tsg::vector<float, 2>({ world_position.x, world_position.y });
+    return tsg::vector<float, 2>{ 
+        static_cast<float>(xpos) / static_cast<float>(m_window->get_width()),
+        static_cast<float>(ypos) / static_cast<float>(m_window->get_height())
+    };
 }
 
 cursor<glfw_window, glfw_camera, glfw_cursor>::event glfw_cursor::get_event() const {

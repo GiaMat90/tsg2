@@ -169,6 +169,23 @@ void glfw_camera::update_camera(input_engine* const input) const {
 		} 
 	}
 }
+
+geometry::vector2D glfw_camera::screen_to_world_2D(const geometry::scalar x, const geometry::scalar y) {
+	// Reverse the viewport transformation: from screen coordinates to NDC
+	geometry::scalar ndc_x = (2.0f * x) / static_cast<geometry::scalar>(m_window->get_width()) - 1.0f;
+	geometry::scalar ndc_y = 1.0f - (2.0f * y) / static_cast<geometry::scalar>(m_window->get_height());
+	auto model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+	model = glm::translate(model, glm::vec3(ndc_x, ndc_y, 0.0f));
+	auto world_position = glm::inverse(get_projection() * get_view()) * glm::vec4(ndc_x, ndc_y, 0.0f, 1.0f);
+	return geometry::vector2D{ world_position.x, world_position.y };
+}
+
+geometry::vector3D glfw_camera::screen_to_world_3D(const geometry::scalar x, const geometry::scalar y) {
+	/*TODO*/
+	assert(0);
+	return geometry::vector3D{ .0f, .0f, .0f};
+}
+
 void glfw_camera::set_initial_zoom(const float z) const {
 	assert(z > 0.0f && z < 1.0f);
 	camera_data.m_zoom = -180.0f + (z * 180.0f);

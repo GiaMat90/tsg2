@@ -2,6 +2,7 @@
 
 // engine includes
 #include <window.h>
+#include <geometry.h>
 // tsg includes
 #include <tsg/math.h>
 // std includes
@@ -34,7 +35,6 @@ enum class CAMERA_OPTIONS : std::size_t {
 template <typename WindowImpl, typename CameraImpl>
 class camera {
 public:
-public:
 	camera(WindowImpl* const w) : m_window(w) { assert(m_window); };
 	virtual ~camera() = default;
 public:
@@ -43,6 +43,8 @@ public:
 public:
 	inline void init() const { static_cast<CameraImpl*>(this)->init(); }
 	inline void update_camera(input_engine* const i) const { static_cast<CameraImpl* const>(this)->update_camera(i); }
+	template<std::size_t Dim> requires (Dim == 2 || Dim == 3)
+	inline tsg::vector<geometry::scalar, Dim> screen_to_world(const geometry::scalar x, const geometry::scalar y) const { return static_cast<CameraImpl*>(this)->screen_to_world<Dim>(x,y); }
 public:
 	// setters
 	inline void set_initial_zoom(const float z) const { static_cast<CameraImpl*>(this)->set_initial_zoom(z); };

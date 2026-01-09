@@ -72,15 +72,18 @@ public:
 	inline void remove_physical_object(physics::physical_object* const o) { m_physics.remove_physical_object(o); };
 	inline void clean_drawables() { m_renderer.clean_drawables(); };
 	inline void clean_physical_objects() { m_physics.clean_objects(); };
-	inline void set_cursor_image(const std::string& image) { m_cursor.set_cursor_image(image); };
-	inline cursor_impl::position get_cursor_position() const { return m_cursor.get_position(); };
-	inline cursor_impl::event get_cursor_event() const { return m_cursor.get_event(); };	
 	inline physics::vector get_world_scale() const { return m_physics.get_physical_world()->get_scale(); };
 public:
 	/* Camera methods */
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }
 	inline void set_camera_initial_zoom(const scalar z) { m_camera.set_initial_zoom(z); };
 	inline void set_camera_option(const CAMERA_OPTIONS opt) { m_camera.set_option(opt); };
+public:
+	// Cursor methods
+	inline void set_cursor_image(const std::string& image) { m_cursor.set_cursor_image(image); };
+	inline cursor_impl::screen_position get_cursor_screen_position() const { return m_cursor.get_screen_position(); };
+	inline decltype(auto) get_cursor_world_position() const { return m_cursor.get_world_position<Dim>(); };
+	inline cursor_impl::event get_cursor_event() const { return m_cursor.get_event(); };	
 protected: // attributes
 	GAME_STATE m_state{ GAME_STATE::NONE };
 	window_impl m_window;

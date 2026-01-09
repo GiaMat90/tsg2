@@ -154,7 +154,7 @@ int main() {
 		//transform = glm::scale(transform, glm::vec3(scale, scale, scale));
 		//transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
 		//transform = glm::rotate(transform, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-		transformLoc = glGetUniformLocation(line_shader.get_adaptee_v(), "transform");
+		transformLoc = glGetUniformLocation(line_shader.cget_raw_attribute(), "transform");
 		check_error(__FILE__, __LINE__);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);

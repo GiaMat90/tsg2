@@ -12,5 +12,7 @@ public:
 public:
 	height_t get_height();
 	width_t get_width();
+private:
+	void update();
 };
 

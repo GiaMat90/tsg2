@@ -38,12 +38,16 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 glfw_window::~glfw_window() { /* Nothing To Do */ }
 
 window::height_t glfw_window::get_height() {
-	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
+	update();
 	return m_height;
 };
 window::width_t glfw_window::get_width() {
-	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
+	update();
 	return m_width;
+};
+
+void glfw_window::update() {
+	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
 };
 
 #endif

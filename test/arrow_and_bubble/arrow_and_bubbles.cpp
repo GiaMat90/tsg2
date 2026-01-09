@@ -115,8 +115,9 @@ void arrow_and_bubbles::update_game() {
 	bool update_engine_containers{ false };
 	
 	if (cursor_impl::event::left_click == get_cursor_event()){
-		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {			
-			return b.get_bounding_volume()->contains(get_cursor_position());
+		geometry::point2D cursor_pos = get_cursor_world_position();
+		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
+			return b.get_bounding_volume()->contains(cursor_pos);
 		});
 		if(m_bubbles.end() != victim) {
 			victim->set_state(actor::state::dead);

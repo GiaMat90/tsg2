@@ -93,7 +93,7 @@ int main() {
 		geometry::box<2> box2d({ 0.0f, 0.0f }, { 0.5f, 0.5f });
 		box_vertex<2> box2d_vertex(&box2d, 0.5f, 0.75f, 0.25f, 1.0f);
 		transform = glm::scale(transform, glm::vec3(scale, scale, scale));
-		transformLoc = glGetUniformLocation(line_shader.get_adaptee_v(), "transform");
+		transformLoc = glGetUniformLocation(line_shader.cget_raw_attribute(), "transform");
 		check_error(__FILE__, __LINE__);
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		check_error(__FILE__, __LINE__);
