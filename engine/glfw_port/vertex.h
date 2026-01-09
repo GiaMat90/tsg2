@@ -2,15 +2,15 @@
 
 #include "gl_includes.h"
 #include "gl_utility.h"
+#include "glfw_adapter.h"
 #include <geometry.h>
 /* tsg includes */
-#include <tsg/types.h>
 #include <tsg/logger.h>
 
 /* std includes */
 #include <numbers>	// pi
 
-class vertex : public tsg::adapter_v<GLuint> {
+class vertex : public glfw_adapter<vertex, GLuint> {
 public:
 	vertex(const GLuint vertex = 0u, const GLuint index = 0u);
 	virtual ~vertex() = default;
@@ -113,13 +113,13 @@ public:
 	}
 	~regpoly_vertex() {
 		glDeleteBuffers(1, &m_vertex_buffer);
-		glDeleteVertexArrays(1, &m_adaptee);
+		glDeleteVertexArrays(1, &m_raw_attribute);
 	}
 	void init() override {
 		// line - buffers and arrays
-		glGenVertexArrays(1, &m_adaptee);
+		glGenVertexArrays(1, &m_raw_attribute);
 		check_error(__FILE__, __LINE__);
-		glBindVertexArray(m_adaptee);
+		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 		glGenBuffers(1, &m_vertex_buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
@@ -138,7 +138,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	void use() override {
-		glBindVertexArray(m_adaptee);
+		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 	}
 	void draw() override {
@@ -176,13 +176,13 @@ public:
 	}
 	~box_vertex() {
 		glDeleteBuffers(1, &m_vertex_buffer);
-		glDeleteVertexArrays(1, &m_adaptee);
+		glDeleteVertexArrays(1, &m_raw_attribute);
 	}
 	void init() override {
 		// line - buffers and arrays
-		glGenVertexArrays(1, &m_adaptee);
+		glGenVertexArrays(1, &m_raw_attribute);
 		check_error(__FILE__, __LINE__);
-		glBindVertexArray(m_adaptee);
+		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 		glGenBuffers(1, &m_vertex_buffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
@@ -201,7 +201,7 @@ public:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 	void use() override {
-		glBindVertexArray(m_adaptee);
+		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 	}
 	void draw() override {

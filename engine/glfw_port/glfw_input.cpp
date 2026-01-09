@@ -63,27 +63,27 @@ glfw_input::~glfw_input(){}
 
 // overloaded methods
 bool glfw_input::is_key_pressed(const INPUT_KEY key) {
-	return glfwGetKey(m_window->get_adaptee_r(), g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS;
+	return glfwGetKey(m_window->cget_raw_attribute(), g_keyboard_glfw_mapping.at(key)) == GLFW_PRESS;
 };
 // mouse
 bool glfw_input::is_mouse_clicked(const INPUT_MOUSE side) {
-	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
+	const bool res{ glfwGetMouseButton(m_window->cget_raw_attribute(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
 	check_error(__FILE__, __LINE__);
 	return res;
 }
 bool glfw_input::is_mouse_pressed(const INPUT_MOUSE side) {
-	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_PRESS };
+	const bool res{ glfwGetMouseButton(m_window->cget_raw_attribute(), g_mouse_glfw_mapping.at(side)) == GLFW_PRESS };
 	check_error(__FILE__, __LINE__);
 	return res;
 }
 bool glfw_input::is_mouse_released(const INPUT_MOUSE side) {
-	const bool res{ glfwGetMouseButton(m_window->get_adaptee_r(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
+	const bool res{ glfwGetMouseButton(m_window->cget_raw_attribute(), g_mouse_glfw_mapping.at(side)) == GLFW_RELEASE };
 	check_error(__FILE__, __LINE__);
 	return res;
 }
 void glfw_input::get_mouse_position(float& x, float& y) {
 	double xpos, ypos;
-	glfwGetCursorPos(m_window->get_adaptee_r(), &xpos, &ypos);
+	glfwGetCursorPos(m_window->cget_raw_attribute(), &xpos, &ypos);
 	x = static_cast<float>(xpos) / static_cast<float>(m_window->get_width());
 	y = static_cast<float>(ypos) / static_cast<float>(m_window->get_height());
 }

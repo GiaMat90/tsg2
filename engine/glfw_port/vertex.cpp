@@ -13,15 +13,15 @@ texture_vertex::~texture_vertex()
 {
 	glDeleteBuffers(1, &m_vertex_buffer);
 	glDeleteBuffers(1, &m_index_buffer);
-	glDeleteVertexArrays(1, &m_adaptee);
+	glDeleteVertexArrays(1, &m_raw_attribute);
 }
 
 
 void texture_vertex::init() {
 	// texture - buffers and arrays
-	glGenVertexArrays(1, &m_adaptee);
+	glGenVertexArrays(1, &m_raw_attribute);
 	check_error(__FILE__, __LINE__);
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 
 	glGenBuffers(1, &m_vertex_buffer);
@@ -45,7 +45,7 @@ void texture_vertex::init() {
 }
 
 void texture_vertex::use() {
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 }
 void texture_vertex::draw() {
@@ -73,14 +73,14 @@ box2D_vertex::~box2D_vertex()
 {
 	glDeleteBuffers(1, &m_vertex_buffer);
 	glDeleteBuffers(1, &m_index_buffer);
-	glDeleteVertexArrays(1, &m_adaptee);
+	glDeleteVertexArrays(1, &m_raw_attribute);
 }
 
 void box2D_vertex::init() {
 	// texture - buffers and arrays
-	glGenVertexArrays(1, &m_adaptee);
+	glGenVertexArrays(1, &m_raw_attribute);
 	check_error(__FILE__, __LINE__);
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 	glGenBuffers(1, &m_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
@@ -102,12 +102,12 @@ void box2D_vertex::init() {
 }
 
 void box2D_vertex::use() {
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 }
 
 void box2D_vertex::draw() {
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	check_error(__FILE__, __LINE__);
@@ -129,13 +129,13 @@ line_vertex::line_vertex(const float r, const float b, const float g, const floa
 line_vertex::~line_vertex()
 {
 	glDeleteBuffers(1, &m_vertex_buffer);
-	glDeleteVertexArrays(1, &m_adaptee);
+	glDeleteVertexArrays(1, &m_raw_attribute);
 }
 void line_vertex::init() {
 	// line - buffers and arrays
-	glGenVertexArrays(1, &m_adaptee);
+	glGenVertexArrays(1, &m_raw_attribute);
 	check_error(__FILE__, __LINE__);
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 	glGenBuffers(1, &m_vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer);
@@ -155,7 +155,7 @@ void line_vertex::init() {
 }
 
 void line_vertex::use() {
-	glBindVertexArray(m_adaptee);
+	glBindVertexArray(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 }
 

@@ -54,9 +54,9 @@ void glfw_sprite::load(const std::string& asset) {
 }
 
 void glfw_sprite::unload() {
-    if (m_adaptee) {
-        glDeleteTextures(1, &m_adaptee);
-        m_adaptee = 0;
+    if (m_raw_attribute) {
+        glDeleteTextures(1, &m_raw_attribute);
+        m_raw_attribute = 0;
         m_width = 0;
         m_height = 0;
     }

@@ -55,7 +55,7 @@ void glfw_renderer::render() {
 	/* Render here */
 	check_error(__FILE__, __LINE__);
 	int width, height;
-	glfwGetFramebufferSize(m_window->get_adaptee_r(), &width, &height);
+	glfwGetFramebufferSize(m_window->cget_raw_attribute(), &width, &height);
 	const float ratio = static_cast<float>(width) / static_cast<float>(height);
 
 	glViewport(0, 0, width, height);
@@ -121,7 +121,7 @@ void glfw_renderer::render() {
 		m_line_shader.unuse();
 	}
 	/* Swap front and back buffers */
-	glfwSwapBuffers(m_window->get_adaptee_r());
+	glfwSwapBuffers(m_window->cget_raw_attribute());
 	check_error(__FILE__, __LINE__);
 }
 
@@ -138,18 +138,18 @@ void glfw_renderer::set_draw_color(const color& c)
 
 void glfw_renderer::draw(texture const * const t) {
 	if (auto texture = dynamic_cast<glfw_texture const *>(t)) {
-		assert(glIsTexture(texture->get_adaptee_v())); // chack if texture is not a valid OpenGL texture
+		assert(glIsTexture(texture->cget_raw_attribute())); // chack if texture is not a valid OpenGL texture
 
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		model = glm::scale(model, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f)); // <- old, TOREMOVE
 		model = glm::translate(model, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
 		model = glm::rotate(model, texture->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.get_adaptee_v(), "model");
+		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.cget_raw_attribute(), "model");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(model));
 		check_error(__FILE__, __LINE__);
 
-		glBindTexture(GL_TEXTURE_2D, texture->get_adaptee_v());
+		glBindTexture(GL_TEXTURE_2D, texture->cget_raw_attribute());
 		check_error(__FILE__, __LINE__);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -163,13 +163,13 @@ void glfw_renderer::draw(texture const * const t) {
 
 void glfw_renderer::draw(sprite * const s) {
 	if (auto sprite = dynamic_cast<glfw_sprite*>(s)) {
-		assert(glIsTexture(sprite->get_adaptee_v()));
+		assert(glIsTexture(sprite->cget_raw_attribute()));
 
 		sprite->set_active();
 
 		GLint boundTexture;
 		glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
-		assert(boundTexture == sprite->get_adaptee_v());
+		assert(boundTexture == sprite->cget_raw_attribute());
 
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		//model = glm::scale(model, glm::vec3(sprite->get_scale(), sprite->get_scale(), 1.0f));

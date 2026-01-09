@@ -2,9 +2,7 @@
 
 #include "gl_includes.h"
 #include "gl_utility.h" // gl_check_error
-
-/* tsg includes */
-#include <tsg/types.h>
+#include "glfw_adapter.h"
 
 /* std includes */
 #include <filesystem>
@@ -13,7 +11,7 @@
 // glm includes
 #include <glm/glm.hpp>
 
-class shader : public tsg::adapter_v<GLuint>{
+class shader : public glfw_adapter<shader, GLuint> {
 public:
 	shader() = default;
 	shader(const char* vertex_path, const char* fragment_path);
@@ -37,6 +35,6 @@ private:
 // template specialization
 template<>
 inline void shader::load_uniform<glm::mat4>(const std::string& name, const glm::mat4& uniform) const {
-	glUniformMatrix4fv(glGetUniformLocation(m_adaptee, name.c_str()), 1, GL_FALSE, &uniform[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(m_raw_attribute, name.c_str()), 1, GL_FALSE, &uniform[0][0]);
 	check_error(__FILE__, __LINE__);
 }

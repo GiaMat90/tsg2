@@ -6,7 +6,6 @@
 
 /* tsg includes */
 #include <tsg/logger.h>
-#include <tsg/types.h>
 #include <tsg/io.h>
 
 /* std includes */
@@ -22,9 +21,9 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// Create an GLFW Window
-	m_adaptee = glfwCreateWindow(w, h, t.c_str(), nullptr, nullptr);
+	m_raw_attribute = glfwCreateWindow(w, h, t.c_str(), nullptr, nullptr);
 
-	if (!m_adaptee)
+	if (!m_raw_attribute)
 	{
 		const char* description;
 		int code = glfwGetError(&description);
@@ -32,18 +31,18 @@ glfw_window::glfw_window(const std::string& t, const width_t w, const height_t h
 		tsg::logger::get_instance().write("Error {}:{}", code, description);
 		assert(0);
 	}
-	glfwMakeContextCurrent(m_adaptee);
-	glfwSetFramebufferSizeCallback(m_adaptee, resize_window_callback);
+	glfwMakeContextCurrent(m_raw_attribute);
+	glfwSetFramebufferSizeCallback(m_raw_attribute, resize_window_callback);
 }
 
 glfw_window::~glfw_window() { /* Nothing To Do */ }
 
 window::height_t glfw_window::get_height() {
-	glfwGetFramebufferSize(m_adaptee, &m_width, &m_height);
+	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
 	return m_height;
 };
 window::width_t glfw_window::get_width() {
-	glfwGetFramebufferSize(m_adaptee, &m_width, &m_height);
+	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
 	return m_width;
 };
 

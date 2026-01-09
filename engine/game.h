@@ -9,9 +9,6 @@
 #include "game_event.h"
 #include "camera.h"
 
-/* tsg includes */
-#include <tsg/types.h>
-
 /* Graphic impl includes */
 #ifdef GLFW_GAME
 #include "glfw_port/glfw_port.h"

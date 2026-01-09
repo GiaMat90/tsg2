@@ -5,7 +5,6 @@
 #include "geometry.h"
 // tsg includes
 #include <tsg/io.h>
-#include <tsg/types.h>
 // std includes
 #include <vector>
 #include <algorithm>

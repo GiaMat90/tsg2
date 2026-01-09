@@ -27,7 +27,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 glfw_cursor::glfw_cursor(glfw_window* const w, glfw_camera* const c, const std::string& image) : cursor<glfw_window, glfw_camera, glfw_cursor>(w, c, image) {
     set_cursor_image(image);
-    glfwSetMouseButtonCallback(m_window->get_adaptee_r(), mouse_button_callback);
+    glfwSetMouseButtonCallback(m_window->cget_raw_attribute(), mouse_button_callback);
 }
 
 glfw_cursor::~glfw_cursor() {
@@ -64,17 +64,17 @@ void glfw_cursor::set_cursor_image(const std::string& image) {
             glfw_img.pixels = stbi_img.get_data()->m_data;
             m_cursor = glfwCreateCursor(&glfw_img, 0, 0);
             assert(m_cursor);
-            glfwSetCursor(m_window->get_adaptee_r(), m_cursor);
+            glfwSetCursor(m_window->cget_raw_attribute(), m_cursor);
         }
     }
     else {
-        glfwSetCursor(m_window->get_adaptee_r(), NULL);
+        glfwSetCursor(m_window->cget_raw_attribute(), NULL);
     }
 }
 
 tsg::vector<float, 2> glfw_cursor::get_position() const {
     double xpos, ypos;
-    glfwGetCursorPos(m_window->get_adaptee_r(), &xpos, &ypos);
+    glfwGetCursorPos(m_window->cget_raw_attribute(), &xpos, &ypos);
 	// Reverse the viewport transformation: from screen coordinates to NDC
     float x = (2.0f * xpos) / m_window->get_width() - 1.0f;  
     float y = 1.0f - (2.0f * ypos) / m_window->get_height();  

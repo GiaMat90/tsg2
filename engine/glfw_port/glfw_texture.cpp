@@ -13,11 +13,11 @@ texture* texture::create_texture() {
 
 glfw_texture::glfw_texture(int w, int h) : texture(w, h) {
     // Generate texture
-    glGenTextures(1, &m_adaptee);
+    glGenTextures(1, &m_raw_attribute);
     check_error(__FILE__, __LINE__);
 
     // Bind the texture
-    glBindTexture(GL_TEXTURE_2D, m_adaptee);
+    glBindTexture(GL_TEXTURE_2D, m_raw_attribute);
     check_error(__FILE__, __LINE__);
 
     // Set texture parameters
@@ -31,14 +31,14 @@ glfw_texture::glfw_texture(int w, int h) : texture(w, h) {
     check_error(__FILE__, __LINE__);
 }
 glfw_texture::~glfw_texture() {
-    if (m_adaptee) {
-        glDeleteTextures(1, &m_adaptee);
-        m_adaptee = 0u;
+    if (m_raw_attribute) {
+        glDeleteTextures(1, &m_raw_attribute);
+        m_raw_attribute = 0u;
     }
 }
 
 void glfw_texture::set_active() {
-    glBindTexture(GL_TEXTURE_2D, get_adaptee_v());
+    glBindTexture(GL_TEXTURE_2D, m_raw_attribute);
     check_error(__FILE__, __LINE__);
 }
 

@@ -12,18 +12,18 @@ shader::shader(const char* vertex_path, const char* fragment_path) {
 }
 
 void shader::init(const char* vertex_path, const char* fragment_path) {
-	m_adaptee = glCreateProgram();
+	m_raw_attribute = glCreateProgram();
 	GLuint vertex_id = load(vertex_path, SHADER_TYPE::VERTEX);
 	GLuint fragment_id = load(fragment_path, SHADER_TYPE::FRAGMENT);
-	glLinkProgram(m_adaptee);
+	glLinkProgram(m_raw_attribute);
 	// check linking
 	int success;
-	glGetProgramiv(m_adaptee, GL_LINK_STATUS, &success);
+	glGetProgramiv(m_raw_attribute, GL_LINK_STATUS, &success);
 	check_error(__FILE__, __LINE__);
 	if (!success) {
 		char info_log[512];
-		glGetProgramInfoLog(m_adaptee, 512, NULL, info_log);
-		tsg::print("Compiling shader {} fails with error: {}", m_adaptee, info_log);
+		glGetProgramInfoLog(m_raw_attribute, 512, NULL, info_log);
+		tsg::print("Compiling shader {} fails with error: {}", m_raw_attribute, info_log);
 	}
 	// freeing memory
 	glDeleteShader(vertex_id);
@@ -64,7 +64,7 @@ GLuint shader::load(const char * path, const SHADER_TYPE type) {
 			tsg::print("Compiling shader {} fails with error: {}", local_shader, info_log);
 		}
 		// attach to main program
-		glAttachShader(m_adaptee, local_shader);
+		glAttachShader(m_raw_attribute, local_shader);
 		check_error(__FILE__, __LINE__);
 		return local_shader;
 	}
@@ -79,7 +79,7 @@ GLuint shader::load(const char * path, const SHADER_TYPE type) {
 }
 
 void shader::use() {
-	glUseProgram(m_adaptee);
+	glUseProgram(m_raw_attribute);
 	check_error(__FILE__, __LINE__);
 }
 
