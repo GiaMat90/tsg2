@@ -60,6 +60,7 @@ protected: // "virtual" methods
 protected:
 	inline void update_physics(const scalar delta_time) { m_physics.update(delta_time); };
 	inline void render_scene() { m_renderer.render(); };
+	inline game_timer_impl::time_t tick() { return m_timer.tick(); };
 protected:
 	inline void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 	inline void camera_init() { m_camera.init(); };

@@ -159,13 +159,16 @@ void glfw_camera::update_camera(input_engine* const input) const {
 		}
 	} else if (m_options.test(static_cast<std::size_t>(CAMERA_OPTIONS::WASD_CONTROLLED))) {
 		if(input->is_key_pressed(INPUT_KEY::KEY_W)) {
-			camera_data.m_position.y += camera_data.m_speed;
-		} else if (input->is_key_pressed(INPUT_KEY::KEY_S)) {
-			camera_data.m_position.y -= camera_data.m_speed;
-		} else if ( input->is_key_pressed(INPUT_KEY::KEY_A)) {
-			camera_data.m_position.x -= camera_data.m_speed;
-		} else if (input->is_key_pressed(INPUT_KEY::KEY_D)) {
-			camera_data.m_position.x += camera_data.m_speed;
+			camera_data.m_position.y += camera_data.m_speed * m_window->get_height() / 100.0f;
+		} 
+		if (input->is_key_pressed(INPUT_KEY::KEY_S)) {
+			camera_data.m_position.y -= camera_data.m_speed * m_window->get_height() / 100.0f;
+		} 
+		if ( input->is_key_pressed(INPUT_KEY::KEY_A)) {
+			camera_data.m_position.x -= camera_data.m_speed * m_window->get_width() / 100.0f;
+		} 
+		if (input->is_key_pressed(INPUT_KEY::KEY_D)) {
+			camera_data.m_position.x += camera_data.m_speed * m_window->get_width() / 100.0f;
 		} 
 	}
 }
@@ -182,8 +185,22 @@ geometry::vector2D glfw_camera::screen_to_world_2D(const geometry::scalar x, con
 
 geometry::vector3D glfw_camera::screen_to_world_3D(const geometry::scalar x, const geometry::scalar y) {
 	/*TODO*/
-	assert(0);
-	return geometry::vector3D{ .0f, .0f, .0f};
+	assert(0);    
+	// Convert screen coordinates to normalized device coordinates [-1, 1]
+	geometry::scalar depth = 0.0f; // Assuming a depth value of 0 for simplicity
+	glm::vec4 ndc(
+		(2.0f * x) / m_window->get_width() - 1.0f,
+		1.0f - (2.0f * y) / m_window->get_height(), // Flip Y
+		2.0f * depth - 1.0f,
+		1.0f
+	);
+
+	// Transform through inverse projection and view
+	glm::mat4 invViewProj = glm::inverse(get_projection() * get_view());
+	glm::vec4 worldPos = invViewProj * ndc;
+
+	// Perspective divide
+	return geometry::vector3D({ worldPos.x / worldPos.w, worldPos.y / worldPos.w, worldPos.z / worldPos.w });
 }
 
 void glfw_camera::set_initial_zoom(const float z) const {
@@ -220,4 +237,6 @@ glm::mat4 glfw_camera::get_projection() const {
 	return glm::perspective(glm::radians(camera_data.m_zoom), static_cast<float>(m_window->get_width()) / static_cast<float>(m_window->get_height()), 0.1f, 100.0f);
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

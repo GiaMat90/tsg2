@@ -110,13 +110,15 @@ void arrow_and_bubbles::process_input() {
 };
 
 void arrow_and_bubbles::update_game() {
-	const auto tick = m_timer.tick();
+	const auto elapsed_time = tick();
 	/* Actor interactions */
 	bool update_engine_containers{ false };
 	
 	if (cursor_impl::event::left_click == get_cursor_event()){
 		geometry::point2D cursor_pos = get_cursor_world_position();
 		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
+			tsg::print("Cursor pos ({},{})", cursor_pos[geometry::AXES::X], cursor_pos[geometry::AXES::Y]);
+			tsg::print("Bubble BV pos({},{})", b.get_position()[geometry::AXES::X], b.get_position()[geometry::AXES::Y]);
 			return b.get_bounding_volume()->contains(cursor_pos);
 		});
 		if(m_bubbles.end() != victim) {
@@ -150,7 +152,7 @@ void arrow_and_bubbles::update_game() {
 		}
 	}
 	/**/
-	update_physics(tick);
+	update_physics(elapsed_time);
 }
 
 void arrow_and_bubbles::generate_output() {
