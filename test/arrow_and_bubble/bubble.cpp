@@ -14,7 +14,6 @@ bubble::bubble() : actor(), sprite_object(), physics<2>::physical_object()
 
 void bubble::init() {
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\bubble.png")).string());
-	m_sprite->set_scale(0.5f);
 	auto w = m_sprite->get_size().get<geometry::AXES::X>();
 	auto h = m_sprite->get_size().get<geometry::AXES::Y>();
 	// set random position	
