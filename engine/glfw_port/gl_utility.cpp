@@ -31,4 +31,6 @@ void check_error(const std::string& f, int r) {
 void gl_check_error(const std::string& f, int r) { return; };
 #endif
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

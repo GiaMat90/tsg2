@@ -14,4 +14,6 @@ public:
 	GAME_EVENTS get_events();
 };
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

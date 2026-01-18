@@ -247,4 +247,6 @@ void glfw_renderer::draw(const drawable_bounding_volume&) {
 	assert(0);
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

@@ -62,4 +62,6 @@ void glfw_sprite::unload() {
     }
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

@@ -10,4 +10,7 @@ protected:
 	bool init();
 	void quit();
 };
+
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

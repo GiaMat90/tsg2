@@ -30,4 +30,7 @@ bool glfw_game::init() {
 void glfw_game::quit() {
 	// TODO: any additional cleanup
 }
+
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

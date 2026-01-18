@@ -50,6 +50,8 @@ void glfw_window::update() {
 	glfwGetFramebufferSize(m_raw_attribute, &m_width, &m_height);
 };
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif
 
 

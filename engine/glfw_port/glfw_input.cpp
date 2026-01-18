@@ -88,4 +88,6 @@ void glfw_input::get_mouse_position(float& x, float& y) {
 	y = static_cast<float>(ypos) / static_cast<float>(m_window->get_height());
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

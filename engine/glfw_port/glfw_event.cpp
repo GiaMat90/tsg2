@@ -16,4 +16,6 @@ GAME_EVENTS glfw_event::get_events() {
 	check_error(__FILE__, __LINE__);
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

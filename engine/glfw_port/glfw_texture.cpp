@@ -42,4 +42,6 @@ void glfw_texture::set_active() {
     check_error(__FILE__, __LINE__);
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

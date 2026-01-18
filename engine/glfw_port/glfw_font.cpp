@@ -19,4 +19,6 @@ void glfw_font::load_font(const std::string& file_name, const std::size_t dim) {
 	assert(0);
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif

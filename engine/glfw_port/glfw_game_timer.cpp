@@ -25,4 +25,6 @@ const float glfw_game_timer::tick() {
 	return delta_time > threshold_sec ? threshold_sec : delta_time;
 }
 
+#else
+static_assert(false, "GLFW_GAME is not defined");
 #endif
