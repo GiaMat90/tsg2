@@ -177,8 +177,6 @@ void glfw_renderer::draw(sprite * const s) {
 		model = glm::rotate(model, sprite->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		m_sprite_shader.load_uniform("model", model);
-		//GLuint transformLoc = glGetUniformLocation(m_sprite_shader.get_adaptee_v(), "transform");
-		//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		check_error(__FILE__, __LINE__);

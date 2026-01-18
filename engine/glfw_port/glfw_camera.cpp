@@ -179,7 +179,7 @@ geometry::vector2D glfw_camera::screen_to_world_2D(const geometry::scalar x, con
 	geometry::scalar ndc_y = 1.0f - (2.0f * y) / static_cast<geometry::scalar>(m_window->get_height());
 	auto model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 	model = glm::translate(model, glm::vec3(ndc_x, ndc_y, 0.0f));
-	auto world_position = glm::inverse(get_projection() * get_view()) * glm::vec4(ndc_x, ndc_y, 0.0f, 1.0f);
+	auto world_position = glm::inverse(get_view() * get_projection()) * glm::vec4(ndc_x, ndc_y, 0.0f, 1.0f);
 	return geometry::vector2D{ world_position.x, world_position.y };
 }
 
