@@ -14,10 +14,10 @@ void arrow::init() {
 	sprite_object::init();
 	physical_object::init();
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
-	m_sprite->set_where(texture::position({ m_position[geometry::AXES::X], m_position[geometry::AXES::Y]}));
+	m_sprite->set_where(texture::position({ m_position[geometry::axes::x], m_position[geometry::axes::y]}));
 	//m_sprite->set_scale(0.5f);
-	auto w = m_sprite->get_size().get<geometry::AXES::X>();
-	auto h = m_sprite->get_size().get<geometry::AXES::Y>();
+	auto w = m_sprite->get_size().get<geometry::axes::x>();
+	auto h = m_sprite->get_size().get<geometry::axes::y>();
 	geometry::vector2D half_sizes{ w / scalar(2), h / scalar(2) };
 	half_sizes.scale(m_world->get_scale());
 	set_bounding_volume<geometry::bounding_volume::type::aabb>(m_position, half_sizes);
@@ -50,23 +50,23 @@ void arrow::process_input(input_engine* const input) {
 	} else if (input->is_mouse_released(INPUT_MOUSE::LEFT)) {
 		if(dragging) {
 			// compute new offset
-			input->get_mouse_position(offset[geometry::AXES::X], offset[geometry::AXES::Y]);
-			offset[geometry::AXES::Y] *= scalar(-1); // invert Y axis
+			input->get_mouse_position(offset[geometry::axes::x], offset[geometry::axes::y]);
+			offset[geometry::axes::y] *= scalar(-1); // invert Y axis
 			offset = m_position - offset;
 			//m_position -= offset;
-			//tsg::logger::get_instance().write("Dragging ended. New offset: ({},{})", offset[geometry::AXES::X], offset[geometry::AXES::Y]);
+			//tsg::logger::get_instance().write("Dragging ended. New offset: ({},{})", offset[geometry::axes::x], offset[geometry::axes::y]);
 			dragging = false;
 		}
 		else {
-			input->get_mouse_position(m_position[geometry::AXES::X], m_position[geometry::AXES::Y]);
-			m_position[geometry::AXES::Y] *= scalar(-1); // invert Y axis
+			input->get_mouse_position(m_position[geometry::axes::x], m_position[geometry::axes::y]);
+			m_position[geometry::axes::y] *= scalar(-1); // invert Y axis
 			m_position += offset;
-			//tsg::logger::get_instance().write("Arrow position: ({},{})", m_position[geometry::AXES::X], m_position[geometry::AXES::Y]);
+			//tsg::logger::get_instance().write("Arrow position: ({},{})", m_position[geometry::axes::x], m_position[geometry::axes::y]);
 		}
 	}
 #else 
-	input->get_mouse_position(m_position[geometry::AXES::X], m_position[geometry::AXES::Y]);
-	m_position[geometry::AXES::Y] *= scalar(-1); // invert Y axis
+	input->get_mouse_position(m_position[geometry::axes::x], m_position[geometry::axes::y]);
+	m_position[geometry::axes::y] *= scalar(-1); // invert Y axis
 
 	if(input->is_mouse_pressed(INPUT_MOUSE::LEFT)) {
 		actor::set_state(actor::state::attacking);

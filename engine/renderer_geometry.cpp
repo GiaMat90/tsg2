@@ -17,7 +17,7 @@ void drawable_bounding_volume::update() {
 	case geometry::bounding_volume::type::aabb:
 	case geometry::bounding_volume::type::obb: {
 		auto box = static_cast<geometry::box2D*>(m_bv);
-		m_texture->set_where(texture::position({ box->get_center()[geometry::AXES::X], box->get_center()[geometry::AXES::Y] }));
+		m_texture->set_where(texture::position({ box->get_center()[geometry::axes::x], box->get_center()[geometry::axes::y] }));
 		break;
 	}
 	default:

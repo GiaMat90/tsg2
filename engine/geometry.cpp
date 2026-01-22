@@ -8,7 +8,7 @@ namespace geometry {
 		m_w(w), m_i(i), m_j(j), m_k(k) {
 	};
 	quaternion::quaternion(const tsg::vector<scalar, 3>& vec) :
-		m_w(scalar(0)), m_i(vec[AXES::X]), m_j(vec[AXES::Y]), m_k(vec[AXES::Z]) {
+		m_w(scalar(0)), m_i(vec[axes::x]), m_j(vec[axes::y]), m_k(vec[axes::z]) {
 	};
 	void quaternion::normalize() {
 		scalar d = m_w * m_w + m_i * m_i + m_j * m_j + m_k * m_k;
@@ -59,9 +59,9 @@ namespace geometry {
 		vector3D pv({ m_i, m_j, m_k });
 		vector3D qv({ other.m_i, other.m_j, other.m_k });
 		vector3D newVec = m_w * qv + other.m_w * pv + vector3D::cross(pv, qv);
-		this->m_i = newVec[AXES::X];
-		this->m_j = newVec[AXES::Y];
-		this->m_k = newVec[AXES::Z];
+		this->m_i = newVec[axes::x];
+		this->m_j = newVec[axes::y];
+		this->m_k = newVec[axes::z];
 
 		// Scalar component is:
 		// ps * qs - pv . qv

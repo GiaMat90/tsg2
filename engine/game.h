@@ -76,9 +76,11 @@ public:
 	inline physics::vector get_world_scale() const { return m_physics.get_physical_world()->get_scale(); };
 public:
 	/* Camera methods */
+	inline void set_camera_type(const camera_type t) { m_camera.set_type(t); };
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }
 	inline void set_camera_initial_zoom(const scalar z) { m_camera.set_initial_zoom(z); };
-	inline void set_camera_option(const CAMERA_OPTIONS opt) { m_camera.set_option(opt); };
+	inline void set_camera_sensitivity(const scalar s) { m_camera.set_sensitivity(s); }
+	inline void set_camera_controls(const camera_controls opt) { m_camera.set_controls(opt); };
 public:
 	// Cursor methods
 	inline void set_cursor_image(const std::string& image) { m_cursor.set_cursor_image(image); };

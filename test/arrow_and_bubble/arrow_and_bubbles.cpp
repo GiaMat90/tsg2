@@ -4,7 +4,7 @@
 #include <tsg/io.h>
 #include <tsg/os.h>
 
-#define EXCLUDE_BOUNDING_VOLUME 0
+#define EXCLUDE_BOUNDING_VOLUME 1
 
 #define EXCLUDE_BUBBLE 0
 #if !FORCE_INCLUDE_ARROW
@@ -70,14 +70,14 @@ void arrow_and_bubbles::create_physics() {
 
 void arrow_and_bubbles::initialize_camera() {
 	// camera stuff
-	set_camera_initial_zoom(0.5f);
-	set_camera_option(CAMERA_OPTIONS::DIMENSION2);
-	/* Mouse controlled */ 
-	//set_camera_option(CAMERA_OPTIONS::MOUSE_CONTROLLED);
-	set_camera_option(CAMERA_OPTIONS::SCROLLABLE_ZOOM);
-	/* Keyboard controlled */
-	set_camera_option(CAMERA_OPTIONS::KEY_CONTROLLED);
-	set_camera_option(CAMERA_OPTIONS::WASD_CONTROLLED);
+	set_camera_type(camera_type::ortographic);
+	set_camera_initial_zoom(1.0f);
+	set_camera_sensitivity(0.1f);
+	/* Mouse controls */ 
+	set_camera_controls(camera_controls::scrollable_zoom);
+	set_camera_controls(camera_controls::point_where_scrolling);
+	/* Keyboard controls */
+	set_camera_controls(camera_controls::wasd_controlled);
 	camera_init();
 }
 
@@ -117,8 +117,6 @@ void arrow_and_bubbles::update_game() {
 	if (cursor_impl::event::left_click == get_cursor_event()){
 		geometry::point2D cursor_pos = get_cursor_world_position();
 		const auto victim = std::find_if(m_bubbles.begin(), m_bubbles.end(), [&](const bubble& b) {
-			tsg::print("Cursor pos ({},{})", cursor_pos[geometry::AXES::X], cursor_pos[geometry::AXES::Y]);
-			tsg::print("Bubble BV pos({},{})", b.get_position()[geometry::AXES::X], b.get_position()[geometry::AXES::Y]);
 			return b.get_bounding_volume()->contains(cursor_pos);
 		});
 		if(m_bubbles.end() != victim) {
@@ -126,6 +124,17 @@ void arrow_and_bubbles::update_game() {
 			victim->set_visible(drawable::state::invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
 			update_engine_containers = true;
 		}
+	}
+	bool shutdown_game{ true };
+	auto it{ m_bubbles.begin() };
+	while(shutdown_game && it != m_bubbles.end()) {
+		if (it->get_state() != actor::state::dead) {
+			shutdown_game = false;
+		}
+		++it;
+	}
+	if (shutdown_game) {
+		m_state = GAME_STATE::SHUT_DOWN;
 	}
 	/* Update all objects */ // <- this doesn't works because the bounding volume result not istantiated yet when updating the physics
 	if (false /*update_engine_containers*/) {

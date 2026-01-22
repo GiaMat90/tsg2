@@ -5,6 +5,8 @@
 #include <physics.h>
 #include <contact.h>
 
+#define STEADY 0
+
 bubble::bubble() : actor(), sprite_object(), physics<2>::physical_object() 
 {
 	/* setting actor features */
@@ -14,8 +16,8 @@ bubble::bubble() : actor(), sprite_object(), physics<2>::physical_object()
 
 void bubble::init() {
 	m_sprite->load((tsg::os::get_exe_path() / std::filesystem::path("assets\\bubble.png")).string());
-	auto w = m_sprite->get_size().get<geometry::AXES::X>();
-	auto h = m_sprite->get_size().get<geometry::AXES::Y>();
+	auto w = m_sprite->get_size().get<geometry::axes::x>();
+	auto h = m_sprite->get_size().get<geometry::axes::y>();
 	// set random position	
 	static std::random_device rd;
 	static std::mt19937 gen(rd());
@@ -51,14 +53,16 @@ void bubble::init() {
 		}
 	}
 	tsg::logger::get_instance().write("Bubble start at ({},{}), (min_x, max_x) = ({}, {}), (min_y, max_y) = ({}, {})",
-		boxes.back().get_center().get<geometry::AXES::X>(),
-		boxes.back().get_center().get<geometry::AXES::Y>(),
-		boxes.back().get_min(AXES::X),
-		boxes.back().get_max(AXES::X),
-		boxes.back().get_min(AXES::Y),
-		boxes.back().get_max(AXES::Y));
+		boxes.back().get_center().get<geometry::axes::x>(),
+		boxes.back().get_center().get<geometry::axes::y>(),
+		boxes.back().get_min(axes::x),
+		boxes.back().get_max(axes::x),
+		boxes.back().get_min(axes::y),
+		boxes.back().get_max(axes::y));
 	m_position = boxes.back().get_center();
+#if !STEADY
 	m_velocity = { dis(gen), dis(gen) };
+#endif
 	set_mass(scalar(1));
 }
 

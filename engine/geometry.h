@@ -24,10 +24,10 @@ namespace geometry {
 	template <std::size_t Dim>
 	concept GeometricDimension = Dimension2D<Dim> || Dimension3D<Dim>;
 
-	enum AXES : std::size_t {
-		X = 0u,
-		Y = 1u,
-		Z = 2u
+	enum axes : std::size_t {
+		x = 0u,
+		y = 1u,
+		z = 2u
 	};
 
 	enum MEASURE {
@@ -400,8 +400,8 @@ namespace geometry {
 			vector v = p - m_center;
 			for (size_t i = 0u; i < Dim; ++i) {
 				scalar projection = vector::dot(v, m_base.get_row(i));
-				if (geometry::abs(projection) > m_half_sizes.get<AXES::X>() + scalar_zero) {
-					return false;
+				if (geometry::abs(projection) > m_half_sizes.get<axes::x>() + scalar_zero) {
+					 return false;
 				}
 			}
 			return true;
@@ -600,7 +600,7 @@ namespace geometry {
 		if (v.get_norm() < scalar_zero) {
 			assert(0); // zero length segment
 		}
-		return vector2D({ -v.get<AXES::Y>(), v.get<AXES::X>() }).get_normalized();
+		return vector2D({ -v.get<axes::y>(), v.get<axes::x>() }).get_normalized();
 	}
 
 	class inertia_tensor_factory {

@@ -18,6 +18,7 @@ public:
 	void init() const;
 	void update_camera(input_engine* const) const;
 	void set_initial_zoom(const float z) const;
+	void set_sensitivity(const float s) const;
 	template<std::size_t Dim> requires (Dim == 2 || Dim == 3)
 	inline tsg::vector<geometry::scalar, Dim> screen_to_world(const geometry::scalar x, const geometry::scalar y) {
 		if constexpr (Dim == 2) {
@@ -30,9 +31,10 @@ public:
 			assert(0); // not allowed dimension
 		}
 	}
+	geometry::vector2D screen_to_ndc(const geometry::scalar x, const geometry::scalar y) const;
 private:
-	geometry::vector2D screen_to_world_2D(const geometry::scalar x, const geometry::scalar y);
-	geometry::vector3D screen_to_world_3D(const geometry::scalar x, const geometry::scalar y);
+	geometry::vector2D screen_to_world_2D(const geometry::scalar x, const geometry::scalar y) const;
+	geometry::vector3D screen_to_world_3D(const geometry::scalar x, const geometry::scalar y) const;
 private:
 	glm::mat4 get_view() const;
 	glm::mat4 get_projection() const;

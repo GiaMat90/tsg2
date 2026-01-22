@@ -20,7 +20,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using geometry::AXES;
+using geometry::axes;
 
 glfw_renderer::glfw_renderer(glfw_window * const w, glfw_camera * const c) : renderer<glfw_window, glfw_renderer, glfw_camera>(w, c) {
 	// NOTE: OpenGL error checks have been omitted for brevity
@@ -142,7 +142,7 @@ void glfw_renderer::draw(texture const * const t) {
 
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		model = glm::scale(model, glm::vec3(texture->get_scale(), texture->get_scale(), 1.0f)); // <- old, TOREMOVE
-		model = glm::translate(model, glm::vec3(texture->get_where()[AXES::X], texture->get_where()[AXES::Y], texture->get_where()[AXES::Z]));
+		model = glm::translate(model, glm::vec3(texture->get_where()[axes::x], texture->get_where()[axes::y], texture->get_where()[axes::z]));
 		model = glm::rotate(model, texture->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		unsigned int transformLoc = glGetUniformLocation(m_texture_shader.cget_raw_attribute(), "model");
@@ -173,7 +173,7 @@ void glfw_renderer::draw(sprite * const s) {
 
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		//model = glm::scale(model, glm::vec3(sprite->get_scale(), sprite->get_scale(), 1.0f));
-		model = glm::translate(model, glm::vec3(sprite->get_where()[AXES::X], sprite->get_where()[AXES::Y], sprite->get_where()[AXES::Z]));
+		model = glm::translate(model, glm::vec3(sprite->get_where()[axes::x], sprite->get_where()[axes::y], sprite->get_where()[axes::z]));
 		model = glm::rotate(model, sprite->get_rotation(), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		m_sprite_shader.load_uniform("model", model);

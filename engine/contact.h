@@ -6,7 +6,7 @@
 #include <functional>
 
 using geometry::scalar;
-using geometry::AXES;
+using geometry::axes;
 
 template <std::size_t Dim> requires geometry::GeometricDimension<Dim>
 class contact_engine {
@@ -68,35 +68,35 @@ protected:
 	}
 	void computeAABB(const box& first, const box& second) {
 		if constexpr (Dim == 2) {
-			if (first.get_max(AXES::X) > second.get_min(AXES::X)) {
-				if ((first.get_max(AXES::Y) > second.get_min(AXES::Y)) &&
-					(second.get_max(AXES::Y) > first.get_min(AXES::Y)))
+			if (first.get_max(axes::x) > second.get_min(axes::x)) {
+				if ((first.get_max(axes::y) > second.get_min(axes::y)) &&
+					(second.get_max(axes::y) > first.get_min(axes::y)))
 				{
 					/* collision! */
 					/* TODO: resolve collision */
 					m_has_contact = true;/* valid for AABB bounding volumes */
 					scalar penetration_x = std::min(
-						first.get_max(AXES::X) - second.get_min(AXES::X),
-						second.get_max(AXES::X) - first.get_min(AXES::X)
+						first.get_max(axes::x) - second.get_min(axes::x),
+						second.get_max(axes::x) - first.get_min(axes::x)
 					);
 					scalar penetration_y = std::min(
-						first.get_max(AXES::Y) - second.get_min(AXES::Y),
-						second.get_max(AXES::Y) - first.get_min(AXES::Y)
+						first.get_max(axes::y) - second.get_min(axes::y),
+						second.get_max(axes::y) - first.get_min(axes::y)
 					);
 					/* Choose the minimum axes penetration */
 					if (penetration_x < penetration_y) {
 						/* X axes */
 						m_contact.m_penetration = penetration_x;
-						m_contact.m_normal = first.get_center()[AXES::X] < second.get_center()[AXES::X] ?
+						m_contact.m_normal = first.get_center()[axes::x] < second.get_center()[axes::x] ?
 							vector({ scalar(-1), scalar(0) }) : vector({ scalar(1), scalar(0) });
-						m_contact.m_penetration_vector = vector({ m_contact.m_normal[AXES::X] * m_contact.m_penetration, scalar(0) });
+						m_contact.m_penetration_vector = vector({ m_contact.m_normal[axes::x] * m_contact.m_penetration, scalar(0) });
 					}
 					else {
 						/* Y axes */
 						m_contact.m_penetration = penetration_y;
-						m_contact.m_normal = first.get_center()[AXES::Y] < second.get_center()[AXES::Y] ?
+						m_contact.m_normal = first.get_center()[axes::y] < second.get_center()[axes::y] ?
 							vector({ scalar(0), scalar(-1) }) : vector({ scalar(0), scalar(1) });
-						m_contact.m_penetration_vector = vector({ m_contact.m_normal[AXES::Y] * m_contact.m_penetration, scalar(0) });
+						m_contact.m_penetration_vector = vector({ m_contact.m_normal[axes::y] * m_contact.m_penetration, scalar(0) });
 					}
 					m_contact.m_point = (first.get_center() + second.get_center()) * scalar(0.5);
 				}
@@ -130,7 +130,7 @@ protected:
 				for (auto vertex_it = v.begin(); vertex_it != v.end(); ++vertex_it) {
 					for (auto edge_it = e.begin(); edge_it != e.end(); ++edge_it) {
 						/* compute the normal of a 2D vector is straightforward n(v(x,y)) = v(-y,x) */
-						vector normal = { -edge_it->get_direction()[AXES::Y], edge_it->get_direction()[AXES::X] };
+						vector normal = { -edge_it->get_direction()[axes::y], edge_it->get_direction()[axes::x] };
 						vector vertex_start = *vertex_it - edge_it->get_start();
 						scalar distance = vector::dot(normal, vertex_start);
 						if (distance < 0) {

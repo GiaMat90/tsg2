@@ -12,7 +12,7 @@
 
 #define FREE_WORLD 1
 
-using geometry::AXES;
+using geometry::axes;
 using geometry::scalar;
 using geometry::quaternion;
 using geometry::matrix3D;
@@ -43,7 +43,7 @@ public:
 				/* Sorting objects x-based */
 				std::sort(m_objects.begin(), m_objects.end(), [](physical_object* a, physical_object* b)
 					{
-						return a->get_bounding_volume()->get_min(geometry::X) < b->get_bounding_volume()->get_min(geometry::X);
+						return a->get_bounding_volume()->get_min(axes::x) < b->get_bounding_volume()->get_min(axes::x);
 					}
 				);
 				/* First check if there is contact with world walls */
@@ -55,57 +55,57 @@ public:
 							obj->m_velocity += obj->m_inverse_mass * impulse;
 						};
 					// compute if the new position is inside the world, else translate it
-					if (obj->m_box.get_max(AXES::X) > m_limits.get_max(AXES::X)) {
+					if (obj->m_box.get_max(axes::x) > m_limits.get_max(axes::x)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dx = obj->get_bounding_volume()->get_max(AXES::X) - m_limits.get_max(AXES::X);
-							scalar dy{ dx * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::X>() };
-							scalar dz{ dx * obj->m_velocity.get<AXES::Z>() / obj->m_velocity.get<AXES::X>() };
+							scalar dx = obj->get_bounding_volume()->get_max(axes::x) - m_limits.get_max(axes::x);
+							scalar dy{ dx * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::x>() };
+							scalar dz{ dx * obj->m_velocity.get<axes::z>() / obj->m_velocity.get<axes::x>() };
 							obj->translate({ -dx, -dy, -dz });
 							
 						}
 						wall_contact({ scalar(-1), scalar(0), scalar(0) });
 						return;
 					}
-					if (obj->m_box.get_max(AXES::Y) > m_limits.get_max(AXES::Y)) {
+					if (obj->m_box.get_max(axes::y) > m_limits.get_max(axes::y)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dy = obj->get_bounding_volume()->get_max(AXES::Y) - m_limits.get_max(AXES::Y);
-							scalar dx{ dy * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::Y>() };
-							scalar dz{ dy * obj->m_velocity.get<AXES::Z>() / obj->m_velocity.get<AXES::Y>() };
+							scalar dy = obj->get_bounding_volume()->get_max(axes::y) - m_limits.get_max(axes::y);
+							scalar dx{ dy * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::y>() };
+							scalar dz{ dy * obj->m_velocity.get<axes::z>() / obj->m_velocity.get<axes::y>() };
 							obj->translate({ -dx, -dy, -dz });
 							
 						}
 						wall_contact({ scalar(0), scalar(-1), scalar(0) });
 						return;
 					}
-					if (obj->m_box.get_max(AXES::Z) > m_limits.get_max(AXES::Z)) {
+					if (obj->m_box.get_max(axes::z) > m_limits.get_max(axes::z)) {
 						/* Nothing to do for now */
 					}
 					//
-					if (obj->m_box.get_min(AXES::X) < m_limits.get_min(AXES::X)) {
+					if (obj->m_box.get_min(axes::x) < m_limits.get_min(axes::x)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dx = obj->get_bounding_volume()->get_min(AXES::X) - m_limits.get_min(AXES::X);
-							scalar dy{ dx * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::X>() };
-							scalar dz{ dx * obj->m_velocity.get<AXES::Z>() / obj->m_velocity.get<AXES::X>() };
+							scalar dx = obj->get_bounding_volume()->get_min(axes::x) - m_limits.get_min(axes::x);
+							scalar dy{ dx * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::x>() };
+							scalar dz{ dx * obj->m_velocity.get<axes::z>() / obj->m_velocity.get<axes::x>() };
 							obj->translate({ -dx, -dy, -dz });							
 						}
 						wall_contact({ scalar(1), scalar(0), scalar(0) });
 						return;
 					}
-					if (obj->m_box.get_min(AXES::Y) < m_limits.get_min(AXES::Y)) {
+					if (obj->m_box.get_min(axes::y) < m_limits.get_min(axes::y)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dy = obj->get_bounding_volume()->get_min(AXES::Y) - m_limits.get_min(AXES::Y);
-							scalar dx{ dy * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::Y>() };
-							scalar dz{ dy * obj->m_velocity.get<AXES::Z>() / obj->m_velocity.get<AXES::Y>() };
+							scalar dy = obj->get_bounding_volume()->get_min(axes::y) - m_limits.get_min(axes::y);
+							scalar dx{ dy * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::y>() };
+							scalar dz{ dy * obj->m_velocity.get<axes::z>() / obj->m_velocity.get<axes::y>() };
 							obj->translate({ -dx, -dy, -dz });							
 						}
 						wall_contact({ scalar(0), scalar(1), scalar(0) });
 						return;
 					}
-					if (obj->m_box.get_min(AXES::Z) < m_limits.get_min(AXES::Z)) {
+					if (obj->m_box.get_min(axes::z) < m_limits.get_min(axes::z)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dz = obj->get_bounding_volume()->get_min(AXES::Z) - m_limits.get_min(AXES::Z);
-							scalar dx{ dz * obj->m_velocity.get<AXES::X>() / obj->m_velocity.get<AXES::Z>() };
-							scalar dy{ dz * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::Z>() };
+							scalar dz = obj->get_bounding_volume()->get_min(axes::z) - m_limits.get_min(axes::z);
+							scalar dx{ dz * obj->m_velocity.get<axes::x>() / obj->m_velocity.get<axes::z>() };
+							scalar dy{ dz * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::z>() };
 							obj->translate({ -dx, -dy, -dz });
 							
 						}
@@ -130,7 +130,7 @@ public:
 				/* Sorting objects x-based */
 				std::sort(m_objects.begin(), m_objects.end(), [](physical_object* a, physical_object* b) 
 					{
-						return a->get_bounding_volume()->get_min(geometry::X) < b->get_bounding_volume()->get_min(geometry::X);
+						return a->get_bounding_volume()->get_min(axes::x) < b->get_bounding_volume()->get_min(axes::x);
 					}
 				);
 				/* First check if there is contact with world walls */
@@ -143,37 +143,37 @@ public:
 							obj->m_velocity += obj->m_inverse_mass * impulse;
 						};
 					// compute if the object collide with a wall (world limit)
-					if (obj->get_bounding_volume()->get_max(AXES::X) > m_limits.get_max(AXES::X)) {
+					if (obj->get_bounding_volume()->get_max(axes::x) > m_limits.get_max(axes::x)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dx = obj->get_bounding_volume()->get_max(AXES::X) - m_limits.get_max(AXES::X);
-							scalar dy{ dx * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::X>() };
+							scalar dx = obj->get_bounding_volume()->get_max(axes::x) - m_limits.get_max(axes::x);
+							scalar dy{ dx * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::x>() };
 							obj->translate({ -dx, -dy });						
 						}
 						wall_contact({ scalar(-1), scalar(0) });
 						return;
 					}
-					if (obj->get_bounding_volume()->get_max(AXES::Y) > m_limits.get_max(AXES::Y)) {
+					if (obj->get_bounding_volume()->get_max(axes::y) > m_limits.get_max(axes::y)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dy = obj->get_bounding_volume()->get_max(AXES::Y) - m_limits.get_max(AXES::Y);
-							scalar dx{ dy * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::Y>() };
+							scalar dy = obj->get_bounding_volume()->get_max(axes::y) - m_limits.get_max(axes::y);
+							scalar dx{ dy * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::y>() };
 							obj->translate({ -dx, -dy });
 						}
 						wall_contact({ scalar(0), scalar(-1) });
 						return;
 					}
-					if (obj->get_bounding_volume()->get_min(AXES::X) < m_limits.get_min(AXES::X)) {
+					if (obj->get_bounding_volume()->get_min(axes::x) < m_limits.get_min(axes::x)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dx = obj->get_bounding_volume()->get_min(AXES::X) - m_limits.get_min(AXES::X);
-							scalar dy{ dx * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::X>() };
+							scalar dx = obj->get_bounding_volume()->get_min(axes::x) - m_limits.get_min(axes::x);
+							scalar dy{ dx * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::x>() };
 							obj->translate({ -dx, -dy });							
 						}
 						wall_contact({ scalar(1), scalar(0) });
 						return;
 					}
-					if (obj->get_bounding_volume()->get_min(AXES::Y) < m_limits.get_min(AXES::Y)) {
+					if (obj->get_bounding_volume()->get_min(axes::y) < m_limits.get_min(axes::y)) {
 						if (!obj->m_velocity.is_zero()) {
-							scalar dy = obj->get_bounding_volume()->get_min(AXES::Y) - m_limits.get_min(AXES::Y);
-							scalar dx{ dy * obj->m_velocity.get<AXES::Y>() / obj->m_velocity.get<AXES::Y>() };
+							scalar dy = obj->get_bounding_volume()->get_min(axes::y) - m_limits.get_min(axes::y);
+							scalar dx{ dy * obj->m_velocity.get<axes::y>() / obj->m_velocity.get<axes::y>() };
 							obj->translate({ -dx, -dy });							
 						}
 						wall_contact({ scalar(0), scalar(1) });
@@ -221,9 +221,9 @@ public:
 			else if constexpr (Dim == 2) {
 				auto tmp = m_contact_engine.get_point() - a->m_position;
 				auto opposite_impulse = scalar(-1) * impulse;
-				const scalar torque_a = tsg::vector<scalar, 3>::cross(geometry::point3D(tmp), geometry::point3D(opposite_impulse))[AXES::Z];
+				const scalar torque_a = tsg::vector<scalar, 3>::cross(geometry::point3D(tmp), geometry::point3D(opposite_impulse))[axes::z];
 				tmp = m_contact_engine.get_point() - b->m_position;
-				const scalar torque_b = tsg::vector<scalar, 3>::cross(geometry::point3D(tmp), geometry::point3D(opposite_impulse))[AXES::Z];
+				const scalar torque_b = tsg::vector<scalar, 3>::cross(geometry::point3D(tmp), geometry::point3D(opposite_impulse))[axes::z];
 				a->m_angular_speed += torque_a;
 				b->m_angular_speed -= torque_b;
 			}
@@ -381,12 +381,12 @@ public:
 		m_world->m_limits.set_center(vector(scalar(0)));
 		m_world->m_limits.set_half_sizes(vector(scale));
 		tsg::logger::get_instance().write("World limits: ({},{},{},{}) with scale ({},{})", 
-			m_world->m_limits.get_center()[AXES::X] - m_world->m_limits.get_sizes()[AXES::X],
-			m_world->m_limits.get_center()[AXES::X] + m_world->m_limits.get_sizes()[AXES::X],
-			m_world->m_limits.get_center()[AXES::Y] + m_world->m_limits.get_sizes()[AXES::Y],
-			m_world->m_limits.get_center()[AXES::Y] - m_world->m_limits.get_sizes()[AXES::Y],
-			m_world->m_scale[AXES::X],
-			m_world->m_scale[AXES::Y]);
+			m_world->m_limits.get_center()[axes::x] - m_world->m_limits.get_sizes()[axes::x],
+			m_world->m_limits.get_center()[axes::x] + m_world->m_limits.get_sizes()[axes::x],
+			m_world->m_limits.get_center()[axes::y] + m_world->m_limits.get_sizes()[axes::y],
+			m_world->m_limits.get_center()[axes::y] - m_world->m_limits.get_sizes()[axes::y],
+			m_world->m_scale[axes::x],
+			m_world->m_scale[axes::y]);
 	}
 public:
 	inline void update(const float delta_time) {
