@@ -43,6 +43,22 @@ if(GLFW_GAME)
         $<TARGET_FILE_DIR:arrow_and_bubbles>/shaders
 		COMMENT "Copying shaders files to build directory"
 	)
+
+	# Install targets - standalone folder for this executable
+	set(ARROW_INSTALL_DIR arrow_and_bubbles)
+	install(TARGETS arrow_and_bubbles
+		RUNTIME DESTINATION ${ARROW_INSTALL_DIR}
+		COMPONENT arrow_and_bubbles
+	)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/
+		DESTINATION ${ARROW_INSTALL_DIR}/assets
+		COMPONENT arrow_and_bubbles
+	)
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/engine/glfw_port/shaders/
+		DESTINATION ${ARROW_INSTALL_DIR}/shaders
+		COMPONENT arrow_and_bubbles
+		FILES_MATCHING PATTERN "*.glsl"
+	)
 endif()
 
 

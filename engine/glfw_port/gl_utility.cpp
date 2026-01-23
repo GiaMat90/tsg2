@@ -28,7 +28,7 @@ void check_error(const std::string& f, int r) {
 	}
 };
 #else
-void gl_check_error(const std::string& f, int r) { return; };
+void check_error(const std::string& f, int r) { return; };
 #endif
 
 #else

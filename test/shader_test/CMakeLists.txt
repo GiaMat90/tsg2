@@ -40,6 +40,25 @@ if(GLFW_GAME)
         $<TARGET_FILE_DIR:shader_test>/shaders
 		COMMENT "Copying shaders files to build directory"
 	)
+
+	# Install targets - standalone folder for this executable
+	set(SHADER_TEST_INSTALL_DIR shader_test)
+	install(TARGETS shader_test
+		RUNTIME DESTINATION ${SHADER_TEST_INSTALL_DIR}
+		COMPONENT shader_test
+	)
+	# Install engine shaders
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/engine/glfw_port/shaders/
+		DESTINATION ${SHADER_TEST_INSTALL_DIR}/shaders
+		COMPONENT shader_test
+		FILES_MATCHING PATTERN "*.glsl"
+	)
+	# Install test-specific shaders (overwrite/add to engine shaders)
+	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/shaders/
+		DESTINATION ${SHADER_TEST_INSTALL_DIR}/shaders
+		COMPONENT shader_test
+		FILES_MATCHING PATTERN "*.glsl"
+	)
 endif()
 
 

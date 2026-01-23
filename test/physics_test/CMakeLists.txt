@@ -40,6 +40,18 @@ if(GLFW_GAME)
         $<TARGET_FILE_DIR:physics_test>/shaders
 		COMMENT "Copying shaders files to build directory"
 	)
+
+	# Install targets - standalone folder for this executable
+	set(PHYSICS_TEST_INSTALL_DIR physics_test)
+	install(TARGETS physics_test
+		RUNTIME DESTINATION ${PHYSICS_TEST_INSTALL_DIR}
+		COMPONENT physics_test
+	)
+	install(DIRECTORY ${CMAKE_SOURCE_DIR}/engine/glfw_port/shaders/
+		DESTINATION ${PHYSICS_TEST_INSTALL_DIR}/shaders
+		COMPONENT physics_test
+		FILES_MATCHING PATTERN "*.glsl"
+	)
 endif()
 
 
