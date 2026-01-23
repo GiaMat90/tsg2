@@ -57,11 +57,13 @@ install(DIRECTORY ${CMAKE_SOURCE_DIR}/engine/
 set(CPACK_PACKAGE_NAME "tsg2")
 set(CPACK_PACKAGE_VERSION "1.0.0")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "TSG2 Game Engine")
-set(CPACK_PACKAGE_VENDOR "GiaMat90")
+set(CPACK_PACKAGE_VENDOR "Giacomo Matzeu")
+set(CPACK_PACKAGE_CONTACT "giacominomatzeu@gmail.com")
+set(CPACK_CONFIGURATION_TYPES "Debug;Release")
 
-# Create ZIP archive on Windows, TGZ on Linux
+# Create ZIP archive on Windows and NSIS installer, TGZ on Linux
 if(WIN32)
-    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_GENERATOR "ZIP;NSIS")
 else()
     set(CPACK_GENERATOR "TGZ")
 endif()
