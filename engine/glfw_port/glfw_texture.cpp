@@ -37,7 +37,7 @@ glfw_texture::~glfw_texture() {
     }
 }
 
-void glfw_texture::set_active() {
+void glfw_texture::set_active() const {
     glBindTexture(GL_TEXTURE_2D, m_raw_attribute);
     check_error(__FILE__, __LINE__);
 }

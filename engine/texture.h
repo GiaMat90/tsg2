@@ -11,9 +11,11 @@ public:
 	using scale = scalar;
 public:
 	texture(int w = 0, int h = 0) : m_width(w), m_height(h) {};
+	texture(const position& p, const scale& s = 1.0f, const angle a = 0.0f) :
+		m_position(p), m_scale(s), m_angle(a) {};
 	virtual ~texture() = default;
 public:
-	virtual void set_active() = 0;
+	virtual void set_active() const = 0;
 public:
 	/* set and getters */
 	inline void set_size(int w = 0, int h = 0) { m_width = w; m_height = h; }

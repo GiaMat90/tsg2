@@ -11,7 +11,7 @@ public:
 	glfw_texture(int width = 0, int height = 0);
 	virtual ~glfw_texture();
 public:
-	void set_active() override;
+	void set_active() const override;
 protected:
 };
 

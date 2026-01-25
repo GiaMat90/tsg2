@@ -23,11 +23,15 @@ class renderer {
 	using meshes = std::vector<mesh_object*>;
 	//using bounding_volumes = std::vector<drawable_bounding_volume*>;
 	using bounding_volumes = std::vector<geometry::bounding_volume const *>;
+	using fonts = std::vector<font*>;
 public:
 	class creation_exception : public std::exception {
 		const char* what() { return "renderer creation exception"; }
 	};
-	renderer(WindowImpl * const w, CameraImpl * const c) : m_window(w), m_camera(c) {};
+	renderer(WindowImpl* const w, CameraImpl* const c) : m_window(w), m_camera(c) {
+		assert(w);
+		assert(c);
+	};
 	virtual ~renderer() {
 		/* TODO */
 	};
@@ -35,11 +39,11 @@ public:
 	inline void render() { static_cast<RendererImpl*>(this)->render(); };
 	inline void clear() { static_cast<RendererImpl*>(this)->clear(); };
 	inline void set_draw_color(const color& c) { static_cast<RendererImpl*>(this)->set_draw_color(c); };
-	inline void draw(sprite* s) { static_cast<RendererImpl*>(this)->draw(s); };
-	inline void draw(texture* t) { static_cast<RendererImpl*>(this)->draw(t); };	
-	inline void draw(mesh* m) { static_cast<RendererImpl*>(this)->draw(m); };
-	inline void draw(font* f) { static_cast<RendererImpl*>(this)->draw(f); };
-	inline void draw(geometry::bounding_volume* bv) { static_cast<RendererImpl*>(this)->draw(bv); };
+	inline void draw(sprite* const s) { static_cast<RendererImpl*>(this)->draw(s); };
+	inline void draw(texture* const t) { static_cast<RendererImpl*>(this)->draw(t); };	
+	inline void draw(mesh* const m) { static_cast<RendererImpl*>(this)->draw(m); };
+	inline void draw(font * const f) { static_cast<RendererImpl*>(this)->draw(f); };
+	inline void draw(geometry::bounding_volume const * const bv) { static_cast<RendererImpl*>(this)->draw(bv); };
 	inline void draw(const geometry::box3D& b) { static_cast<RendererImpl*>(this)->draw(b); };
 	inline void draw(const geometry::box2D& b) { static_cast<RendererImpl*>(this)->draw(b); };
 	inline void draw(const drawable_bounding_volume& bdv) { static_cast<RendererImpl*>(this)->draw(bdv); };
@@ -70,6 +74,10 @@ public:
 		assert(bv);
 		m_bv_obj.emplace_back(bv);
 	}
+	inline void add_font(font * const f) {
+		assert(f);
+		m_fonts_obj.emplace_back(f);
+	}
 	inline void add_camera(CameraImpl* const c) {
 		assert(c);
 	}
@@ -93,7 +101,8 @@ public:
 			assert(0);
 		}
 		else {
-			throw std::runtime_error("Unsupported drawable type");
+			tsg::print("Unsupported drawable type");
+			assert(0);
 		}
 	}
 	inline void clean_drawables() {
@@ -109,5 +118,6 @@ protected:
 	sprites m_sprites_obj;
 	meshes m_meshes_obj;
 	bounding_volumes m_bv_obj;
+	fonts m_fonts_obj;
 	bool m_bounding_volume_rendering{ false }; // <- evaluate to remove
 };

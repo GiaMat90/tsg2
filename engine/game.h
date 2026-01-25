@@ -1,6 +1,7 @@
 #pragma once
 
 /* tsg2 includes */
+#include "game_impl_includes.h"
 #include "input.h"
 #include "input_object.h"
 #include "game_timer.h"
@@ -8,19 +9,6 @@
 #include "physics.h"
 #include "game_event.h"
 #include "camera.h"
-
-/* Graphic impl includes */
-#ifdef GLFW_GAME
-#include "glfw_port/glfw_port.h"
-#elifdef VULKAN_GAME
-/* TODO */
-#include "vulkan_port/vulkan_port.h"
-#elifdef GLES_GAME
-/* TODO */
-#include "gles_port/gles_port.h"
-#elifdef DIRECTX
-/* TODO */
-#endif
 
 template <size_t Dim, typename GameImpl, typename GraphicImpl = graphic_impl >
 class game : public tsg::non_copyable, public GraphicImpl
@@ -34,8 +22,8 @@ public:
 		STOPPING,
 		SHUT_DOWN
 	};
-	game(const std::string& txt, const unsigned h, const unsigned w, const unsigned fps) : 
-		GraphicImpl(), m_window(txt, h, w), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_cursor(&m_window, &m_camera), m_event(&m_window, &m_input), m_timer(fps), m_physics() {
+	game(const std::string& txt, const unsigned w, const unsigned h, const unsigned fps) : 
+		GraphicImpl(), m_window(txt, w, h), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_cursor(&m_window, &m_camera), m_event(&m_window, &m_input), m_timer(fps), m_physics() {
 		
 	};
 	virtual ~game() {}
@@ -58,20 +46,25 @@ protected: // "virtual" methods
 	/* initialize camera */
 	inline void initialize_camera() { static_cast<GameImpl*>(this)->initialize_camera(); };
 protected:
-	inline void update_physics(const scalar delta_time) { m_physics.update(delta_time); };
 	inline void render_scene() { m_renderer.render(); };
+	inline void update_physics(const scalar delta_time) { m_physics.update(delta_time); };
 	inline game_timer_impl::time_t tick() { return m_timer.tick(); };
-protected:
 	inline void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 	inline void camera_init() { m_camera.init(); };
 public:
+	/* Renderer methods */
 	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
 	inline void add_bounding_volume(geometry::bounding_volume const * const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };
-	inline void add_playable(playable_object* const o) { m_input.add_playable(o); };
-	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); };
+	inline void add_font(font * const f) { m_renderer.add_font(f); };
 	inline void remove_drawable(drawable* const obj) { m_renderer.remove_drawable(obj); };
-	inline void remove_physical_object(physics::physical_object* const o) { m_physics.remove_physical_object(o); };
 	inline void clean_drawables() { m_renderer.clean_drawables(); };
+public:
+	/* Input methods */
+	inline void add_playable(playable_object* const o) { m_input.add_playable(o); };
+public:
+	/* Physics methods */
+	inline void add_physical_object(physics::physical_object* const o) { m_physics.add_physical_object(o); };
+	inline void remove_physical_object(physics::physical_object* const o) { m_physics.remove_physical_object(o); };
 	inline void clean_physical_objects() { m_physics.clean_objects(); };
 	inline physics::vector get_world_scale() const { return m_physics.get_physical_world()->get_scale(); };
 public:
@@ -87,6 +80,10 @@ public:
 	inline cursor_impl::screen_position get_cursor_screen_position() const { return m_cursor.get_screen_position(); };
 	inline decltype(auto) get_cursor_world_position() const { return m_cursor.get_world_position<Dim>(); };
 	inline cursor_impl::event get_cursor_event() const { return m_cursor.get_event(); };	
+public:
+	// Font methods
+	inline font* create_font() { return font::create_font(); }
+	inline void use_font(const font_type t) { m_font.use_font(t); }
 protected: // attributes
 	GAME_STATE m_state{ GAME_STATE::NONE };
 	window_impl m_window;
@@ -96,6 +93,7 @@ protected: // attributes
 	cursor_impl m_cursor;
 	game_event_impl m_event;
 	game_timer_impl m_timer;
+	font_impl m_font;
 	physics m_physics;
 };
 

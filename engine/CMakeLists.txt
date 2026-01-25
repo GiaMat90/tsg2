@@ -52,9 +52,23 @@ if(GLFW_GAME)
 	include_directories(${CMAKE_SOURCE_DIR}/externals/GLFW/include)
 	include_directories(${CMAKE_SOURCE_DIR}/externals/GLFW/deps)
 	include_directories(${CMAKE_SOURCE_DIR}/externals/stb)
+	include_directories(${CMAKE_SOURCE_DIR}/externals/freetype/include)
 
 	target_link_directories(engine PRIVATE "${CMAKE_SOURCE_DIR}/externals/GLFW/lib/")
 	target_link_libraries(engine PRIVATE glfw3.lib)
+
+	# Determine the architecture-specific library path
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		# 64-bit build
+		set(FREETYPE_LIB_DIR "${CMAKE_SOURCE_DIR}/externals/freetype/lib/Win64")
+	elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+		# 32-bit build
+		set(FREETYPE_LIB_DIR "${CMAKE_SOURCE_DIR}/externals/freetype/lib/Win32")
+	else()
+		message(FATAL_ERROR "Unsupported architecture")
+	endif()
+	target_link_directories(engine PRIVATE ${FREETYPE_LIB_DIR})
+	target_link_libraries(engine PRIVATE freetype.lib)
 	
 	add_compile_definitions(GLFW_INCLUDE_NONE)
 
@@ -64,6 +78,15 @@ if(GLFW_GAME)
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/shaders
 		$<TARGET_FILE_DIR:engine>/shaders
+		COMMENT "Copying shaders files to build directory"
+	)
+
+	add_custom_target(copy_fonts ALL)
+
+	add_custom_command(TARGET engine POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory
+		${CMAKE_CURRENT_SOURCE_DIR}/glfw_port/fonts
+		$<TARGET_FILE_DIR:engine>/fonts
 		COMMENT "Copying shaders files to build directory"
 	)
 

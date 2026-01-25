@@ -38,3 +38,9 @@ inline void shader::load_uniform<glm::mat4>(const std::string& name, const glm::
 	glUniformMatrix4fv(glGetUniformLocation(m_raw_attribute, name.c_str()), 1, GL_FALSE, &uniform[0][0]);
 	check_error(__FILE__, __LINE__);
 }
+
+template<>
+inline void shader::load_uniform<glm::vec3>(const std::string& name, const glm::vec3& uniform) const {
+	glUniform3fv(glGetUniformLocation(m_raw_attribute, name.c_str()), 1, &uniform[0]);
+	check_error(__FILE__, __LINE__);
+}

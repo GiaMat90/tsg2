@@ -286,9 +286,8 @@ glm::mat4 glfw_camera::get_projection() const {
 		const float aspect{ static_cast<float>(m_window->get_width()) / static_cast<float>(m_window->get_height()) };
 
 		// How much of the world do we see at once?
-		//const float zoomFactor{ 1.0f + (-camera_data.m_zoom / 180.0f) };
 		const float zoom_factor{ camera_data.m_zoom };
-		const float view_height{ zoom_factor};  // See 20 units tall
+		const float view_height{ zoom_factor}; 
 		const float view_width{ view_height * aspect };
 
 		// Camera shows a window into the world centered at camera position

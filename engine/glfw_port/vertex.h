@@ -15,8 +15,9 @@ public:
 	vertex(const GLuint vertex = 0u, const GLuint index = 0u);
 	virtual ~vertex() = default;
 	virtual void init() = 0;
-	virtual void use() = 0;
-	virtual void draw() = 0;
+	virtual void use() const = 0;
+	virtual void unuse() const = 0;
+	virtual void draw() const = 0;
 protected:
 	GLuint m_vertex_buffer{};
 	GLuint m_index_buffer{};
@@ -27,8 +28,9 @@ public:
 	texture_vertex();
 	~texture_vertex();
 	void init() override;
-	void use() override;
-	void draw() override;
+	void use() const override;
+	void unuse() const override;
+	void draw() const override;
 private:
 	const float m_vertexes[20] = {
 		// Vertex Positions // Texture Coords
@@ -49,8 +51,9 @@ public:
 	virtual ~mesh_vertex();
 public:
 	void init() override;
-	void use() override;
-	void draw() override;
+	void use() const override;
+	void unuse() const override;
+	void draw() const override;
 };
 
 class box2D_vertex : public vertex {
@@ -58,8 +61,9 @@ public:
 	box2D_vertex();
 	~box2D_vertex();
 	void init() override;
-	void use() override;
-	void draw() override;
+	void use() const override;
+	void unuse() const override;
+	void draw() const override;
 private:
 	const float m_vertexes[20] = {
 		-0.5f,  0.5f, 0.f, 0.f, 0.f, // top left
@@ -78,8 +82,9 @@ public:
 	line_vertex(const float r = 1.0f, const float b = 1.0f, const float g = 1.0f, const float a = 1.0f);
 	~line_vertex();
 	void init() override;
-	void use() override;
-	void draw() override;
+	void use() const override;
+	void unuse() const override;
+	void draw() const override;
 private:
 	float m_vertexes[14] = {
 		// Vertex Positions   // Color RGBA
@@ -115,7 +120,7 @@ public:
 		glDeleteBuffers(1, &m_vertex_buffer);
 		glDeleteVertexArrays(1, &m_raw_attribute);
 	}
-	void init() override {
+	void init() const override {
 		// line - buffers and arrays
 		glGenVertexArrays(1, &m_raw_attribute);
 		check_error(__FILE__, __LINE__);
@@ -137,11 +142,11 @@ public:
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-	void use() override {
+	void use() const override {
 		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 	}
-	void draw() override {
+	void draw() const override {
 		glDrawArrays(GL_LINE_LOOP, 0, N);
 		glBindVertexArray(0);
 		check_error(__FILE__, __LINE__);
@@ -200,11 +205,14 @@ public:
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
-	void use() override {
+	void use() const override {
 		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
 	}
-	void draw() override {
+	void unuse() const override {
+		glBindVertexArray(0);
+	}
+	void draw() const override {
 		glDrawArrays(GL_LINE_LOOP, 0, Dim * Dim);
 		glBindVertexArray(0);
 		check_error(__FILE__, __LINE__);
@@ -213,4 +221,18 @@ private:
 	// N dimensional Box has N^2 vertexes, each one with 3 position coords and 4 color RGBA
 	float m_vertexes[7u * Dim * Dim];
 	geometry::box<Dim> const * m_box;
+};
+
+class font_vertex : public vertex {
+public:
+	font_vertex() = default;
+	font_vertex(const float x, const float y, const float w, const float h);
+	~font_vertex();
+	void init() override;
+	void use() const override;
+	void unuse() const override;
+	void draw() const override;
+	void draw(const float x, const float y, const float w, const float h) const;
+private:
+	float m_vertexes[6][4];
 };

@@ -27,8 +27,8 @@ public: // overrided methods
 	void set_draw_color(const color&);
 	void draw(texture const * const);
 	void draw(sprite * const);
-	void draw(mesh const * const);
-	void draw(font const * const);
+	void draw(mesh * const);
+	void draw(font * const);
 	void draw(geometry::bounding_volume const * const);
 	void draw(geometry::box3D const * const);
 	void draw(geometry::box2D const * const); 
@@ -43,8 +43,11 @@ private:
 	/* to render 3D meshes */ 
 	shader m_mesh_shader;
 	mesh_vertex m_mesh_vertex;
-	/* for bounding volumes */
+	/* to render bounding volumes */
 	shader m_line_shader;
 	line_vertex m_line_vertex;
+	/* to render fonts */
+	shader m_font_shader;
+	font_vertex m_font_vertex;
 };
 
