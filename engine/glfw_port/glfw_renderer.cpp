@@ -219,30 +219,17 @@ void glfw_renderer::draw(font * const f) {
 		);
 		font_impl->set_active();
 		const std::string text = font_impl->get_text();
-		for (const auto c : text)
-		{			
-			auto pos{ font_impl->get_char_pos(c) };
-			auto size{ font_impl->get_char_size(c) };
-			//font_vertex fvert(
-			//	static_cast<float>(pos.x) / static_cast<float>(m_window->get_width()),
-			//	static_cast<float>(pos.y) / static_cast<float>(m_window->get_height()),
-			//	static_cast<float>(size.width) / static_cast<float>(m_window->get_width()),
-			//	static_cast<float>(size.height) / static_cast<float>(m_window->get_height())
-			//);
-			//fvert.init();
-			//fvert.use();
-			//font_impl->bind_char_texture(c);
-			//fvert.draw();
-			////fvert.unuse();
-			/* Other way */
-			font_impl->bind_char_texture(c);
+		for (std::size_t i{}; i < font_impl->str_size(); ++i)
+		{
+			font_impl->bind_char_texture(i);
+			const auto char_data{ font_impl->get_character_data(i) };
+			const auto ndc_pos{ m_camera->screen_to_ndc(char_data.pos.x, char_data.pos.y) };
 			m_font_vertex.draw(
-				static_cast<float>(pos.x) / static_cast<float>(m_window->get_width()),
-				static_cast<float>(pos.y) / static_cast<float>(m_window->get_height()),
-				static_cast<float>(size.width) / static_cast<float>(m_window->get_width()),
-				static_cast<float>(size.height) / static_cast<float>(m_window->get_height())
+				ndc_pos[axes::x],
+				ndc_pos[axes::y],
+				static_cast<float>(char_data.size.width) / static_cast<float>(m_window->get_width()),
+				static_cast<float>(char_data.size.height) / static_cast<float>(m_window->get_height())
 			);
-			check_error(__FILE__, __LINE__);
 		}
 	}
 	else {

@@ -52,6 +52,10 @@ protected:
 	inline void set_fps(const unsigned fps) { m_timer.set_fps(fps); }
 	inline void camera_init() { m_camera.init(); };
 public:
+	/* Window methods */
+	inline unsigned get_window_width() { return m_window.get_width(); };
+	inline unsigned get_window_height() { return m_window.get_height(); };
+public:
 	/* Renderer methods */
 	inline void add_drawable(drawable* const obj) { m_renderer.add_drawable(obj); };
 	inline void add_bounding_volume(geometry::bounding_volume const * const bv, const scalar scale) { m_renderer.add_bounding_volume(bv, scale); };

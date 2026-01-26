@@ -25,10 +25,10 @@ public:
 		m_bearing[1] = bearing_y;
 	}
 private:
-	std::size_t m_size[2];			// Size of glyph
-	std::size_t m_bearing[2];		// Offset from baseline to left/top of glyph		
-	std::size_t m_advance{};		// Offset to advance to next glyph
 	unsigned int m_texture_id{};	// ID handle of the glyph texture
+	int m_size[2];			// Size of glyph
+	int m_bearing[2];		// Offset from baseline to left/top of glyph		
+	int m_advance{};		// Offset to advance to next glyph
 };
 
 static std::unordered_map<char, character> s_characters;
@@ -206,50 +206,62 @@ void glfw_font::load_font(const std::filesystem::path& file_name, const std::siz
 	FT_Done_FreeType(ft);
 }
 
-void glfw_font::compute_text_size(const std::string& s, const float scale) {
-	assert(s.empty());
-	size size{ .width{0u}, .height{0u} };
-	for (const char& c : s) {
-		const character& ch = s_characters.at(c);
-		size.width += static_cast<std::size_t>((ch.m_advance >> 6) * scale); // bitshift by 6 to get value in pixels (2^6 = 64)
-		const std::size_t h = static_cast<std::size_t>(ch.m_size[1] * scale);
-		if (h > size.height) {
-			size.height = h;
+void glfw_font::compute_text_size() {
+	if (false == m_text.empty()) {
+		glfw_font::size_t size{ .width{0u}, .height{0u} };
+		for (const char& c : m_text) {
+			const character& ch = s_characters.at(c);
+			size.width += static_cast<std::size_t>((ch.m_advance >> 6) * m_scale); // bitshift by 6 to get value in pixels (2^6 = 64)
+			const std::size_t h = static_cast<std::size_t>(ch.m_size[1] * m_scale);
+			if (h > size.height) {
+				size.height = h;
+			}
 		}
+		m_width = static_cast<int>(size.width);
+		m_height = static_cast<int>(size.height);
+		compute_where();
 	}
-	m_width = static_cast<int>(size.width);
-	m_height = static_cast<int>(size.height);
 }
-glfw_font::size glfw_font::get_text_size(const std::string& s, const float scale) const {
-	assert(s.empty());
-	size size{ .width{0u}, .height{0u} };
-	for (const char& c : s) {
-		const character& ch = s_characters.at(c);
-		size.width += static_cast<std::size_t>((ch.m_advance >> 6) * scale); // bitshift by 6 to get value in pixels (2^6 = 64)
-		const std::size_t h = static_cast<std::size_t>(ch.m_size[1] * scale);
-		if (h > size.height) {
-			size.height = h;
+glfw_font::size_t glfw_font::get_text_size() const {
+	glfw_font::size_t size{ .width{0u}, .height{0u} };
+	if (false == m_text.empty()) {
+		for (const char& c : m_text) {
+			const character& ch = s_characters.at(c);
+			size.width += static_cast<std::size_t>((ch.m_advance >> 6) * m_scale); // bitshift by 6 to get value in pixels (2^6 = 64)
+			const std::size_t h = static_cast<std::size_t>(ch.m_size[1] * m_scale);
+			if (h > size.height) {
+				size.height = h;
+			}
 		}
 	}
 	return size;
 }
 
-glfw_font::size glfw_font::get_char_size(const char c) const {
+glfw_font::size_t glfw_font::get_char_size(const char c) const {
 	const character& ch = s_characters.at(c);
-	size size{
+	glfw_font::size_t size{
 		.width{ static_cast<std::size_t>(ch.m_size[0] * m_scale) },
 		.height{ static_cast<std::size_t>(ch.m_size[1] * m_scale) }
 	};
 	return size;
 }
 
-glfw_font::pos glfw_font::get_char_pos(const char c) const {
+glfw_font::pos_t glfw_font::get_char_pos(const char c) const {
 	const character& ch = s_characters.at(c);
-	pos position{
+	glfw_font::pos_t position{
 		.x{ static_cast<std::size_t>( m_position[0] + ch.m_bearing[0]*m_scale) },
 		.y{ static_cast<std::size_t>(m_position[1] - (ch.m_size[1] - ch.m_bearing[1]) * m_scale) }
 	};
 	return position;
+}
+
+glfw_font::char_data_t glfw_font::get_character_data(const std::size_t i) const {
+	assert(i < m_text.size());
+	glfw_font::char_data_t data{ .size{get_char_size(m_text.at(i))}, .pos{get_char_pos(m_text.at(i))} };
+	for (std::size_t j{}; j < i; ++j) {
+		data.pos.x += (s_characters[m_text.at(j)].m_advance >> 6) * m_scale;
+	}
+	return data;
 }
 
 void glfw_font::cleanup() {
@@ -260,9 +272,13 @@ void glfw_font::cleanup() {
 }
 
 void glfw_font::set_active() const {
-	// with one should I do?
+	// Which one should I do?
 	glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, m_raw_attribute);
+}
+
+void glfw_font::bind_char_texture(const std::size_t i) const {
+	assert(i < m_text.size());
+	bind_char_texture(m_text.at(i));
 }
 
 void glfw_font::bind_char_texture(const char c) const {

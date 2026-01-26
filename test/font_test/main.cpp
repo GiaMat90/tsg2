@@ -15,6 +15,9 @@ public:
 		tsg::logger::get_instance().write("text_render_test ctor");
 	};
 	~text_render_test() {
+		delete m_header_font;
+		delete m_date_font;
+		delete m_time_font;
 		tsg::logger::get_instance().write("text_render_test dtor");
 	};
 	void initialize() {
@@ -25,14 +28,48 @@ public:
 		m_header_font = create_font();
 		m_date_font = create_font();
 		m_time_font = create_font();
+		m_font = create_font();
 		// Set font positions
-		m_header_font->set_where({ 0.0f, 550.0f, 0.0f });
-		m_date_font->set_where({ 0.0f, 250.0f, 0.0f });
-		m_time_font->set_where({ 0.0f, 0.0f, 0.0f });
+		constexpr float num_row{ 2.0f };
+		font_container header_container{ 
+			get_window_width() / std::size_t(4), 
+			get_window_width() - (get_window_width() / std::size_t(4)),
+			get_window_height() / std::size_t(2) / std::size_t(num_row),
+			get_window_height() / std::size_t(2)
+		};
+		m_header_font->set_container(
+			{
+				get_window_width() / std::size_t(4),
+				get_window_width() - (get_window_width() / std::size_t(4)),
+				get_window_height() / std::size_t(2) / std::size_t(num_row),
+				get_window_height() / std::size_t(2)
+			}
+		);
+		m_date_font->set_container(
+			{
+				get_window_width() / std::size_t(4),
+				get_window_width() - (get_window_width() / std::size_t(4)),
+				std::size_t(2) * get_window_height() / std::size_t(2) / std::size_t(num_row),
+				get_window_height() / std::size_t(2)
+			}
+		);
+		m_time_font->set_container(
+			{
+				get_window_width() / std::size_t(4),
+				get_window_width() - (get_window_width() / std::size_t(4)),
+				std::size_t(3) * get_window_height() / std::size_t(2) / std::size_t(num_row),
+				get_window_height() / std::size_t(2)
+			}
+		);
+		// set aligments
+		m_header_font->set_alignmet(font_horizontal_alignment::center, font_vertical_alignment::center);
+		m_date_font->set_alignmet(font_horizontal_alignment::center, font_vertical_alignment::center);
+		m_time_font->set_alignmet(font_horizontal_alignment::center, font_vertical_alignment::center);
 		// Load fonts
-		m_header_font->load_font(12u, font_type::carlito, font_style::regular);
-		m_date_font->load_font(12u, font_type::carlito, font_style::regular);
-		m_time_font->load_font(12u, font_type::carlito, font_style::regular);
+		constexpr std::size_t font_size{ 72u };
+		m_header_font->load_font(font_size, font_type::carlito, font_style::regular);
+		m_date_font->load_font(font_size, font_type::carlito, font_style::regular);
+		m_time_font->load_font(font_size, font_type::carlito, font_style::regular);
 		// Set font texts
 		m_header_font->set_text(m_header);
 		m_date_font->set_text(m_date);
@@ -76,7 +113,7 @@ public:
 private:
 	void update() {
 		// Nothing to update
-		m_date = tsg::date::get_date(tsg::date::TYPE::ONLY_DATE, false);
+		m_date = tsg::date::get_date(tsg::date::TYPE::ONLY_DATE, false).replace_c(' ', '/');
 		m_time = tsg::date::get_date(tsg::date::TYPE::ONLY_TIME, false);
 		m_date_font->set_text(m_date);
 		m_time_font->set_text(m_time);
@@ -88,6 +125,7 @@ private:
 	font* m_header_font{ nullptr };
 	font* m_date_font{ nullptr };
 	font* m_time_font{ nullptr };
+	font* m_font{ nullptr };
 };
 
 int main() {

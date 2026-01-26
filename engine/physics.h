@@ -288,9 +288,9 @@ public:
 	public:
 		/* Bounding volume stuff */
 		template <geometry::bounding_volume::type T, typename ...Args>
-		inline void set_bounding_volume(Args... args) {
+		inline void set_bounding_volume(Args&&... args) {
 			if constexpr (T == bounding_volume::type::aabb || T == bounding_volume::type::obb) {
-				m_bounding_volume = new geometry::box<Dim>(args...);
+				m_bounding_volume = new geometry::box<Dim>(std::forward<decltype(args)>(args)...);
 			}
 			else if constexpr (T == bounding_volume::type::sphere) {
 				m_bounding_volume = new geometry::sphere<Dim>(args...);
