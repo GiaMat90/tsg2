@@ -10,7 +10,7 @@
 /* std includes */
 #include <numbers>	// pi
 
-class vertex : public glfw_adapter<vertex, GLuint> {
+class vertex : public glfw_adapter<GLuint> {
 public:
 	vertex(const GLuint vertex = 0u, const GLuint index = 0u);
 	virtual ~vertex() = default;

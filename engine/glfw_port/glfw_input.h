@@ -11,10 +11,10 @@ public:
 	~glfw_input();
 public:
 	// overloaded methods
-	bool is_key_pressed(const INPUT_KEY key) override final;
+	bool is_key_pressed(const input_key key) override final;
 	// mouse
-	bool is_mouse_clicked(const INPUT_MOUSE side) override final;
-	bool is_mouse_pressed(const INPUT_MOUSE side) override final;
-	bool is_mouse_released(const INPUT_MOUSE side) override final;
+	bool is_mouse_clicked(const input_mouse side) override final;
+	bool is_mouse_pressed(const input_mouse side) override final;
+	bool is_mouse_released(const input_mouse side) override final;
 	void get_mouse_position(float& x, float& y) override final;
 };

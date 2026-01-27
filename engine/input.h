@@ -5,63 +5,63 @@
 #include <vector>
 #include <cassert>
 
-enum class INPUT_TYPE {
-	KEYBOARD,
-	MOUSE,
-	GAMEPAD,
-	JOYSTICK
+enum class input_type {
+	keyboard,
+	mouse,
+	gamepad,
+	joystick
 };
-enum class INPUT_KEY : int {
-	KEY_ESC,
-	KEY_RET,
-	KEY_LCTRL,
-	KEY_RCTRL,
-	KEY_LSHIFT,
-	KEY_RSHIFT,
-	KEY_RALT,
-	KEY_LALT,
-	KEY_TAB,
-	KEY_SPACE,
-	KEY_LEFT,
-	KEY_RIGHT,
-	KEY_DOWN,
-	KEY_UP,
-	KEY_Q,
-	KEY_W,
-	KEY_E,
-	KEY_R,
-	KEY_T,
-	KEY_Y,
-	KEY_U,
-	KEY_I,
-	KEY_O,
-	KEY_P,
-	KEY_A,
-	KEY_S,
-	KEY_D,
-	KEY_F,
-	KEY_G,
-	KEY_H,
-	KEY_J,
-	KEY_K,
-	KEY_L,
-	KEY_Z,
-	KEY_X,
-	KEY_C,
-	KEY_V,
-	KEY_B,
-	KEY_N,
-	KEY_M,
-	MOUSE_LEFT,
-	MOUSE_RIGHT,
-	MOUSE_MIDDLE,
-	MAX_KEY = MOUSE_MIDDLE
+enum class input_key : int {
+	key_esc,
+	key_ret,
+	key_lctrl,
+	key_rctrl,
+	key_lshift,
+	key_rshift,
+	key_ralt,
+	key_lalt,
+	key_tab,
+	key_space,
+	key_left,
+	key_right,
+	key_down,
+	key_up,
+	key_q,
+	key_w,
+	key_e,
+	key_r,
+	key_t,
+	key_y,
+	key_u,
+	key_i,
+	key_o,
+	key_p,
+	key_a,
+	key_s,
+	key_d,
+	key_f,
+	key_g,
+	key_h,
+	key_j,
+	key_k,
+	key_l,
+	key_z,
+	key_x,
+	key_c,
+	key_v,
+	key_b,
+	key_n,
+	key_m,
+	mouse_left,
+	mouse_right,
+	mouse_middle,
+	max_key = mouse_middle
 };
-enum class INPUT_MOUSE {
-	LEFT,
-	RIGHT,
-	MIDDLE,
-	SCROLL
+enum class input_mouse {
+	left,
+	right,
+	middle,
+	scroll
 };
 
 
@@ -71,11 +71,11 @@ public:
 	virtual ~input_engine() = default;
 public:
 	// keyboard
-	virtual bool is_key_pressed(const INPUT_KEY key) = 0;
+	virtual bool is_key_pressed(const input_key key) = 0;
 	// mouse
-	virtual bool is_mouse_clicked(const INPUT_MOUSE side) = 0;
-	virtual bool is_mouse_pressed(const INPUT_MOUSE side) = 0;
-	virtual bool is_mouse_released(const INPUT_MOUSE side) = 0;
+	virtual bool is_mouse_clicked(const input_mouse side) = 0;
+	virtual bool is_mouse_pressed(const input_mouse side) = 0;
+	virtual bool is_mouse_released(const input_mouse side) = 0;
 	virtual void get_mouse_position(float& x, float& y) = 0;
 };
 
@@ -97,11 +97,11 @@ public:
 public:
 	// kind of inputs events
 	// keyboard
-	bool is_key_pressed(const INPUT_KEY key) override { return static_cast<InputImpl*>(this)->is_key_pressed(key); };
+	bool is_key_pressed(const input_key key) override { return static_cast<InputImpl*>(this)->is_key_pressed(key); };
 	// mouse
-	bool is_mouse_clicked(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_clicked(side); };
-	bool is_mouse_pressed(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_pressed(side); };
-	bool is_mouse_released(const INPUT_MOUSE side) override { return static_cast<InputImpl*>(this)->is_mouse_released(side); };
+	bool is_mouse_clicked(const input_mouse side) override { return static_cast<InputImpl*>(this)->is_mouse_clicked(side); };
+	bool is_mouse_pressed(const input_mouse side) override { return static_cast<InputImpl*>(this)->is_mouse_pressed(side); };
+	bool is_mouse_released(const input_mouse side) override { return static_cast<InputImpl*>(this)->is_mouse_released(side); };
 	void get_mouse_position(float& x, float& y) override { return static_cast<InputImpl *>(this)->get_mouse_position(x, y); };
 	// gamepad
 	/* TODO */

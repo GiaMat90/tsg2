@@ -11,7 +11,7 @@ public:
 	glfw_event(glfw_window * const w, glfw_input * const i);
 	~glfw_event() = default;
 public:
-	GAME_EVENTS get_events();
+	game_events get_events();
 };
 
 #else

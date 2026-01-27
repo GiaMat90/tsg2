@@ -8,10 +8,10 @@
 
 glfw_event::glfw_event(glfw_window* const w, glfw_input* const i) : game_event<glfw_window, glfw_input, glfw_event>(w, i) {};
 
-GAME_EVENTS glfw_event::get_events() {
+game_events glfw_event::get_events() {
 	glfwPollEvents();
-	if(m_input->is_key_pressed(m_event_key_map[GAME_EVENTS::QUIT])) {
-		return GAME_EVENTS::QUIT;
+	if(m_input->is_key_pressed(m_event_key_map[game_events::quit])) {
+		return game_events::quit;
 	}
 	check_error(__FILE__, __LINE__);
 }

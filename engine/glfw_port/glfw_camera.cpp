@@ -152,26 +152,26 @@ void glfw_camera::update_camera(input_engine* const input) const {
 		return;
 	}
 	if (m_controls.test(static_cast<std::size_t>(camera_controls::left_click_drag))) {
-		if (input->is_mouse_pressed(INPUT_MOUSE::LEFT))
+		if (input->is_mouse_pressed(input_mouse::left))
 		{
 			mouse_2D();
 		}
-		if(input->is_mouse_released(INPUT_MOUSE::LEFT))
+		if(input->is_mouse_released(input_mouse::left))
 		{
 		}
 	} 
 	if (m_controls.test(static_cast<std::size_t>(camera_controls::wasd_controlled))) {
 		// camera speed its thought as percentage of the window size
-		if(input->is_key_pressed(INPUT_KEY::KEY_W)) {
+		if(input->is_key_pressed(input_key::key_w)) {
 			camera_data.m_position.y -= camera_data.m_sensitivity;
 		} 
-		if (input->is_key_pressed(INPUT_KEY::KEY_S)) {
+		if (input->is_key_pressed(input_key::key_s)) {
 			camera_data.m_position.y += camera_data.m_sensitivity;
 		}
-		if (input->is_key_pressed(INPUT_KEY::KEY_A)) {
+		if (input->is_key_pressed(input_key::key_a)) {
 			camera_data.m_position.x -= camera_data.m_sensitivity;
 		}
-		if (input->is_key_pressed(INPUT_KEY::KEY_D)) {
+		if (input->is_key_pressed(input_key::key_d)) {
 			camera_data.m_position.x += camera_data.m_sensitivity;
 		} 
 	}

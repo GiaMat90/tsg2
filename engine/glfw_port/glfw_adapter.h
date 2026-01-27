@@ -1,6 +1,6 @@
 #pragma once 
 
-template <typename AdapterImpl, typename RawType>
+template <typename RawType>
 class glfw_adapter {
 public:
 	inline RawType get_raw_attribute() const { return m_raw_attribute; };
@@ -8,3 +8,4 @@ public:
 protected:
 	RawType m_raw_attribute;
 };
+

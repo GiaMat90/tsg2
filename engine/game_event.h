@@ -5,11 +5,11 @@
 #include <cassert>
 #include <unordered_map>
 
-enum class GAME_EVENTS : int {
-	QUIT,
-	PAUSE,
-	MAIN_MENU,
-	MAX_EVENT = MAIN_MENU
+enum class game_events : int {
+	quit,
+	pause,
+	main_menu,
+	max_event = main_menu
 };
 
 template <typename WindowImpl, typename InputImpl, typename GameEventImpl>
@@ -21,14 +21,14 @@ public:
 		assert(i);
 	};
 public:
-	GAME_EVENTS get_events() { return static_cast<GameEventImpl*>(this)->get_events(); };
-	inline void set_key_event(GAME_EVENTS event, INPUT_KEY key) {
-		assert(event <= GAME_EVENTS::MAX_EVENT);
-		assert(key <= INPUT_KEY::MAX_KEY);
+	game_events get_events() { return static_cast<GameEventImpl*>(this)->get_events(); };
+	inline void set_key_event(game_events event, input_key key) {
+		assert(event <= game_events::max_event);
+		assert(key <= input_key::max_key);
 		m_event_key_map[event] = key;
 	};
 protected:
 	WindowImpl* m_window{ nullptr };
 	InputImpl* m_input{ nullptr };
-	std::unordered_map<GAME_EVENTS, INPUT_KEY> m_event_key_map;
+	std::unordered_map<game_events, input_key> m_event_key_map;
 };

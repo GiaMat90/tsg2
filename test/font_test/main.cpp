@@ -79,11 +79,11 @@ public:
 		add_font(m_date_font);
 		add_font(m_time_font);
 
-		m_state = GAME_STATE::RUNNING;
+		m_state = game_state::running;
 	};
 	void run_game() {
 		tsg::logger::get_instance().write("text_render_test run_game");
-		while (GAME_STATE::RUNNING == m_state) {
+		while (game_state::running == m_state) {
 			process_input();
 			update_game();
 			generate_output();
@@ -99,8 +99,8 @@ public:
 		camera_init();
 	}
 	void process_input() {
-		if (GAME_EVENTS::QUIT == get_event()) {
-			m_state = GAME_STATE::SHUT_DOWN;
+		if (game_events::quit == get_event()) {
+			m_state = game_state::shut_down;
 		}
 		m_input.process_input();
 	};

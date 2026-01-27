@@ -5,7 +5,8 @@
 #include "glfw_adapter.h"
 #include <window.h>
 
-class glfw_window : public window, public glfw_adapter<glfw_window, GLFWwindow*> {
+
+class glfw_window : public window, public glfw_adapter<GLFWwindow*> {
 public:
 	glfw_window(const std::string& s = "", const window::width_t w = 0u, const window::height_t h = 0u);
 	~glfw_window();	

@@ -47,11 +47,11 @@ void arrow_and_bubbles::initialize() {
 	set_cursor_image((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
 
 	initialize_objects();
-	m_state = GAME_STATE::RUNNING;
+	m_state = game_state::running;
 }
 
 void arrow_and_bubbles::run_game() {
-	while (GAME_STATE::RUNNING == m_state) {
+	while (game_state::running == m_state) {
 		process_input();
 		update_game();
 		generate_output();
@@ -103,8 +103,8 @@ void arrow_and_bubbles::initialize_objects() {
 }
 
 void arrow_and_bubbles::process_input() {
-	if( GAME_EVENTS::QUIT == get_event()) {
-		m_state = GAME_STATE::SHUT_DOWN;
+	if( game_events::quit == get_event()) {
+		m_state = game_state::shut_down;
 	}
 	m_input.process_input();
 };
@@ -134,7 +134,7 @@ void arrow_and_bubbles::update_game() {
 		++it;
 	}
 	if (shutdown_game) {
-		m_state = GAME_STATE::SHUT_DOWN;
+		m_state = game_state::shut_down;
 	}
 	/* Update all objects */ // <- this doesn't works because the bounding volume result not istantiated yet when updating the physics
 	if (false /*update_engine_containers*/) {

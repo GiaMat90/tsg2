@@ -15,12 +15,12 @@ class game : public tsg::non_copyable, public GraphicImpl
 {
 	using physics = physics<Dim>;
 public:
-	enum class GAME_STATE {
-		NONE,
-		INITIALIZING,
-		RUNNING,
-		STOPPING,
-		SHUT_DOWN
+	enum class game_state {
+		none,
+		initializing,
+		running,
+		stopping,
+		shut_down
 	};
 	game(const std::string& txt, const unsigned w, const unsigned h, const unsigned fps) : 
 		GraphicImpl(), m_window(txt, w, h), m_camera(&m_window), m_renderer(&m_window, &m_camera), m_input(&m_window, &m_camera), m_cursor(&m_window, &m_camera), m_event(&m_window, &m_input), m_timer(fps), m_physics() {
@@ -32,7 +32,7 @@ public:
 	void shutdown() { static_cast<GameImpl*>(this)->shutdown(); };
 public:
 	window * const get_window() const { return &m_window; }
-	GAME_EVENTS get_event() { return m_event.get_events(); };
+	game_events get_event() { return m_event.get_events(); };
 protected: // "virtual" methods
 	inline void process_input() { static_cast<GameImpl*>(this)->process_input(); };
 	/* Calculate elapsed time and update game-object states */
@@ -89,7 +89,7 @@ public:
 	inline font* create_font() { return font::create_font(); }
 	inline void use_font(const font_type t) { m_font.use_font(t); }
 protected: // attributes
-	GAME_STATE m_state{ GAME_STATE::NONE };
+	game_state m_state{ game_state::none };
 	window_impl m_window;
 	camera_impl m_camera;
 	renderer_impl m_renderer;

@@ -11,7 +11,7 @@
 // glm includes
 #include <glm/glm.hpp>
 
-class shader : public glfw_adapter<shader, GLuint> {
+class shader : public glfw_adapter<GLuint> {
 public:
 	shader() = default;
 	shader(const char* vertex_path, const char* fragment_path);
