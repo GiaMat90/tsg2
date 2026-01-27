@@ -24,6 +24,21 @@ if(GLFW_GAME)
 	# Linking GLFW libs
 	target_link_directories(physics_test PRIVATE "${CMAKE_SOURCE_DIR}/externals/GLFW/lib/")
 	target_link_libraries(physics_test PRIVATE glfw3.lib)
+	# Linking FreeType lib needed by TSG2
+	# Determine the architecture-specific library path
+	if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+		# 64-bit build
+		set(FREETYPE_LIB_DIR "${CMAKE_SOURCE_DIR}/externals/freetype/lib/Win64")
+	elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+		# 32-bit build
+		set(FREETYPE_LIB_DIR "${CMAKE_SOURCE_DIR}/externals/freetype/lib/Win32")
+	else()
+		message(FATAL_ERROR "Unsupported architecture")
+	endif()
+	target_link_directories(physics_test PRIVATE ${FREETYPE_LIB_DIR})
+	target_link_libraries(physics_test PRIVATE freetype.lib)
+
+
 	add_compile_definitions(GLFW_INCLUDE_NONE)
 
 	# Settings compiler options

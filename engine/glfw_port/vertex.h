@@ -120,7 +120,7 @@ public:
 		glDeleteBuffers(1, &m_vertex_buffer);
 		glDeleteVertexArrays(1, &m_raw_attribute);
 	}
-	void init() const override {
+	void init() override {
 		// line - buffers and arrays
 		glGenVertexArrays(1, &m_raw_attribute);
 		check_error(__FILE__, __LINE__);
@@ -145,6 +145,9 @@ public:
 	void use() const override {
 		glBindVertexArray(m_raw_attribute);
 		check_error(__FILE__, __LINE__);
+	}
+	void unuse() const override {
+		glBindVertexArray(0);
 	}
 	void draw() const override {
 		glDrawArrays(GL_LINE_LOOP, 0, N);
