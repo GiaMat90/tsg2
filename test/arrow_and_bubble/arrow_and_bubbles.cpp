@@ -71,7 +71,7 @@ void arrow_and_bubbles::create_physics() {
 void arrow_and_bubbles::initialize_camera() {
 	// camera stuff
 	set_camera_type(camera_type::ortographic);
-	set_camera_initial_zoom(1.0f);
+	set_camera_initial_zoom(10.0f);
 	set_camera_sensitivity(0.1f);
 	/* Mouse controls */ 
 	set_camera_controls(camera_controls::scrollable_zoom);
