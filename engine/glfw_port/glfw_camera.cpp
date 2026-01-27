@@ -133,15 +133,20 @@ glfw_camera::glfw_camera(glfw_window* const w) : camera(w) {
 glfw_camera::~glfw_camera() {}
 
 void glfw_camera::init() const {
-	glfwSetInputMode(m_window->cget_raw_attribute(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 	// make sure system sensible to mouse
 	if(m_controls.test(static_cast<std::size_t>(camera_controls::follow_target))) {
 		assert(m_target);
 	}
 	if (m_controls.test(static_cast<std::size_t>(camera_controls::scrollable_zoom))) {
+		if (GLFW_CURSOR_CAPTURED != glfwGetInputMode(m_window->cget_raw_attribute(), GLFW_CURSOR)) {
+			glfwSetInputMode(m_window->cget_raw_attribute(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+		}
 		glfwSetScrollCallback(m_window->cget_raw_attribute(), scroll_callback);
 	}
 	if (m_controls.test(static_cast<std::size_t>(camera_controls::point_where_scrolling))) {
+		if (GLFW_CURSOR_CAPTURED != glfwGetInputMode(m_window->cget_raw_attribute(), GLFW_CURSOR)) {
+			glfwSetInputMode(m_window->cget_raw_attribute(), GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+		}
 		camera_data.m_capture_scroll_position = true;
 		glfwSetCursorPosCallback(m_window->cget_raw_attribute(), capture_mouse_position);
 	}

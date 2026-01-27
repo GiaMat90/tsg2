@@ -30,19 +30,19 @@ namespace geometry {
 		z = 2u
 	};
 
-	enum MEASURE {
-		WIDTH = 0,
-		HEIGHT = 1,
-		DEPTH = 2
+	enum measure {
+		width = 0,
+		height = 1,
+		depth = 2
 	};
 
-	enum class SHAPE_TYPE {
-		NONE,
-		RECTANGLE,
-		CIRCLE,
-		TRIANGLE,
-		SPHERE,
-		PYRAMID
+	enum class shape_type {
+		none,
+		rectangle,
+		circle,
+		triangle,
+		sphere,
+		pyramid
 	};
 
 #ifdef DOUBLE_PRECISION

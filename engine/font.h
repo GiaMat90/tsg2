@@ -61,12 +61,20 @@ public:
 	inline void set_scale(const float s) { m_scale = s; };
 	inline void set_text(const std::string& s) {
 		m_text = s;
-		compute_text_size();
-		compute_where();		
+		if (false == m_text.empty()) {
+			compute_text_size();
+			compute_where();
+		}
+	}
+	inline void set_container(const font_container& fc) {
+		m_container = fc;
+		if (false == m_text.empty()) {
+			compute_text_size();
+			compute_where();
+		}
 	}
 	inline void add_row(const std::string& r) { m_rows.emplace_back(r); };
 	inline void set_where(const texture::position& p) { m_position = p; }
-	inline void set_container(const font_container& fc) { m_container = fc; }
 	inline void set_color(const color& c) { m_color = c; }
 	inline texture::position get_where() const { return m_position; }
 	inline std::string get_text() const { return m_text; }

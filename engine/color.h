@@ -5,17 +5,36 @@
 
 class color {
 public:
+	enum class predefined : uint32_t {
+		white	= 0xffffffff,
+		black	= 0x000000ff,
+		red		= 0xff0000ff,
+		green	= 0x00ff00ff,
+		blue	= 0x0000ffff,
+		yellow	= 0xffff00ff,
+		cyan	= 0x00ffffff,
+		magenta = 0xff00ffff,
+	};
+public:
 	enum rgba : unsigned {
 		red		= 0,
 		green	= 1,
 		blue	= 2,
 		alpha	= 3,
 	};
-	color(uint8_t r = 0u, uint8_t g = 0u, uint8_t b = 0u, uint8_t a = 0u) {
-		assert(r <= 255u);
-		assert(g <= 255u);
-		assert(b <= 255u);
-		assert(a <= 255u);
+	color() {
+		m_rgba[0] = 0u;
+		m_rgba[1] = 0u;
+		m_rgba[2] = 0u;
+		m_rgba[3] = 255u;
+	};
+	color(const predefined rgba_value) {
+		m_rgba[0] = (static_cast<uint32_t>(rgba_value) >> 24u) & 0xffu;
+		m_rgba[1] = (static_cast<uint32_t>(rgba_value) >> 16u) & 0xffu;
+		m_rgba[2] = (static_cast<uint32_t>(rgba_value) >> 8u) & 0xffu;
+		m_rgba[3] = static_cast<uint32_t>(rgba_value) & 0xffu;
+	};
+	color(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 		m_rgba[0] = r;
 		m_rgba[1] = g;
 		m_rgba[2] = b;

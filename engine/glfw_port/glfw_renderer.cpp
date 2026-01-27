@@ -214,8 +214,7 @@ void glfw_renderer::draw(mesh * const m) {
 void glfw_renderer::draw(font * const f) {
 	if (auto font_impl = dynamic_cast<glfw_font*>(f)) {
 		m_font_shader.load_uniform("textColor",
-			//glm::vec3(font_impl->get_color().get_normalized(color::red), font_impl->get_color().get_normalized(color::green), font_impl->get_color().get_normalized(color::blue))
-			glm::vec3(0.9f, 0.8f, 0.7f) // inverse of background color petrolio
+			glm::vec3(font_impl->get_color().get_normalized(color::rgba::red), font_impl->get_color().get_normalized(color::rgba::green), font_impl->get_color().get_normalized(color::rgba::blue))
 		);
 		font_impl->set_active();
 		const std::string text = font_impl->get_text();
