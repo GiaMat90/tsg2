@@ -4,6 +4,8 @@
 #include <tsg/io.h>
 #include <tsg/os.h>
 
+#define EXCLUDE_UI 0
+
 #define EXCLUDE_BOUNDING_VOLUME 1
 
 #define EXCLUDE_BUBBLE 0
@@ -35,6 +37,7 @@ arrow_and_bubbles::arrow_and_bubbles(const std::string& window_text, const unsig
 {
 	tsg::logger::get_instance().write("arrow_and_bubbles ctor");
 	m_bubbles.reserve(NUMBER_OF_BUBBLE);
+	m_time_remaining = NUMBER_OF_BUBBLE * 60.0f; // seconds
 }
 
 arrow_and_bubbles::~arrow_and_bubbles() {
@@ -47,6 +50,7 @@ void arrow_and_bubbles::initialize() {
 	set_cursor_image((tsg::os::get_exe_path() / std::filesystem::path("assets\\arrow.png")).string());
 
 	initialize_objects();
+	initialize_ui();
 	m_state = game_state::running;
 }
 
@@ -72,7 +76,7 @@ void arrow_and_bubbles::initialize_camera() {
 	// camera stuff
 	set_camera_type(camera_type::ortographic);
 	set_camera_initial_zoom(10.0f);
-	set_camera_sensitivity(0.1f);
+	set_camera_sensitivity(1.0f, 1.0f);
 	/* Mouse controls */ 
 	set_camera_controls(camera_controls::scrollable_zoom);
 	set_camera_controls(camera_controls::point_where_scrolling);
@@ -102,6 +106,29 @@ void arrow_and_bubbles::initialize_objects() {
 	}
 }
 
+void arrow_and_bubbles::initialize_ui() {
+#if !EXCLUDE_UI
+	// font stuff
+	m_bubble_counter_font = create_font();
+	constexpr std::size_t font_size{ 72u };
+	m_bubble_counter_font->load_font(font_size, font_type::carlito, font_style::regular);
+	m_bubble_counter_font->set_alignmet(font_horizontal_alignment::left, font_vertical_alignment::top);
+	m_bubble_counter_font->set_color(color::predefined::cyan);
+	m_bubble_counter_font->set_container(
+		{
+			0,
+			get_window_width(),
+			0,
+			get_window_height() 
+		}
+	);
+	add_font(m_bubble_counter_font);
+	//
+	m_time_remaining_font = create_font();
+	add_font(m_time_remaining_font);
+#endif
+}	
+
 void arrow_and_bubbles::process_input() {
 	if( game_events::quit == get_event()) {
 		m_state = game_state::shut_down;
@@ -121,7 +148,7 @@ void arrow_and_bubbles::update_game() {
 		});
 		if(m_bubbles.end() != victim) {
 			victim->set_state(actor::state::dead);
-			victim->set_visible(drawable::state::invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine
+			victim->set_visible(drawable::state::invisible); // <- this hack works but the bubbles are still in the physics engine and in the drawable engine, then they can will collide!
 			update_engine_containers = true;
 		}
 	}
@@ -136,28 +163,21 @@ void arrow_and_bubbles::update_game() {
 	if (shutdown_game) {
 		m_state = game_state::shut_down;
 	}
+	// update UI
+	const auto alive_bubbles{ std::count_if(m_bubbles.begin(), m_bubbles.end(), [](const bubble& b) {
+		return actor::state::dead != b.get_state();
+		})
+	};
+	m_bubble_counter_font->set_text("Bubbles alive: " + std::to_string(alive_bubbles));
+	m_time_remaining -= elapsed_time;
+	m_time_remaining_font->set_text("Time remaining: " + std::to_string(m_time_remaining));
+
 	/* Update all objects */ // <- this doesn't works because the bounding volume result not istantiated yet when updating the physics
-	if (false /*update_engine_containers*/) {
-		auto it{ m_bubbles.begin() };
-		while (it != m_bubbles.end()) {
-			remove_physical_object(&*it);
-			remove_drawable(&*it);
-			++it;
-		}
-		std::erase_if(m_bubbles, [&](bubble& b) {
-			return actor::state::dead == b.get_state();
-			if (actor::state::dead == b.get_state()) {
-				remove_physical_object(&b);
-				remove_drawable(&b);
-				return true;
-			}
-			else {
-				return false;
-			}
-			});
-		for (auto& b : m_bubbles) {
-			add_physical_object(&b);
-			add_drawable(&b);
+	if (update_engine_containers) {
+		std::erase_if(m_bubbles, [&](bubble& b) { return actor::state::dead == b.get_state(); });
+		for (std::size_t i{}; i < m_bubbles.size(); ++i) {
+			add_physical_object(&m_bubbles[i]); // BUG <- this create a different vector from bubbles
+			add_drawable(&m_bubbles[i]);		// BUG <- this create a different vector from bubbles
 		}
 	}
 	/**/

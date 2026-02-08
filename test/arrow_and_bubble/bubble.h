@@ -4,7 +4,7 @@
 #include <actor.h>
 #include <physics.h>
 
-class bubble : public actor,public sprite_object, public physics<2>::physical_object {
+class bubble : public actor, public sprite_object, public physics<2>::physical_object {
 public:
 	bubble();
 	~bubble() = default;
