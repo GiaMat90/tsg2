@@ -59,7 +59,7 @@ public:
 public:
 	// setters and getters
 	inline void set_scale(const float s) { m_scale = s; };
-	inline void set_text(const std::string& s) {
+	inline void set_text(const tsg::string& s) {
 		m_text = s;
 		if (false == m_text.empty()) {
 			compute_text_size();
