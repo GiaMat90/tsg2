@@ -15,9 +15,8 @@
 class character {
 	friend glfw_font;
 public:
-	character() = default;
 	~character() = default;
-	character(const unsigned int id, std::size_t advance, const std::size_t size_x, const std::size_t size_y, const std::size_t bearing_x, const std::size_t bearing_y) :
+	character(const unsigned int id = 0u, const int advance = 0, const int size_x = 0, const int size_y = 0, const int bearing_x = 0, const int bearing_y = 0) :
 		m_texture_id(id), m_advance(advance) {
 		m_size[0] = size_x;
 		m_size[1] = size_y;
@@ -32,6 +31,7 @@ private:
 };
 
 static std::unordered_map<char, character> s_characters;
+static int s_font_ascent{};	// Maximum ascent (bearing_y) across all characters
 
 font* font::create_font() {
 	return new glfw_font();
@@ -191,13 +191,18 @@ void glfw_font::load_font(const std::filesystem::path& file_name, const std::siz
 		// Now store character for later use
 		character character_instance(
 			texture,
-			static_cast<std::size_t>(face->glyph->advance.x),
-			static_cast<std::size_t>(face->glyph->bitmap.width),
-			static_cast<std::size_t>(face->glyph->bitmap.rows),
-			static_cast<std::size_t>(face->glyph->bitmap_left),
-			static_cast<std::size_t>(face->glyph->bitmap_top)
+			face->glyph->advance.x,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			face->glyph->bitmap_left,
+			face->glyph->bitmap_top
 		);
 		s_characters.insert(std::pair<char, character>(c, character_instance));
+		// Track maximum ascent
+		const int bearing_y = face->glyph->bitmap_top;
+		if (bearing_y > s_font_ascent) {
+			s_font_ascent = bearing_y;
+		}
 	}
 	// Unbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -249,8 +254,10 @@ glfw_font::size_t glfw_font::get_char_size(const char c) const {
 glfw_font::pos_t glfw_font::get_char_pos(const char c) const {
 	const character& ch = s_characters.at(c);
 	glfw_font::pos_t position{
-		.x{ static_cast<std::size_t>( m_position[0] + ch.m_bearing[0]*m_scale) },
-		.y{ static_cast<std::size_t>(m_position[1] - (ch.m_size[1] - ch.m_bearing[1]) * m_scale) }
+		.x{ static_cast<std::size_t>(m_position[0] + ch.m_bearing[0] * m_scale) },
+		.y{m_position[1] > (s_font_ascent - ch.m_bearing[1]) ?
+			static_cast<std::size_t>(m_position[1] - (s_font_ascent + ch.m_size[1] - ch.m_bearing[1]) * m_scale) :
+			static_cast<std::size_t>((s_font_ascent + ch.m_size[1] - ch.m_bearing[1]) * m_scale)}
 	};
 	return position;
 }

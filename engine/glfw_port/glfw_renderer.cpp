@@ -130,11 +130,7 @@ void glfw_renderer::render() {
 	if (m_fonts_obj.size() > 0) {
 		// use programs previously loaded
 		m_font_shader.use();
-		m_font_shader.load_uniform("projection",
-			//glm::ortho(0.0f, static_cast<float>(m_window->get_width()), 0.0f, static_cast<float>(m_window->get_height())));
-			//glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f)
-			m_camera->get_projection()
-		);
+		m_font_shader.load_uniform("projection", glm::mat4(1.0f));
 		m_font_vertex.use();
 		for (const auto& f : m_fonts_obj) {
 			this->draw(f);

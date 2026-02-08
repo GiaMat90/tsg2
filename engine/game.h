@@ -45,6 +45,8 @@ protected: // "virtual" methods
 	inline void initialize_objects() { static_cast<GameImpl*>(this)->initialize_objects(); };
 	/* initialize camera */
 	inline void initialize_camera() { static_cast<GameImpl*>(this)->initialize_camera(); };
+	/* initialize user interface */
+	inline void initialize_ui() { static_cast<GameImpl*>(this)->initialize_ui(); };
 protected:
 	inline void render_scene() { m_renderer.render(); };
 	inline void update_physics(const scalar delta_time) { m_physics.update(delta_time); };
@@ -76,7 +78,9 @@ public:
 	inline void set_camera_type(const camera_type t) { m_camera.set_type(t); };
 	inline void set_camera_target(camera_target* const t) { m_camera.set_target(t); }
 	inline void set_camera_initial_zoom(const scalar z) { m_camera.set_initial_zoom(z); };
-	inline void set_camera_sensitivity(const scalar s) { m_camera.set_sensitivity(s); }
+	inline void set_camera_sensitivity(const scalar s, const scalar z) { m_camera.set_speed_sensitivity(s); m_camera.set_zoom_sensitivity(z); }
+	inline void set_camera_speed_sensitivity(const scalar s) { m_camera.set_speed_sensitivity(s); }
+	inline void set_camera_zoom_sensitivity(const scalar z) { m_camera.set_zoom_sensitivity(z); }
 	inline void set_camera_controls(const camera_controls opt) { m_camera.set_controls(opt); };
 public:
 	// Cursor methods

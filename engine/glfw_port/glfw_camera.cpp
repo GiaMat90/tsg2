@@ -35,8 +35,9 @@ private:
 	float m_pitch{ 0.0f };
 	// parameters
 	float m_speed{ 10.0f };
-	float m_sensitivity{ 0.0f };
+	float m_speed_sensitivity{ 0.0f };
 	float m_zoom{ 1.0f };
+	float m_zoom_sensitivity{ 0.1f };
 	// window 
 	glfw_window * m_window{ nullptr };
 	glfw_camera* m_camera{ nullptr };
@@ -106,16 +107,15 @@ static void mouse_callback_3D(GLFWwindow*, double xposIn, double yposIn) {
 }
 static void scroll_callback(GLFWwindow*, double, double yoffset)
 {
-	camera_data.m_zoom -= static_cast<float>(yoffset) * 0.1f;
+	camera_data.m_zoom -= static_cast<float>(yoffset) * camera_data.m_zoom_sensitivity;
 	// crop zoom value to a minimum
 	if (camera_data.m_zoom < 0.1f) {
 		camera_data.m_zoom = 0.1f;
 	}
 	if (camera_data.m_capture_scroll_position) {
-		auto target_ndc_positin = camera_data.m_camera->screen_to_ndc(last_mouse_pos.x, last_mouse_pos.y);
-		float k{ camera_data.m_sensitivity };
-		camera_data.m_position.x += target_ndc_positin[geometry::axes::x] * k;
-		camera_data.m_position.y -= target_ndc_positin[geometry::axes::y] * k;// Remember to reverse y-axes
+		const auto target_ndc_positin = camera_data.m_camera->screen_to_ndc(last_mouse_pos.x, last_mouse_pos.y);
+		camera_data.m_position.x += target_ndc_positin[geometry::axes::x] * camera_data.m_speed_sensitivity;
+		camera_data.m_position.y -= target_ndc_positin[geometry::axes::y] * camera_data.m_speed_sensitivity;// Remember to reverse y-axes
 	}
 }
 /* Camera static methods */
@@ -168,16 +168,16 @@ void glfw_camera::update_camera(input_engine* const input) const {
 	if (m_controls.test(static_cast<std::size_t>(camera_controls::wasd_controlled))) {
 		// camera speed its thought as percentage of the window size
 		if(input->is_key_pressed(input_key::key_w)) {
-			camera_data.m_position.y -= camera_data.m_sensitivity;
+			camera_data.m_position.y -= camera_data.m_speed_sensitivity;
 		} 
 		if (input->is_key_pressed(input_key::key_s)) {
-			camera_data.m_position.y += camera_data.m_sensitivity;
+			camera_data.m_position.y += camera_data.m_speed_sensitivity;
 		}
 		if (input->is_key_pressed(input_key::key_a)) {
-			camera_data.m_position.x -= camera_data.m_sensitivity;
+			camera_data.m_position.x -= camera_data.m_speed_sensitivity;
 		}
 		if (input->is_key_pressed(input_key::key_d)) {
-			camera_data.m_position.x += camera_data.m_sensitivity;
+			camera_data.m_position.x += camera_data.m_speed_sensitivity;
 		} 
 	}
 }
@@ -224,8 +224,12 @@ void glfw_camera::set_initial_zoom(const float z) const {
 	camera_data.m_zoom = z;
 }
 
-void glfw_camera::set_sensitivity(const float s) const {
-	camera_data.m_sensitivity = s;
+void glfw_camera::set_speed_sensitivity(const float s) const {
+	camera_data.m_speed_sensitivity = s;
+}
+
+void glfw_camera::set_zoom_sensitivity(const float s) const {
+	camera_data.m_zoom_sensitivity = s;
 }
 
 glm::mat4 glfw_camera::get_view() const {

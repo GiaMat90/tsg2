@@ -18,7 +18,8 @@ public:
 	void init() const;
 	void update_camera(input_engine* const) const;
 	void set_initial_zoom(const float z) const;
-	void set_sensitivity(const float s) const;
+	void set_speed_sensitivity(const float s) const;
+	void set_zoom_sensitivity(const float s) const;
 	template<std::size_t Dim> requires (Dim == 2 || Dim == 3)
 	inline tsg::vector<geometry::scalar, Dim> screen_to_world(const geometry::scalar x, const geometry::scalar y) {
 		if constexpr (Dim == 2) {
