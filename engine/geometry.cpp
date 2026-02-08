@@ -89,6 +89,7 @@ namespace geometry {
 	* Bounding volume class implementation
 	*/
 	bounding_volume::bounding_volume(const type t, const std::size_t d) : m_type(t), m_dimension(d) {};
+	bounding_volume::bounding_volume(const bounding_volume& other) { assert(false); /* must be implemented in derived classes */ };
 	void bounding_volume::translate(const tsg::vector<scalar, 2>& pos) {
 		/* can't be pure virtual because of it depends on the dimension... */
 		assert(0); // not implemented

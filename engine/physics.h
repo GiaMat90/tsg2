@@ -239,6 +239,96 @@ public:
 	class physical_object {
 		friend physics;
 	public:
+		physical_object() = default;
+		// copy constructor
+		physical_object(const physical_object& other) :
+			m_world(other.m_world),
+			m_position(other.m_position),
+			m_velocity(other.m_velocity),
+			m_acceleration(other.m_acceleration),
+			m_inverse_mass(other.m_inverse_mass),
+			m_orientation(other.m_orientation),
+			m_angular_velocity(other.m_angular_velocity),
+			m_angular_acceleration(other.m_angular_acceleration),
+			m_inverse_intertia_tensor(other.m_inverse_intertia_tensor),
+			m_rotation(other.m_rotation),
+			m_angular_speed(other.m_angular_speed),
+			m_bounding_volume(nullptr)
+		{
+			if(other.m_bounding_volume) {
+				m_bounding_volume = bounding_volume::create<Dim>(other.m_bounding_volume->get_type());
+				*m_bounding_volume = *(other.m_bounding_volume);
+			}
+		}
+
+		// Move constructor
+		physical_object(physical_object&& other) noexcept :
+			m_world(other.m_world),
+			m_position(std::move(other.m_position)),
+			m_velocity(std::move(other.m_velocity)),
+			m_acceleration(std::move(other.m_acceleration)),
+			m_inverse_mass(other.m_inverse_mass),
+			m_orientation(std::move(other.m_orientation)),
+			m_angular_velocity(std::move(other.m_angular_velocity)),
+			m_angular_acceleration(std::move(other.m_angular_acceleration)),
+			m_inverse_intertia_tensor(std::move(other.m_inverse_intertia_tensor)),
+			m_rotation(other.m_rotation),
+			m_angular_speed(other.m_angular_speed),
+			m_bounding_volume(other.m_bounding_volume)
+		{
+			other.m_bounding_volume = nullptr;
+		}
+		// Copy assignment operator
+		physical_object& operator=(const physical_object& other) {
+			if (this != &other) {
+				m_world = other.m_world;
+				if (other.m_bounding_volume) {
+					if (m_bounding_volume) {
+						delete m_bounding_volume;
+					}
+					m_bounding_volume = bounding_volume::create<Dim>(other.m_bounding_volume->get_type());
+					other.m_bounding_volume->clone(*m_bounding_volume);
+				}
+				else {
+					m_bounding_volume = nullptr;
+				}
+				m_position = other.m_position;
+				m_velocity = other.m_velocity;
+				m_acceleration = other.m_acceleration;
+				m_inverse_mass = other.m_inverse_mass;
+				m_orientation = other.m_orientation;
+				m_angular_velocity = other.m_angular_velocity;
+				m_angular_acceleration = other.m_angular_acceleration;
+				m_inverse_intertia_tensor = other.m_inverse_intertia_tensor;
+				m_rotation = other.m_rotation;
+				m_angular_speed = other.m_angular_speed;
+			}
+			return *this;
+		}		
+		// Move assignment
+		physical_object& operator=(physical_object&& other) noexcept {
+			if (this != &other) {
+				if (m_bounding_volume) {
+					delete m_bounding_volume;
+				}
+				m_world = other.m_world;
+				m_bounding_volume = other.m_bounding_volume;
+				m_position = std::move(other.m_position);
+				m_velocity = std::move(other.m_velocity);
+				m_acceleration = std::move(other.m_acceleration);
+				m_inverse_mass = other.m_inverse_mass;
+				m_orientation = std::move(other.m_orientation);
+				m_angular_velocity = std::move(other.m_angular_velocity);
+				m_angular_acceleration = std::move(other.m_angular_acceleration);
+				m_inverse_intertia_tensor = std::move(other.m_inverse_intertia_tensor);
+				m_rotation = other.m_rotation;
+				m_angular_speed = other.m_angular_speed;
+
+				other.m_bounding_volume = nullptr;
+			}
+			return *this;
+		}
+
 		virtual ~physical_object() {
 			if (m_bounding_volume) {
 				delete m_bounding_volume;
@@ -293,10 +383,10 @@ public:
 				m_bounding_volume = new geometry::box<Dim>(std::forward<decltype(args)>(args)...);
 			}
 			else if constexpr (T == bounding_volume::type::sphere) {
-				m_bounding_volume = new geometry::sphere<Dim>(args...);
+				m_bounding_volume = new geometry::sphere<Dim>(std::forward<decltype(args)>(args)...);
 			}
 			else if constexpr (T == bounding_volume::type::polygon) {
-				m_bounding_volume = new geometry::polygon<Dim>(args...);
+				m_bounding_volume = new geometry::polygon<Dim>(std::forward<decltype(args)>(args)...);
 			}
 			else {
 				/* No supported bounding volume type */

@@ -284,7 +284,9 @@ namespace geometry {
 		};
 	public:
 		bounding_volume(const type t = type::unknown, const std::size_t d = 0u);
+		bounding_volume(const bounding_volume& other);
 		virtual ~bounding_volume() = default;
+		virtual void clone(bounding_volume&) = 0;
 		inline const type get_type() const { return m_type; };
 		inline const std::size_t get_dimension() const { return m_dimension; };
 	public:
@@ -297,6 +299,10 @@ namespace geometry {
 		virtual void rotate(const scalar angle) = 0;
 		inline virtual scalar get_min(const std::size_t axes) const = 0;
 		inline virtual scalar get_max(const std::size_t axes) const = 0;
+	public:
+		/* factory method */
+		template<std::size_t Dim>
+		static bounding_volume* create(const type t);
 	protected:
 		type m_type{ type::unknown };
 		std::size_t m_dimension{};
@@ -304,7 +310,7 @@ namespace geometry {
 
 	/*
 	* The box has validity only for 2 or 3 dimension (as per now). 
-	* This giustify the concept.
+	* This giustify the use of the concept GeometricDimension.
 	*/
 	template <std::size_t Dim> requires GeometricDimension<Dim>
 	class box : public bounding_volume {
@@ -342,6 +348,35 @@ namespace geometry {
 			}
 		};
 		virtual ~box() {};
+		box<Dim>& operator=(const box<Dim>& other) {
+			other.clone(this);
+			return *this;
+		};
+		void clone(bounding_volume& other) override {
+			if(auto b = dynamic_cast<box<Dim>*>(&other)) {
+				this->clone(*b);
+			}
+			else {
+				assert(0); // invalid type for cloning
+			}
+		}
+		void clone(box<Dim>& other) {
+			other.m_center = this->m_center;
+			other.m_half_sizes = this->m_half_sizes;
+			other.m_direction = this->m_direction;
+			other.m_base = this->m_base;
+			for (std::size_t i = 0u; i < m_vertexes.size(); ++i) {
+				other.m_vertexes[i] = this->m_vertexes[i];
+			}
+			for (std::size_t i = 0u; i < m_edges.size(); ++i) {
+				other.m_edges[i] = this->m_edges[i];
+			}
+			for (std::size_t i = 0u; i < m_faces.size(); ++i) {
+				other.m_faces[i] = this->m_faces[i];
+			}
+			other.m_type = this->m_type;
+			other.m_dimension = this->m_dimension;
+		}
 	public:
 		// setter
 		inline void set_center(const tsg::vector<scalar, Dim>& c) { m_center = c; }
@@ -577,6 +612,31 @@ namespace geometry {
 		~polygon() = default;
 	};
 
+	/* bounding volume factory method */
+	template<std::size_t Dim>
+	bounding_volume* bounding_volume::create(const bounding_volume::type t) {
+		bounding_volume* ret = nullptr;
+		switch (t) {
+		case type::aabb:
+			ret = new box<Dim>(t);
+			break;
+		case type::obb:
+			/* TODO */
+			assert(0);
+			break;
+		case type::sphere:
+			/* TODO */
+			assert(0);
+			break;
+		case type::polygon:
+			/* TODO */
+			assert(0);
+			break;
+		default:
+			break;
+		}
+		return ret;
+	}
 	/* distance functions  point - point */
 	template<std::size_t Dim> requires Dimension2D<Dim> || Dimension3D<Dim>
 	inline scalar distance(const tsg::vector<scalar, Dim>& p, const tsg::vector<scalar, Dim>& q) {
